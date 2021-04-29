@@ -31,8 +31,8 @@ type ResolveResponse<ReqLine extends RequestLine, Query = unknown> =
 export interface Client {
   send<ReqLine extends OptionalParamsRequestLine>(requestLine: ReqLine): Promise<InferResponse<ReqLine, {}>>
 
-  send<ReqLine extends RequestLine, Params extends Operation.MinimalInput<Operations[ReqLine]>>(
+  send<ReqLine extends RequestLine, Params extends Operation.MinimalInput<Operations[ReqLine]>> (
     requestLine: ReqLine,
-    params: Const<Params>
+    params: Const<Params & Operation.MinimalInput<Operations[ReqLine]>>
   ): Promise<InferResponse<ReqLine, Params>>
 }
