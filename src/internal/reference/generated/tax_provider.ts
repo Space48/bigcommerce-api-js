@@ -68,9 +68,13 @@ export interface components {
       };
       readonly quantity: number;
       readonly tax_class?: components["schemas"]["TaxClass"];
-      /** Flag whether or not this item is always tax exempt. Gift Certificate purchases for example. Tax Exempt items should be included in the Request for auditing purposes. */
+      /** Flag whether or not this item is always tax exempt. For example, gift certificate purchases and order-level refunds are tax exempt. Tax exempt items are included in the request for auditing purposes. */
       readonly tax_exempt?: boolean;
-      /** The type of line item this request represents. This will depend on the items position in the request hirearchy, for example a collection of items (Which may or may not also have wrapping attached) are contained within the document request, and separately each document request has a single shipping and a single handling line item (to capture these values). */
+      /**
+       * The type of line item this request represents. This will depend on the items position in the request hirearchy, for example a collection of items (which may or may not also have wrapping attached) are contained within the document request. Seperately, each document request has a single shipping and a single handling line item (to capture these values).
+       *
+       * The type refund is used when the tax estimate request is for an order-level refund.
+       */
       readonly type: "item" | "wrapping" | "handling" | "shipping" | "refund";
       readonly wrapping?: components["schemas"]["request-item"];
     };

@@ -450,7 +450,7 @@ export interface operations {
   readonly "index-site-routes": {
     readonly parameters: {
       readonly path: {
-        readonly site_id: string;
+        readonly site_id: number;
       };
       readonly query: {
         /** Filter routes by a given resource type */
@@ -486,7 +486,7 @@ export interface operations {
   readonly "post-site-route": {
     readonly parameters: {
       readonly path: {
-        readonly site_id: string;
+        readonly site_id: number;
       };
       readonly body: {
         readonly body: definitions["siteRoute_Base"];

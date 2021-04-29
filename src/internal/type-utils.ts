@@ -7,4 +7,4 @@ type Narrowable =
   | number
   | bigint
   | boolean
-  | readonly [];
+  | readonly any[];

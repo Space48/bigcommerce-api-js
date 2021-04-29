@@ -654,7 +654,7 @@ export interface operations {
                 readonly body: definitions["UpdateConsignmentRequest"];
             };
             readonly query: {
-                /** Must be included to get available shipping options */
+                /** Include to get available shipping options */
                 readonly include?: "consignments.available_shipping_options";
             };
         };
