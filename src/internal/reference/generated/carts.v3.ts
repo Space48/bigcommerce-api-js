@@ -260,7 +260,7 @@ export interface definitions {
       /** The discounted amount. */
       readonly discounted_amount?: number;
     }[];
-    readonly line_items?: readonly {
+    readonly line_items?: {
       readonly physical_items: readonly ({
         /** The line-item ID. */
         readonly id?: string;
@@ -467,7 +467,7 @@ export interface definitions {
         /** Item's list price multiplied by quantity. */
         readonly extended_list_price?: number;
       }[];
-    }[];
+    };
     /** Time when the cart was created. */
     readonly created_time?: string;
     /** Time when the cart was last updated. */
@@ -1091,6 +1091,11 @@ export interface definitions {
 export interface parameters {
   readonly Accept: string;
   readonly "Content-Type": string;
+  /**
+   * * `redirect_urls`: Create a direct link to a Cart. This can be used during the /POST request for Carts.
+   * * `line_items.physical_items.options`: The Cart returns an abbreviated result. Use this to return physical items product options. Can also be used in a /POST to have the extended Cart object return.
+   * * `line_items.digital_items.options`: The Cart returns an abbreviated result. Use this to return digital items product options.  Can also be used in a /POST to have the extended Cart object return.
+   */
   readonly line_items: readonly (
     | "redirect_urls"
     | "line_items.physical_items.options"
@@ -1154,6 +1159,11 @@ export interface operations {
         readonly cartData: definitions["CartCreatePostData"];
       };
       readonly query: {
+        /**
+         * * `redirect_urls`: Create a direct link to a Cart. This can be used during the /POST request for Carts.
+         * * `line_items.physical_items.options`: The Cart returns an abbreviated result. Use this to return physical items product options. Can also be used in a /POST to have the extended Cart object return.
+         * * `line_items.digital_items.options`: The Cart returns an abbreviated result. Use this to return digital items product options.  Can also be used in a /POST to have the extended Cart object return.
+         */
         readonly include?: readonly (
           | "redirect_urls"
           | "line_items.physical_items.options"
@@ -1187,6 +1197,11 @@ export interface operations {
         readonly ItemData: definitions["Cart_Line_Item_Update_Post"];
       };
       readonly query: {
+        /**
+         * * `redirect_urls`: Create a direct link to a Cart. This can be used during the /POST request for Carts.
+         * * `line_items.physical_items.options`: The Cart returns an abbreviated result. Use this to return physical items product options. Can also be used in a /POST to have the extended Cart object return.
+         * * `line_items.digital_items.options`: The Cart returns an abbreviated result. Use this to return digital items product options.  Can also be used in a /POST to have the extended Cart object return.
+         */
         readonly include?: readonly (
           | "redirect_urls"
           | "line_items.physical_items.options"
@@ -1253,6 +1268,11 @@ export interface operations {
         readonly lineItem: definitions["Cart_Line_Item_Update_Post"];
       };
       readonly query: {
+        /**
+         * * `redirect_urls`: Create a direct link to a Cart. This can be used during the /POST request for Carts.
+         * * `line_items.physical_items.options`: The Cart returns an abbreviated result. Use this to return physical items product options. Can also be used in a /POST to have the extended Cart object return.
+         * * `line_items.digital_items.options`: The Cart returns an abbreviated result. Use this to return digital items product options.  Can also be used in a /POST to have the extended Cart object return.
+         */
         readonly include?: readonly (
           | "redirect_urls"
           | "line_items.physical_items.options"
@@ -1286,6 +1306,11 @@ export interface operations {
         readonly "Content-Type": string;
       };
       readonly query: {
+        /**
+         * * `redirect_urls`: Create a direct link to a Cart. This can be used during the /POST request for Carts.
+         * * `line_items.physical_items.options`: The Cart returns an abbreviated result. Use this to return physical items product options. Can also be used in a /POST to have the extended Cart object return.
+         * * `line_items.digital_items.options`: The Cart returns an abbreviated result. Use this to return digital items product options.  Can also be used in a /POST to have the extended Cart object return.
+         */
         readonly include?: readonly (
           | "redirect_urls"
           | "line_items.physical_items.options"
@@ -1309,6 +1334,11 @@ export interface operations {
         readonly cartId: string;
       };
       readonly query: {
+        /**
+         * * `redirect_urls`: Create a direct link to a Cart. This can be used during the /POST request for Carts.
+         * * `line_items.physical_items.options`: The Cart returns an abbreviated result. Use this to return physical items product options. Can also be used in a /POST to have the extended Cart object return.
+         * * `line_items.digital_items.options`: The Cart returns an abbreviated result. Use this to return digital items product options.  Can also be used in a /POST to have the extended Cart object return.
+         */
         readonly include?: readonly (
           | "redirect_urls"
           | "line_items.physical_items.options"
@@ -1342,6 +1372,11 @@ export interface operations {
         readonly CartUpdateData: definitions["CartUpdatePutRequestData"];
       };
       readonly query: {
+        /**
+         * * `redirect_urls`: Create a direct link to a Cart. This can be used during the /POST request for Carts.
+         * * `line_items.physical_items.options`: The Cart returns an abbreviated result. Use this to return physical items product options. Can also be used in a /POST to have the extended Cart object return.
+         * * `line_items.digital_items.options`: The Cart returns an abbreviated result. Use this to return digital items product options.  Can also be used in a /POST to have the extended Cart object return.
+         */
         readonly include?: readonly (
           | "redirect_urls"
           | "line_items.physical_items.options"
