@@ -14,6 +14,13 @@
     "clean": "rimraf lib",
     "prepare": "npm run clean && npm run build -- --build tsconfig.publish.json"
   },
+  "engines": {
+    "node": ">= 10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Space48/bigcommerce-api-js.git"
+  },
   "author": "Josh Di Fabio <joshdifabio@gmail.com>",
   "license": "MIT",
   "devDependencies": {
