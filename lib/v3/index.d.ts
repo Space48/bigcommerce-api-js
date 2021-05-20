@@ -1,7 +1,9 @@
+/// <reference types="node" />
 import type { V3 as reference } from "../internal/reference";
 import type { NarrowResponse } from "./response-narrowing";
 import type { Operation, OperationIndex, Parameters, Request, RequestMethod, Response } from "../internal/operation";
 import { Const } from "../internal/type-utils";
+import { Agent } from "http";
 export declare type Operations = reference.Operation;
 export declare type RequestLine = keyof Operations;
 export declare type NoParamsRequestLine = keyof OperationIndex.FilterOptionalParams<Operations>;
@@ -11,19 +13,30 @@ export declare type ResponseData<ReqLine extends RequestLine, Params = unknown> 
         readonly data?: infer Data;
     };
 } ? Data : never;
-export interface Client {
+export declare type Config = {
+    readonly storeHash: string;
+    readonly clientId: string;
+    readonly accessToken: string;
+    readonly agent?: Agent;
+};
+export declare class Client {
+    private readonly config;
+    constructor(config: Config);
+    private readonly headers;
     send<ReqLine extends NoParamsRequestLine>(requestLine: ReqLine): Promise<InferResponse<ReqLine, {}>>;
     send<ReqLine extends RequestLine, Params extends Operation.MinimalInput<Operations[ReqLine]>>(requestLine: ReqLine, params: Const<Params & Operation.MinimalInput<Operations[ReqLine]>>): Promise<InferResponse<ReqLine, Params>>;
-    delete<Path extends NoParamsRequestPath<'DELETE'>>(requestLine: Path): Promise<ResponseData<`DELETE ${Path}`, {}> | null>;
-    delete<Path extends RequestPath<'DELETE'>, Params extends Operation.MinimalInput<Operations[`DELETE ${Path}`]>>(path: Path, params: Const<Params & Operation.MinimalInput<Operations[`DELETE ${Path}`]>>): Promise<ResponseData<`DELETE ${Path}`, Params> | null>;
-    get<Path extends NoParamsRequestPath<'GET'>>(requestLine: Path): Promise<ResponseData<`GET ${Path}`, {}> | null>;
+    send(requestLine: string, params?: Parameters): Promise<Response>;
+    get<Path extends NoParamsRequestPath<'GET'>>(path: Path): Promise<ResponseData<`GET ${Path}`, {}> | null>;
     get<Path extends RequestPath<'GET'>, Params extends Operation.MinimalInput<Operations[`GET ${Path}`]>>(path: Path, params: Const<Params & Operation.MinimalInput<Operations[`GET ${Path}`]>>): Promise<ResponseData<`GET ${Path}`, Params> | null>;
-    list<Path extends NoParamsListablePath>(requestLine: Path): AsyncIterable<ListItemType<Path, {}>>;
+    list<Path extends NoParamsListablePath>(path: Path): AsyncIterable<ListItemType<Path, {}>>;
     list<Path extends ListablePath, Params extends Operation.MinimalInput<Operations[`GET ${Path}`]>>(path: Path, params: Const<Params & Operation.MinimalInput<Operations[`GET ${Path}`]>>): AsyncIterable<ListItemType<Path, Params>>;
-    post<Path extends NoParamsRequestPath<'POST'>>(requestLine: Path): Promise<ResponseData<`POST ${Path}`, {}>>;
+    post<Path extends NoParamsRequestPath<'POST'>>(path: Path): Promise<ResponseData<`POST ${Path}`, {}>>;
     post<Path extends RequestPath<'POST'>, Params extends Operation.MinimalInput<Operations[`POST ${Path}`]>>(path: Path, params: Const<Params & Operation.MinimalInput<Operations[`POST ${Path}`]>>): Promise<ResponseData<`POST ${Path}`, Params>>;
-    put<Path extends NoParamsRequestPath<'PUT'>>(requestLine: Path): Promise<ResponseData<`PUT ${Path}`, {}>>;
+    put<Path extends NoParamsRequestPath<'PUT'>>(path: Path): Promise<ResponseData<`PUT ${Path}`, {}>>;
     put<Path extends RequestPath<'PUT'>, Params extends Operation.MinimalInput<Operations[`PUT ${Path}`]>>(path: Path, params: Const<Params & Operation.MinimalInput<Operations[`PUT ${Path}`]>>): Promise<ResponseData<`PUT ${Path}`, Params>>;
+    delete<Path extends NoParamsRequestPath<'DELETE'>>(path: Path): Promise<ResponseData<`DELETE ${Path}`, {}> | null>;
+    delete<Path extends RequestPath<'DELETE'>, Params extends Operation.MinimalInput<Operations[`DELETE ${Path}`]>>(path: Path, params: Const<Params & Operation.MinimalInput<Operations[`DELETE ${Path}`]>>): Promise<ResponseData<`DELETE ${Path}`, Params> | null>;
+    private checkResponseStatus;
 }
 declare type ListItemType<Path extends string, Params = unknown> = ResponseData<`GET ${Path}` & RequestLine, Params> extends ReadonlyArray<infer T> ? T : never;
 declare type ListablePath = ListablePath_<Operations>;
