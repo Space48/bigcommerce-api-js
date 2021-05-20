@@ -4,6 +4,7 @@ import type { Operation, OperationIndex, Parameters, Request, RequestMethod, Res
 import { Const } from "../internal/type-utils";
 import fetch from "node-fetch";
 import { stringify } from "query-string";
+import { Agent } from "http";
 
 export type Operations = reference.Operation;
 
@@ -24,128 +25,127 @@ export type ResponseData<ReqLine extends RequestLine, Params = unknown> =
     : never;
 
 export type Config = {
-  storeHash: string;
-  accessToken: string;
+  readonly storeHash: string;
+  readonly clientId: string;
+  readonly accessToken: string;
+  readonly agent?: Agent
 };
 
 export class Client {
-  constructor(private config: Config) {}
+  constructor(
+    private readonly config: Config,
+  ) {}
 
-  send<ReqLine extends NoParamsRequestLine>(requestLine: ReqLine): Promise<InferResponse<ReqLine, {}>>;
+  private readonly headers = {
+    Accept: "application/json",
+    "X-Auth-Client": this.config.clientId,
+    "X-Auth-Token": this.config.accessToken,
+  };
 
-  send<ReqLine extends RequestLine, Params extends Operation.MinimalInput<Operations[ReqLine]>> (
+  send<ReqLine extends NoParamsRequestLine>(requestLine: ReqLine): Promise<InferResponse<ReqLine, {}>>
+
+  send<ReqLine extends RequestLine, Params extends Operation.MinimalInput<Operations[ReqLine]>>(
     requestLine: ReqLine,
     params: Const<Params & Operation.MinimalInput<Operations[ReqLine]>>
-  ): Promise<InferResponse<ReqLine, Params>>;
+  ): Promise<InferResponse<ReqLine, Params>>
 
-  async send<ReqLine extends NoParamsRequestLine, Params extends Operation.MinimalInput<Operations[ReqLine]>>(
-    requestLine: ReqLine,
-    params?: Const<Params & Operation.MinimalInput<Operations[ReqLine]>>
-  ): Promise<InferResponse<ReqLine, {}>> {
+  send(requestLine: string, params?: Parameters): Promise<Response>
+
+  async send(requestLine: string, params?: Parameters): Promise<Response> {
     const [method, path] = requestLine.split(" ");
-    const queryParams = stringify(params ?? {}, { arrayFormat: "comma" } );
+    const queryParams = stringify(params?.query ?? {}, { arrayFormat: "comma" } );
     const queryString = queryParams.length ? `?${queryParams}` : "";
-    const res = await fetch(`https://api.bigcommerce.com/stores/${this.config.storeHash}/v3` + path + queryString, {
+    const res = await fetch(`https://api.bigcommerce.com/stores/${this.config.storeHash}/v3${path}${queryString}`, {
       method,
-      headers: this.getHeaders(),
+      headers: {
+        ...this.headers,
+        'Content-Type': params?.body && 'application/json',
+      },
+      agent: this.config.agent,
+      body: params?.body && JSON.stringify(params.body),
     });
-    if (res.ok) {
-      return ({
-        status: res.status,
-        body: await res.json(),
-      }) as any;
-    } else {
-      return ({
-        status: res.status,
-      }) as any;
-    }
+    const body = await res.text();
+    return {
+      status: res.status,
+      body: body && JSON.parse(body),
+    };
   }
 
-  get<Path extends NoParamsRequestPath<'GET'>>(path: Path): Promise<ResponseData<`GET ${Path}`, {}> | null>;
+  get<Path extends NoParamsRequestPath<'GET'>>(path: Path): Promise<ResponseData<`GET ${Path}`, {}> | null>
 
-  get<Path extends RequestPath<'GET'>, Params extends Operation.MinimalInput<Operations[`GET ${Path}`]>> (
+  get<Path extends RequestPath<'GET'>, Params extends Operation.MinimalInput<Operations[`GET ${Path}`]>>(
     path: Path,
     params: Const<Params & Operation.MinimalInput<Operations[`GET ${Path}`]>>
-  ): Promise<ResponseData<`GET ${Path}`, Params> | null>;
+  ): Promise<ResponseData<`GET ${Path}`, Params> | null>
 
-  async get(path: any, params?: any): Promise<any> {
-    const res = await this.send(`GET ${path}` as any, params as any);
+  async get(path: string, params?: Parameters): Promise<unknown> {
+    const res = await this.send(`GET ${path}`, params);
     if (res.status === 404) {
-      return null as typeof res.body.data;
+      return null;
     }
-    this.throwIfBad(`GET ${path}` as any, res);
+    this.checkResponseStatus(`GET ${path}`, res);
     return res.body.data;
   }
 
-  list<Path extends NoParamsListablePath>(path: Path): AsyncIterable<ListItemType<Path, {}>>;
+  list<Path extends NoParamsListablePath>(path: Path): AsyncIterable<ListItemType<Path, {}>>
 
   list<Path extends ListablePath, Params extends Operation.MinimalInput<Operations[`GET ${Path}`]>> (
     path: Path,
     params: Const<Params & Operation.MinimalInput<Operations[`GET ${Path}`]>>
-  ): AsyncIterable<ListItemType<Path, Params>>;
+  ): AsyncIterable<ListItemType<Path, Params>>
 
-  async *list(path: any, params?: any): AsyncIterable<any> {
+  async *list<T>(path: string, params?: Parameters): AsyncIterable<T> {
     const MAX_PAGES = Number.MAX_SAFE_INTEGER;
     for (let page = 0; page < MAX_PAGES; page++) {
-      const _params = { ...params, query: { ...params?.query, page }};
-      const body = await this.get(path, _params as any);
-      if (!body) {
-        break;
-      }
-      yield body;
+      const res = await this.send(`GET ${path}`, { ...params, query: { ...params?.query, page }});
+      this.checkResponseStatus(`GET ${path}`, res);
+      yield* res.body.data as T[];
     }
   }
 
-  post<Path extends NoParamsRequestPath<'POST'>>(path: Path): Promise<ResponseData<`POST ${Path}`, {}>>;
+  post<Path extends NoParamsRequestPath<'POST'>>(path: Path): Promise<ResponseData<`POST ${Path}`, {}>>
 
-  post<Path extends RequestPath<'POST'>, Params extends Operation.MinimalInput<Operations[`POST ${Path}`]>> (
+  post<Path extends RequestPath<'POST'>, Params extends Operation.MinimalInput<Operations[`POST ${Path}`]>>(
     path: Path,
     params: Const<Params & Operation.MinimalInput<Operations[`POST ${Path}`]>>
-  ): Promise<ResponseData<`POST ${Path}`, Params>>;
+  ): Promise<ResponseData<`POST ${Path}`, Params>>
 
-  async post<Path extends NoParamsRequestPath<'POST'>>(path: any, params?: any): Promise<ResponseData<`POST ${Path}`, {}>> {
-    const res = await this.send(`POST ${path}` as any, params);
-    this.throwIfBad(`POST ${path}` as any, res);
+  async post(path: string, params?: Parameters): Promise<unknown> {
+    const res = await this.send(`POST ${path}`, params);
+    this.checkResponseStatus(`POST ${path}`, res);
     return res.body.data;
   }
 
-  put<Path extends NoParamsRequestPath<'PUT'>>(path: Path): Promise<ResponseData<`PUT ${Path}`, {}>>;
+  put<Path extends NoParamsRequestPath<'PUT'>>(path: Path): Promise<ResponseData<`PUT ${Path}`, {}>>
 
-  put<Path extends RequestPath<'PUT'>, Params extends Operation.MinimalInput<Operations[`PUT ${Path}`]>> (
+  put<Path extends RequestPath<'PUT'>, Params extends Operation.MinimalInput<Operations[`PUT ${Path}`]>>(
     path: Path,
     params: Const<Params & Operation.MinimalInput<Operations[`PUT ${Path}`]>>
-  ): Promise<ResponseData<`PUT ${Path}`, Params>>;
+  ): Promise<ResponseData<`PUT ${Path}`, Params>>
 
-  async put<Path extends NoParamsRequestPath<'PUT'>>(path: any, params?: any): Promise<ResponseData<`PUT ${Path}`, {}>> {
-    const res = await this.send(`PUT ${path}` as any, params);
-    this.throwIfBad(`PUT ${path}` as any, res);
+  async put(path: string, params?: Parameters): Promise<unknown> {
+    const res = await this.send(`PUT ${path}`, params);
+    this.checkResponseStatus(`PUT ${path}`, res);
     return res.body.data;
   }
 
-  delete<Path extends NoParamsRequestPath<'DELETE'>>(path: Path): Promise<ResponseData<`DELETE ${Path}`, {}> | null>;
+  delete<Path extends NoParamsRequestPath<'DELETE'>>(path: Path): Promise<ResponseData<`DELETE ${Path}`, {}> | null>
 
-  delete<Path extends RequestPath<'DELETE'>, Params extends Operation.MinimalInput<Operations[`DELETE ${Path}`]>> (
+  delete<Path extends RequestPath<'DELETE'>, Params extends Operation.MinimalInput<Operations[`DELETE ${Path}`]>>(
     path: Path,
     params: Const<Params & Operation.MinimalInput<Operations[`DELETE ${Path}`]>>
-  ): Promise<ResponseData<`DELETE ${Path}`, Params> | null>;
+  ): Promise<ResponseData<`DELETE ${Path}`, Params> | null>
 
-  async delete<Path extends NoParamsRequestPath<'DELETE'>>(path: any, params?: any): Promise<ResponseData<`DELETE ${Path}`, {}> | null> {
-    const res = await this.send(`DELETE ${path}` as any, params);
-    this.throwIfBad(`DELETE ${path}` as any, res);
+  async delete(path: string, params?: Parameters): Promise<unknown> {
+    const res = await this.send(`DELETE ${path}`, params);
+    this.checkResponseStatus(`DELETE ${path}`, res);
     return res.body.data;
   }
 
-  private throwIfBad<ReqLine extends NoParamsRequestLine>(requestLine: ReqLine, response: InferResponse<ReqLine, {}>): void {
+  private checkResponseStatus(requestLine: string, response: Response): void {
     if (response.status > 299) {
       throw new Error(`ERROR DURING ${requestLine}: ${response.status} - ${response.body}`);
     }
-  }
-
-  private getHeaders(): Record<string, string> {
-    return ({
-      Accept: "application/json",
-      "X-Auth-Token": this.config.accessToken,
-    });
   }
 }
 

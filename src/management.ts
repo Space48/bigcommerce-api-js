@@ -1,7 +1,19 @@
-import type { Client as V2Client } from "./v2";
-import type { Client as V3Client } from "./v3";
+import { Agent } from "http";
+import { Client as V2Client } from "./v2";
+import { Client as V3Client } from "./v3";
 
-export interface Client {
-  readonly v2: V2Client
-  readonly v3: V3Client
+export type Config = {
+  readonly storeHash: string;
+  readonly clientId: string;
+  readonly accessToken: string;
+  readonly agent?: Agent
+};
+
+export class Client {
+  constructor(
+    private readonly config: Config
+  ) {}
+
+  readonly v2 = new V2Client(this.config);
+  readonly v3 = new V3Client(this.config);
 }
