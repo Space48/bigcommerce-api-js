@@ -26,7 +26,6 @@ export type ResponseData<ReqLine extends RequestLine, Params = unknown> =
 
 export type Config = {
   readonly storeHash: string;
-  readonly clientId: string;
   readonly accessToken: string;
   readonly agent?: Agent
 };
@@ -38,7 +37,6 @@ export class Client {
 
   private readonly headers = {
     Accept: "application/json",
-    "X-Auth-Client": this.config.clientId,
     "X-Auth-Token": this.config.accessToken,
   };
 

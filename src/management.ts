@@ -4,7 +4,6 @@ import { Client as V3Client } from "./v3";
 
 export type Config = {
   readonly storeHash: string;
-  readonly clientId: string;
   readonly accessToken: string;
   readonly agent?: Agent
 };
