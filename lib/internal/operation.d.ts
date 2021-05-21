@@ -41,4 +41,5 @@ declare type MakeEmptyObjectOptional<T> = 1 extends 0 ? never : ({
 } & {
     readonly [K in keyof T as {} extends T[K] ? never : K]: T[K];
 });
+export declare function resolvePath(parameterizedPath: string, pathParams: Record<string, any>): string;
 export {};
