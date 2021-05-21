@@ -9,7 +9,6 @@
   ],
   "scripts": {
     "build": "tsc",
-    "docs": "node lib/bin/generate-docs",
     "build-reference-types": "node src/internal/reference/generate",
     "clean": "rimraf lib",
     "prepare": "npm run clean && npm run build -- --build tsconfig.publish.json"
