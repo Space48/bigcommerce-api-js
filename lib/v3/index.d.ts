@@ -15,7 +15,6 @@ export declare type ResponseData<ReqLine extends RequestLine, Params = unknown> 
 } ? Data : never;
 export declare type Config = {
     readonly storeHash: string;
-    readonly clientId: string;
     readonly accessToken: string;
     readonly agent?: Agent;
 };
