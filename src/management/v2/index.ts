@@ -1,8 +1,8 @@
-import type { V3 as reference } from "../internal/reference";
+import type { V2 as reference } from "../../internal/reference";
 import type { NarrowResponse } from "./response-narrowing"
-import { Operation, OperationIndex, Parameters, Request, RequestMethod, resolvePath, Response } from "../internal/operation";
-import { Const } from "../internal/type-utils";
-import fetch from "node-fetch";
+import { Operation, OperationIndex, Parameters, Request, RequestMethod, resolvePath, Response } from "../../internal/operation";
+import { Const } from "../../internal/type-utils";
+import fetch from "cross-fetch";
 import { stringify } from "query-string";
 import { Agent } from "http";
 
@@ -20,7 +20,7 @@ export type InferResponse<ReqLine extends RequestLine, Params> =
   >;
 
 export type ResponseData<ReqLine extends RequestLine, Params = unknown> =
-  Response.Success<ResolveResponse<ReqLine, Params>> extends { readonly body: { readonly data?: infer Data } }
+  Response.Success<ResolveResponse<ReqLine, Params>> extends { readonly body: infer Data }
     ? Data
     : never;
 
@@ -42,7 +42,7 @@ export class Client {
 
   send<ReqLine extends NoParamsRequestLine>(requestLine: ReqLine): Promise<InferResponse<ReqLine, {}>>
 
-  send<ReqLine extends RequestLine, Params extends Operation.MinimalInput<Operations[ReqLine]>>(
+  send<ReqLine extends RequestLine, Params extends Operation.MinimalInput<Operations[ReqLine]>> (
     requestLine: ReqLine,
     params: Const<Params & Operation.MinimalInput<Operations[ReqLine]>>
   ): Promise<InferResponse<ReqLine, Params>>
@@ -54,7 +54,7 @@ export class Client {
     const path = resolvePath(paramaterizedPath, params?.path ?? {});
     const queryParams = stringify(params?.query ?? {}, { arrayFormat: "comma" } );
     const queryString = queryParams.length ? `?${queryParams}` : "";
-    const res = await fetch(`https://api.bigcommerce.com/stores/${this.config.storeHash}/v3${path}${queryString}`, {
+    const res = await fetch(`https://api.bigcommerce.com/stores/${this.config.storeHash}/v2${path}${queryString}`, {
       method,
       headers: {
         ...this.headers,
@@ -62,7 +62,7 @@ export class Client {
       },
       agent: this.config.agent,
       body: params?.body && JSON.stringify(params.body),
-    });
+    } as any);
     const body = await res.text();
     return {
       status: res.status,
@@ -70,71 +70,9 @@ export class Client {
     };
   }
 
-  get<Path extends NoParamsRequestPath<'GET'>>(path: Path): Promise<ResponseData<`GET ${Path}`, {}> | null>
+  delete<Path extends NoParamsRequestPath<'DELETE'>>(requestLine: Path): Promise<ResponseData<`DELETE ${Path}`, {}> | null>
 
-  get<Path extends RequestPath<'GET'>, Params extends Operation.MinimalInput<Operations[`GET ${Path}`]>>(
-    path: Path,
-    params: Const<Params & Operation.MinimalInput<Operations[`GET ${Path}`]>>
-  ): Promise<ResponseData<`GET ${Path}`, Params> | null>
-
-  async get(path: string, params?: Parameters): Promise<unknown> {
-    const res = await this.send(`GET ${path}`, params);
-    if (res.status === 404) {
-      return null;
-    }
-    this.checkResponseStatus(`GET ${path}`, res);
-    return res.body.data;
-  }
-
-  list<Path extends NoParamsListablePath>(path: Path): AsyncIterable<ListItemType<Path, {}>>
-
-  list<Path extends ListablePath, Params extends Operation.MinimalInput<Operations[`GET ${Path}`]>> (
-    path: Path,
-    params: Const<Params & Operation.MinimalInput<Operations[`GET ${Path}`]>>
-  ): AsyncIterable<ListItemType<Path, Params>>
-
-  async *list<T>(path: string, params?: Parameters): AsyncIterable<T> {
-    const MAX_PAGES = Number.MAX_SAFE_INTEGER;
-    for (let page = 0; page < MAX_PAGES; page++) {
-      const res = await this.send(`GET ${path}`, { ...params, query: { ...params?.query, page }});
-      this.checkResponseStatus(`GET ${path}`, res);
-      const items = res.body.data as T[] | null | undefined;
-      if (!items?.length) {
-        break;
-      }
-      yield* res.body.data as T[];
-    }
-  }
-
-  post<Path extends NoParamsRequestPath<'POST'>>(path: Path): Promise<ResponseData<`POST ${Path}`, {}>>
-
-  post<Path extends RequestPath<'POST'>, Params extends Operation.MinimalInput<Operations[`POST ${Path}`]>>(
-    path: Path,
-    params: Const<Params & Operation.MinimalInput<Operations[`POST ${Path}`]>>
-  ): Promise<ResponseData<`POST ${Path}`, Params>>
-
-  async post(path: string, params?: Parameters): Promise<unknown> {
-    const res = await this.send(`POST ${path}`, params);
-    this.checkResponseStatus(`POST ${path}`, res);
-    return res.body.data;
-  }
-
-  put<Path extends NoParamsRequestPath<'PUT'>>(path: Path): Promise<ResponseData<`PUT ${Path}`, {}>>
-
-  put<Path extends RequestPath<'PUT'>, Params extends Operation.MinimalInput<Operations[`PUT ${Path}`]>>(
-    path: Path,
-    params: Const<Params & Operation.MinimalInput<Operations[`PUT ${Path}`]>>
-  ): Promise<ResponseData<`PUT ${Path}`, Params>>
-
-  async put(path: string, params?: Parameters): Promise<unknown> {
-    const res = await this.send(`PUT ${path}`, params);
-    this.checkResponseStatus(`PUT ${path}`, res);
-    return res.body.data;
-  }
-
-  delete<Path extends NoParamsRequestPath<'DELETE'>>(path: Path): Promise<ResponseData<`DELETE ${Path}`, {}> | null>
-
-  delete<Path extends RequestPath<'DELETE'>, Params extends Operation.MinimalInput<Operations[`DELETE ${Path}`]>>(
+  delete<Path extends RequestPath<'DELETE'>, Params extends Operation.MinimalInput<Operations[`DELETE ${Path}`]>> (
     path: Path,
     params: Const<Params & Operation.MinimalInput<Operations[`DELETE ${Path}`]>>
   ): Promise<ResponseData<`DELETE ${Path}`, Params> | null>
@@ -142,7 +80,49 @@ export class Client {
   async delete(path: string, params?: Parameters): Promise<unknown> {
     const res = await this.send(`DELETE ${path}`, params);
     this.checkResponseStatus(`DELETE ${path}`, res);
-    return res.body.data;
+    return res.body;
+  }
+
+  get<Path extends NoParamsRequestPath<'GET'>>(requestLine: Path): Promise<ResponseData<`GET ${Path}`, {}> | null>
+
+  get<Path extends RequestPath<'GET'>, Params extends Operation.MinimalInput<Operations[`GET ${Path}`]>> (
+    path: Path,
+    params: Const<Params & Operation.MinimalInput<Operations[`GET ${Path}`]>>
+  ): Promise<ResponseData<`GET ${Path}`, Params> | null>
+
+  async get(path: string, params?: Parameters): Promise<unknown> {
+    const res = await this.send(`GET ${path}`, params);
+    if (res.status === 204 || res.status === 404) {
+      return null;
+    }
+    this.checkResponseStatus(`GET ${path}`, res);
+    return res.body;
+  }
+
+  post<Path extends NoParamsRequestPath<'POST'>>(requestLine: Path): Promise<ResponseData<`POST ${Path}`, {}>>
+
+  post<Path extends RequestPath<'POST'>, Params extends Operation.MinimalInput<Operations[`POST ${Path}`]>> (
+    path: Path,
+    params: Const<Params & Operation.MinimalInput<Operations[`POST ${Path}`]>>
+  ): Promise<ResponseData<`POST ${Path}`, Params>>
+
+  async post(path: string, params?: Parameters): Promise<unknown> {
+    const res = await this.send(`POST ${path}`, params);
+    this.checkResponseStatus(`POST ${path}`, res);
+    return res.body;
+  }
+
+  put<Path extends NoParamsRequestPath<'PUT'>>(requestLine: Path): Promise<ResponseData<`PUT ${Path}`, {}>>
+
+  put<Path extends RequestPath<'PUT'>, Params extends Operation.MinimalInput<Operations[`PUT ${Path}`]>> (
+    path: Path,
+    params: Const<Params & Operation.MinimalInput<Operations[`PUT ${Path}`]>>
+  ): Promise<ResponseData<`PUT ${Path}`, Params>>
+
+  async put(path: string, params?: Parameters): Promise<unknown> {
+    const res = await this.send(`PUT ${path}`, params);
+    this.checkResponseStatus(`PUT ${path}`, res);
+    return res.body;
   }
 
   private checkResponseStatus(requestLine: string, response: Response): void {
@@ -151,24 +131,6 @@ export class Client {
     }
   }
 }
-
-type ListItemType<Path extends string, Params = unknown> =
-  ResponseData<`GET ${Path}` & RequestLine, Params> extends ReadonlyArray<infer T>
-    ? T
-    : never;
-
-type ListablePath = ListablePath_<Operations>;
-
-type NoParamsListablePath = ListablePath & NoParamsRequestPath<'GET'>;
-
-type ListablePath_<Ops extends OperationIndex> = {
-  [ReqLine in keyof Ops]:
-    Response.Success<Ops[ReqLine]['response']> extends { body: { data?: ReadonlyArray<any> } }
-      ? ReqLine extends `GET ${infer Path}`
-        ? Path
-        : never
-      : never
-}[keyof Ops];
 
 type ResolveResponse<ReqLine extends RequestLine, Params = unknown> =
   unknown extends Params

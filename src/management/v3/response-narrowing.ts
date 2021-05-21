@@ -1,4 +1,14 @@
-import type { Operation, OperationIndex, Parameters, Request, Response } from "../internal/operation";
+import type { Operation, OperationIndex, Parameters, Request, Response } from "../../internal/operation";
+
+/**
+ * This module contains functionality for narrowing the response type based on input parameters.
+ * 
+ * For example, when requesting a product, specifying `{ include_fields: ['sku'] }` will cause BigCommerce
+ * to only return the `id` and `sku` fields (as `id` is always returned). This module ensures that response
+ * types reflect the query parameters which were passed in the request.
+ * 
+ * Currently, this module supports `include`, `include_fields` and `exclude_fields`.
+ */
 
 export type NarrowResponse<Ops extends OperationIndex, Req extends Request, Rep extends Response> = 
   NarrowResponse_<Req['parameters'], Rep, Includes<Ops[Req['requestLine']]>>;
