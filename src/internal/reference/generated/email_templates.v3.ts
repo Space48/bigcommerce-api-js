@@ -25,9 +25,10 @@ export interface paths {
 
 export interface components {
   readonly schemas: {
-    readonly ErrorResponse: components["schemas"]["BaseError"] & {
-      readonly errors?: components["schemas"]["DetailedErrors"];
-    };
+    readonly ErrorResponse: components["schemas"]["BaseError"] &
+      ({
+        readonly errors?: components["schemas"]["DetailedErrors"];
+      } & { readonly [key: string]: any }) & { readonly [key: string]: any };
     /** Error payload for the BigCommerce API. */
     readonly BaseError: {
       /** The HTTP status code. */
@@ -36,7 +37,7 @@ export interface components {
       readonly title?: string;
       readonly type?: string;
       readonly instance?: string;
-    };
+    } & { readonly [key: string]: any };
     readonly DetailedErrors: { readonly [key: string]: string };
     /** A collection of all email templates. */
     readonly EmailTemplatesCollection: readonly components["schemas"]["EmailTemplate"][];
@@ -58,14 +59,14 @@ export interface components {
       readonly body?: string;
       readonly translations?: components["schemas"]["LocaleCollection"];
       readonly subject?: string;
-    };
+    } & { readonly [key: string]: any };
     /** A particular locale's translations. */
     readonly LocaleObject: {
       /** Locale code for this language, such as 'en', 'en-us', 'fr-ca'. */
       readonly locale?: string;
       /** Language keys for the template. User-defined. Should match any lang keys used in the template. */
       readonly keys?: { readonly [key: string]: any };
-    };
+    } & { readonly [key: string]: any };
     /** A collection of locale translations for the static language. */
     readonly LocaleCollection: readonly components["schemas"]["LocaleObject"][];
     /** Data for updated template */
@@ -73,10 +74,10 @@ export interface components {
       readonly body: string;
       readonly translations?: components["schemas"]["LocaleCollection"];
       readonly subject: string;
-    };
+    } & { readonly [key: string]: any };
     readonly scratch: {
       readonly id?: string;
-    };
+    } & { readonly [key: string]: any };
   };
   readonly parameters: {
     /** Channel ID to use for channel-specific setting. If omitted, you will interact with the global setting only. */
@@ -102,7 +103,7 @@ export interface operations {
           readonly "application/json": {
             readonly data?: components["schemas"]["EmailTemplatesCollection"];
             readonly meta?: { readonly [key: string]: any };
-          };
+          } & { readonly [key: string]: any };
         };
       };
     };
@@ -125,7 +126,7 @@ export interface operations {
           readonly "application/json": {
             readonly data?: components["schemas"]["EmailTemplate"];
             readonly meta?: { readonly [key: string]: any };
-          };
+          } & { readonly [key: string]: any };
         };
       };
     };
@@ -148,7 +149,7 @@ export interface operations {
           readonly "application/json": {
             readonly data?: components["schemas"]["EmailTemplate"];
             readonly meta?: { readonly [key: string]: any };
-          };
+          } & { readonly [key: string]: any };
         };
       };
       /** Bad Request */

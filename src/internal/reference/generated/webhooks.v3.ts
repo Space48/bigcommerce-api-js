@@ -37,10 +37,10 @@ export interface components {
       /** The error title describing the particular error. */
       readonly title?: string;
       readonly type?: string;
-    };
+    } & { readonly [key: string]: any };
     readonly errorDetailed_Full: {
       readonly errors?: { readonly [key: string]: string };
-    };
+    } & { readonly [key: string]: any };
     readonly webhook_Base: {
       /** Event you subscribe to */
       readonly scope: string;
@@ -51,9 +51,9 @@ export interface components {
       /** You can pass in any number of custom headers to validate webhooks being returned. */
       readonly headers: {
         readonly custom?: string;
-      };
-    };
-    readonly webhook_Full: {
+      } & { readonly [key: string]: any };
+    } & { readonly [key: string]: any };
+    readonly webhook_Full: ({
       /** Id of the webhook */
       readonly id?: number;
       /** Client ID, unique to the store */
@@ -64,7 +64,8 @@ export interface components {
       readonly created_at?: number;
       /** Updated time */
       readonly updated_at?: number;
-    } & components["schemas"]["webhook_Base"];
+    } & { readonly [key: string]: any }) &
+      components["schemas"]["webhook_Base"] & { readonly [key: string]: any };
     /** Data about the response, including pagination and collection totals. */
     readonly Pagination: {
       /** Offset. */
@@ -73,7 +74,7 @@ export interface components {
       readonly limit?: number;
       /** Total number of items. */
       readonly total_items?: number;
-    };
+    } & { readonly [key: string]: any };
   };
   readonly responses: {
     readonly webhooks_Resp: {
@@ -82,8 +83,8 @@ export interface components {
           readonly data?: readonly components["schemas"]["webhook_Full"][];
           readonly meta?: {
             readonly pagination?: components["schemas"]["Pagination"];
-          };
-        };
+          } & { readonly [key: string]: any };
+        } & { readonly [key: string]: any };
         readonly v2: readonly components["schemas"]["webhook_Full"][];
       };
     };
@@ -129,8 +130,8 @@ export interface components {
           readonly errors?: {
             readonly name?: string;
             readonly "primary_contact.district"?: string;
-          };
-        };
+          } & { readonly [key: string]: any };
+        } & { readonly [key: string]: any };
       };
     };
     /** If this occurs, you should retry the request. If you are unable to successfully make a request, please check the BigCommerce system status [here](https://status.bigcommerce.com/). A service is likely down and the request will need to be made again when it is back up (in several hours usually) */
@@ -145,7 +146,7 @@ export interface components {
         readonly v3: {
           readonly data?: components["schemas"]["webhook_Full"];
           readonly meta?: { readonly [key: string]: any };
-        };
+        } & { readonly [key: string]: any };
         readonly v2: components["schemas"]["webhook_Full"];
       };
     };

@@ -45,7 +45,7 @@ export interface definitions {
     /** Primary domain name. */
     readonly domain?: string;
     /** Store’s current HTTPS URL. */
-    readonly secure_URL?: string;
+    readonly secure_url?: string;
     /** The secure hostname of the control panel. */
     readonly control_panel_base_url?: string;
     /** Store's name. */
