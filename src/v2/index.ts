@@ -1,6 +1,6 @@
 import type { V2 as reference } from "../internal/reference";
 import type { NarrowResponse } from "./response-narrowing"
-import type { Operation, OperationIndex, Parameters, Request, RequestMethod, Response } from "../internal/operation";
+import { Operation, OperationIndex, Parameters, Request, RequestMethod, resolvePath, Response } from "../internal/operation";
 import { Const } from "../internal/type-utils";
 import fetch from "node-fetch";
 import { stringify } from "query-string";
@@ -51,23 +51,7 @@ export class Client {
 
   async send(requestLine: string, params?: Parameters): Promise<Response> {
     const [method, paramaterizedPath] = requestLine.split(" ", 2);
-    const path = paramaterizedPath
-      .split("/")
-      .map(el => {
-        const match = el.match(/^\{(.+)\}$/)
-        if (!match) {
-          return el;
-        }
-        const paramName = match[1];
-        const param = params?.path?.[paramName];
-        if (param === null || param === undefined || param === '') {
-          throw new Error(`Path param ${paramName} must be specified.`);
-        }
-        // todo: consider whether we need some form of URL encoding of `param`
-        return param;
-      })
-      .join('/');
-      
+    const path = resolvePath(paramaterizedPath, params?.path ?? {});
     const queryParams = stringify(params?.query ?? {}, { arrayFormat: "comma" } );
     const queryString = queryParams.length ? `?${queryParams}` : "";
     const res = await fetch(`https://api.bigcommerce.com/stores/${this.config.storeHash}/v2${path}${queryString}`, {

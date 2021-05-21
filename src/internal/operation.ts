@@ -57,3 +57,22 @@ type MakeEmptyObjectOptional<T> = 1 extends 0 ? never : ({
 } & {
   readonly [K in keyof T as {} extends T[K] ? never : K]: T[K]
 });
+
+export function resolvePath(parameterizedPath: string, pathParams: Record<string, any>): string {
+  return parameterizedPath
+    .split("/")
+    .map(el => {
+      const match = el.match(/^\{(.+)\}$/)
+      if (!match) {
+        return el;
+      }
+      const paramName = match[1];
+      const param = pathParams[paramName];
+      if (param === null || param === undefined || param === '') {
+        throw new Error(`Path param ${paramName} must be specified.`);
+      }
+      // todo: consider whether we need some form of URL encoding of `param`
+      return param;
+    })
+    .join('/');
+}
