@@ -50,7 +50,24 @@ export class Client {
   send(requestLine: string, params?: Parameters): Promise<Response>
 
   async send(requestLine: string, params?: Parameters): Promise<Response> {
-    const [method, path] = requestLine.split(" ");
+    const [method, paramaterizedPath] = requestLine.split(" ", 2);
+    const path = paramaterizedPath
+      .split("/")
+      .map(el => {
+        const match = el.match(/^\{(.+)\}$/)
+        if (!match) {
+          return el;
+        }
+        const paramName = match[1];
+        const param = params?.path?.[paramName];
+        if (param === null || param === undefined || param === '') {
+          throw new Error(`Path param ${paramName} must be specified.`);
+        }
+        // todo: consider whether we need some form of URL encoding of `param`
+        return param;
+      })
+      .join('/');
+      
     const queryParams = stringify(params?.query ?? {}, { arrayFormat: "comma" } );
     const queryString = queryParams.length ? `?${queryParams}` : "";
     const res = await fetch(`https://api.bigcommerce.com/stores/${this.config.storeHash}/v2${path}${queryString}`, {
