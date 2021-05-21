@@ -114,6 +114,10 @@ export class Client {
     for (let page = 0; page < MAX_PAGES; page++) {
       const res = await this.send(`GET ${path}`, { ...params, query: { ...params?.query, page }});
       this.checkResponseStatus(`GET ${path}`, res);
+      const items = res.body.data as T[] | null | undefined;
+      if (!items?.length) {
+        break;
+      }
       yield* res.body.data as T[];
     }
   }
