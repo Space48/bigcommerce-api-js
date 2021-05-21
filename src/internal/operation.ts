@@ -71,8 +71,7 @@ export function resolvePath(parameterizedPath: string, pathParams: Record<string
       if (param === null || param === undefined || param === '') {
         throw new Error(`Path param ${paramName} must be specified.`);
       }
-      // todo: consider whether we need some form of URL encoding of `param`
-      return param;
+      return encodeURIComponent(param);
     })
     .join('/');
 }
