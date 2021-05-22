@@ -30,8 +30,10 @@ type PathOperationIndex<Path extends string, PathSpec> = 1 extends 0 ? never : {
 };
 
 type CorrectOas2RequestBody<Params> =
-  Params extends { body?: { [nonsenseKey: string]: infer RealBody } }
+  Params extends { body: { [nonsenseKey: string]: infer RealBody } }
     ? Omit<Params, 'body'> & { body: RealBody }
+  : Params extends { body?: { [nonsenseKey: string]: infer RealBody } }
+    ? Omit<Params, 'body'> & { body?: RealBody }
     : Params;
 
 type RequestMethodLc = Lowercase<RequestMethod>;
