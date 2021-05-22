@@ -27,11 +27,17 @@ declare type PathOperationIndex<Path extends string, PathSpec> = 1 extends 0 ? n
     } : never;
 };
 declare type CorrectOas2RequestBody<Params> = Params extends {
-    body?: {
+    body: {
         [nonsenseKey: string]: infer RealBody;
     };
 } ? Omit<Params, 'body'> & {
     body: RealBody;
+} : Params extends {
+    body?: {
+        [nonsenseKey: string]: infer RealBody;
+    };
+} ? Omit<Params, 'body'> & {
+    body?: RealBody;
 } : Params;
 declare type RequestMethodLc = Lowercase<RequestMethod>;
 declare type Response<ResponsesSpec> = 1 extends 0 ? never : {
