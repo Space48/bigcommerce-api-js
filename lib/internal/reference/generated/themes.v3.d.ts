@@ -170,8 +170,14 @@ export interface components {
                     readonly current?: string;
                     /** Link to the next page returned in the response. */
                     readonly next?: string;
+                } & {
+                    readonly [key: string]: any;
                 };
+            } & {
+                readonly [key: string]: any;
             };
+        } & {
+            readonly [key: string]: any;
         };
         /** Data about the response, including pagination and collection totals. */
         readonly Pagination: {
@@ -193,7 +199,11 @@ export interface components {
                 readonly current?: string;
                 /** Link to the next page returned in the response. */
                 readonly next?: string;
+            } & {
+                readonly [key: string]: any;
             };
+        } & {
+            readonly [key: string]: any;
         };
         /** Data about the response, including pagination and collection totals. */
         readonly Meta: {
@@ -217,10 +227,16 @@ export interface components {
                     readonly current?: string;
                     /** Link to the next page returned in the response. */
                     readonly next?: string;
+                } & {
+                    readonly [key: string]: any;
                 };
+            } & {
+                readonly [key: string]: any;
             };
+        } & {
+            readonly [key: string]: any;
         };
-        readonly ErrorResponse: {
+        readonly ErrorResponse: ({
             /** The HTTP status code. */
             readonly status?: number;
             /** The error title describing the particular error. */
@@ -228,9 +244,15 @@ export interface components {
             readonly type?: string;
             readonly instance?: string;
         } & {
+            readonly [key: string]: any;
+        }) & ({
             readonly errors?: {
                 readonly [key: string]: string;
             };
+        } & {
+            readonly [key: string]: any;
+        }) & {
+            readonly [key: string]: any;
         };
         /** Error payload for the BigCommerce API. */
         readonly BaseError: {
@@ -240,6 +262,8 @@ export interface components {
             readonly title?: string;
             readonly type?: string;
             readonly instance?: string;
+        } & {
+            readonly [key: string]: any;
         };
         readonly DetailedErrors: {
             readonly [key: string]: string;
@@ -252,11 +276,15 @@ export interface components {
             readonly title?: string;
             readonly type?: string;
             readonly instance?: string;
+        } & {
+            readonly [key: string]: any;
         };
         /** The job identifier for theme upload or download. */
         readonly JobId: {
             /** The job identifier. */
             readonly job_id?: string;
+        } & {
+            readonly [key: string]: any;
         };
         /** No-content response for the BigCommerce API. */
         readonly NoContent: {
@@ -266,16 +294,20 @@ export interface components {
             readonly title?: string;
             readonly type?: string;
             readonly instance?: string;
+        } & {
+            readonly [key: string]: any;
         };
         /** The job for theme upload or download */
         readonly Job: {
             /** The errors. */
-            readonly errors?: readonly {
+            readonly errors?: readonly ({
                 /** The error. */
                 readonly error?: string;
                 /** The message. */
                 readonly message?: string;
-            }[];
+            } & {
+                readonly [key: string]: any;
+            })[];
             /** The identifier. */
             readonly id?: string;
             /** The percent complete. */
@@ -291,17 +323,21 @@ export interface components {
             /** The time. */
             readonly time?: string;
             /** The warnings. */
-            readonly warnings?: readonly {
+            readonly warnings?: readonly ({
                 /** The message. */
                 readonly message?: string;
                 /** The warning. */
                 readonly warning?: string;
-            }[];
+            } & {
+                readonly [key: string]: any;
+            })[];
+        } & {
+            readonly [key: string]: any;
         };
         /** A theme. */
         readonly Theme: {
             /** The variations. */
-            readonly variations?: readonly {
+            readonly variations?: readonly ({
                 /** The description. */
                 readonly description?: string;
                 /** The external identifier. */
@@ -310,13 +346,17 @@ export interface components {
                 readonly name?: string;
                 /** The identifier. */
                 readonly uuid?: string;
-            }[];
+            } & {
+                readonly [key: string]: any;
+            })[];
             /** The identifier. */
             readonly uuid?: string;
             /** The theme name identifier. */
             readonly name?: string;
             /** Flag to identify private themes. */
             readonly is_private?: boolean;
+        } & {
+            readonly [key: string]: any;
         };
         /** Request definition for activation endpoint. */
         readonly Activate: {
@@ -324,6 +364,8 @@ export interface components {
             readonly variation_id: string;
             /** Which configuration to use. */
             readonly which: "original" | "last_activated" | "last_created";
+        } & {
+            readonly [key: string]: any;
         };
         /** A variation. */
         readonly Variation: {
@@ -335,12 +377,14 @@ export interface components {
             readonly name?: string;
             /** The identifier. */
             readonly uuid?: string;
+        } & {
+            readonly [key: string]: any;
         };
         /** Response payload for the BigCommerce API. */
         readonly ThemesCollectionResponse: {
-            readonly data?: readonly {
+            readonly data?: readonly ({
                 /** The variations. */
-                readonly variations?: readonly {
+                readonly variations?: readonly ({
                     /** The description. */
                     readonly description?: string;
                     /** The external identifier. */
@@ -349,14 +393,18 @@ export interface components {
                     readonly name?: string;
                     /** The identifier. */
                     readonly uuid?: string;
-                }[];
+                } & {
+                    readonly [key: string]: any;
+                })[];
                 /** The identifier. */
                 readonly uuid?: string;
                 /** The theme name identifier. */
                 readonly name?: string;
                 /** Flag to identify private themes. */
                 readonly is_private?: boolean;
-            }[];
+            } & {
+                readonly [key: string]: any;
+            })[];
             /** Data about the response, including pagination and collection totals. */
             readonly meta?: {
                 /** Data about the response, including pagination and collection totals. */
@@ -379,26 +427,38 @@ export interface components {
                         readonly current?: string;
                         /** Link to the next page returned in the response. */
                         readonly next?: string;
+                    } & {
+                        readonly [key: string]: any;
                     };
+                } & {
+                    readonly [key: string]: any;
                 };
+            } & {
+                readonly [key: string]: any;
             };
+        } & {
+            readonly [key: string]: any;
         };
         /** Response payload for the BigCommerce API. */
         readonly ThemeResponse: {
             readonly data?: components["schemas"]["Theme"];
             readonly meta?: components["schemas"]["CollectionMeta"];
+        } & {
+            readonly [key: string]: any;
         };
         /** Response for /GET Jobs by Id. */
         readonly JobResponse: {
             /** The job for theme upload or download */
             readonly data?: {
                 /** The errors. */
-                readonly errors?: readonly {
+                readonly errors?: readonly ({
                     /** The error. */
                     readonly error?: string;
                     /** The message. */
                     readonly message?: string;
-                }[];
+                } & {
+                    readonly [key: string]: any;
+                })[];
                 /** The identifier. */
                 readonly id?: string;
                 /** The percent complete. */
@@ -414,27 +474,39 @@ export interface components {
                 /** The time. */
                 readonly time?: string;
                 /** The warnings. */
-                readonly warnings?: readonly {
+                readonly warnings?: readonly ({
                     /** The message. */
                     readonly message?: string;
                     /** The warning. */
                     readonly warning?: string;
-                }[];
+                } & {
+                    readonly [key: string]: any;
+                })[];
+            } & {
+                readonly [key: string]: any;
             };
             /** Empty meta object; may be used later. */
             readonly meta?: {
                 readonly [key: string]: any;
             };
+        } & {
+            readonly [key: string]: any;
         };
         /** An object specifying which theme to download. One of: `original`: the original Marketplace or uploaded custom theme; `last_activated`: the theme version most recently applied to the store; `last_created`: the theme version most recently created. */
-        readonly WhichThemeToDownload: {
+        readonly WhichThemeToDownload: ({
             /** Which revision to use. */
             readonly which?: "original" | "last_activated" | "last_created";
+        } & {
+            readonly [key: string]: any;
+        }) & {
+            readonly [key: string]: any;
         };
         /** These are the minium request headers needed for BigCommerce. */
         readonly RequestHeaders: {
             readonly "X-Auth-Client"?: string;
             readonly Accepts?: string;
+        } & {
+            readonly [key: string]: any;
         };
         /** A theme. */
         readonly themeConfiguration_Full: {
@@ -450,6 +522,8 @@ export interface components {
             readonly date_created?: string;
             /** Site ID to which this configuration belongs. Will be 0 for the original configuration for a Theme. */
             readonly site_id?: number;
+        } & {
+            readonly [key: string]: any;
         };
         /** A theme. */
         readonly themeConfiguration_Write: {
@@ -459,6 +533,8 @@ export interface components {
             readonly settings?: {
                 readonly [key: string]: any;
             };
+        } & {
+            readonly [key: string]: any;
         };
     };
     readonly responses: {
@@ -467,6 +543,8 @@ export interface components {
                 readonly "application/json": {
                     readonly data?: readonly components["schemas"]["themeConfiguration_Full"][];
                     readonly meta?: components["schemas"]["CollectionMeta"];
+                } & {
+                    readonly [key: string]: any;
                 };
             };
         };
@@ -524,7 +602,7 @@ export interface operations {
             /** Error message. */
             readonly default: {
                 readonly content: {
-                    readonly "application/json": {
+                    readonly "application/json": ({
                         /** The HTTP status code. */
                         readonly status?: number;
                         /** The error title describing the particular error. */
@@ -532,9 +610,15 @@ export interface operations {
                         readonly type?: string;
                         readonly instance?: string;
                     } & {
+                        readonly [key: string]: any;
+                    }) & ({
                         readonly errors?: {
                             readonly [key: string]: string;
                         };
+                    } & {
+                        readonly [key: string]: any;
+                    }) & {
+                        readonly [key: string]: any;
                     };
                 };
             };
@@ -544,6 +628,8 @@ export interface operations {
                 readonly "multipart/form-data": {
                     /** The file. */
                     readonly file: string;
+                } & {
+                    readonly [key: string]: any;
                 };
             };
         };
@@ -569,7 +655,7 @@ export interface operations {
             /** Error message. */
             readonly default: {
                 readonly content: {
-                    readonly "application/json": {
+                    readonly "application/json": ({
                         /** The HTTP status code. */
                         readonly status?: number;
                         /** The error title describing the particular error. */
@@ -577,9 +663,15 @@ export interface operations {
                         readonly type?: string;
                         readonly instance?: string;
                     } & {
+                        readonly [key: string]: any;
+                    }) & ({
                         readonly errors?: {
                             readonly [key: string]: string;
                         };
+                    } & {
+                        readonly [key: string]: any;
+                    }) & {
+                        readonly [key: string]: any;
                     };
                 };
             };
@@ -605,7 +697,7 @@ export interface operations {
             /** Error message. */
             readonly default: {
                 readonly content: {
-                    readonly "application/json": {
+                    readonly "application/json": ({
                         /** The HTTP status code. */
                         readonly status?: number;
                         /** The error title describing the particular error. */
@@ -613,9 +705,15 @@ export interface operations {
                         readonly type?: string;
                         readonly instance?: string;
                     } & {
+                        readonly [key: string]: any;
+                    }) & ({
                         readonly errors?: {
                             readonly [key: string]: string;
                         };
+                    } & {
+                        readonly [key: string]: any;
+                    }) & {
+                        readonly [key: string]: any;
                     };
                 };
             };
@@ -643,7 +741,7 @@ export interface operations {
             /** Error message. */
             readonly default: {
                 readonly content: {
-                    readonly "application/json": {
+                    readonly "application/json": ({
                         /** The HTTP status code. */
                         readonly status?: number;
                         /** The error title describing the particular error. */
@@ -651,9 +749,15 @@ export interface operations {
                         readonly type?: string;
                         readonly instance?: string;
                     } & {
+                        readonly [key: string]: any;
+                    }) & ({
                         readonly errors?: {
                             readonly [key: string]: string;
                         };
+                    } & {
+                        readonly [key: string]: any;
+                    }) & {
+                        readonly [key: string]: any;
                     };
                 };
             };
@@ -686,7 +790,7 @@ export interface operations {
             /** Error message. */
             readonly default: {
                 readonly content: {
-                    readonly "application/json": {
+                    readonly "application/json": ({
                         /** The HTTP status code. */
                         readonly status?: number;
                         /** The error title describing the particular error. */
@@ -694,9 +798,15 @@ export interface operations {
                         readonly type?: string;
                         readonly instance?: string;
                     } & {
+                        readonly [key: string]: any;
+                    }) & ({
                         readonly errors?: {
                             readonly [key: string]: string;
                         };
+                    } & {
+                        readonly [key: string]: any;
+                    }) & {
+                        readonly [key: string]: any;
                     };
                 };
             };
@@ -729,7 +839,7 @@ export interface operations {
             /** Error message. */
             readonly default: {
                 readonly content: {
-                    readonly "application/json": {
+                    readonly "application/json": ({
                         /** The HTTP status code. */
                         readonly status?: number;
                         /** The error title describing the particular error. */
@@ -737,9 +847,15 @@ export interface operations {
                         readonly type?: string;
                         readonly instance?: string;
                     } & {
+                        readonly [key: string]: any;
+                    }) & ({
                         readonly errors?: {
                             readonly [key: string]: string;
                         };
+                    } & {
+                        readonly [key: string]: any;
+                    }) & {
+                        readonly [key: string]: any;
                     };
                 };
             };
@@ -762,10 +878,14 @@ export interface operations {
                             readonly category?: readonly string[];
                             readonly brand?: readonly string[];
                             readonly page?: readonly string[];
+                        } & {
+                            readonly [key: string]: any;
                         };
                         readonly meta?: {
                             readonly [key: string]: any;
                         };
+                    } & {
+                        readonly [key: string]: any;
                     };
                 };
             };

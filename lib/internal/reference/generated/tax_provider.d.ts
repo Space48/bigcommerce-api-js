@@ -63,6 +63,8 @@ export interface components {
                 readonly amount: number;
                 /** Note: **Tax Inclusive** and **Tax Exclusive** prices cannot be added together. */
                 readonly tax_inclusive: boolean;
+            } & {
+                readonly [key: string]: any;
             };
             readonly quantity: number;
             readonly tax_class?: components["schemas"]["TaxClass"];
@@ -75,6 +77,8 @@ export interface components {
              */
             readonly type: "item" | "wrapping" | "handling" | "shipping" | "refund";
             readonly wrapping?: components["schemas"]["request-item"];
+        } & {
+            readonly [key: string]: any;
         };
         /** Each **DocumentRequest** contains a collection of items (represented by an array of 1+ **ItemRequest** objects) the shopper has purchased, shipped to a specific address. Multi-address orders (where shoppers select to ship items to differrent addresses). These are equivalent to "consignment" or "shipment" in other parts of the BigCommerce platform. */
         readonly "request-document": {
@@ -87,6 +91,8 @@ export interface components {
             readonly handling: components["schemas"]["request-item"];
             /** Collection of one or more items contained within this consignment that need to be assessed for tax liabilities. */
             readonly items: readonly components["schemas"]["request-item"][];
+        } & {
+            readonly [key: string]: any;
         };
         /** A **QuoteRequest** contains all of the tax relevant items that a shopper is placing an order for divided into documents (represented by an array of 1+ **DocumentRequest** objects) corresponding to each of the shipping addresses a shopper is sending items to (as multi-address orders may be taxed differently based on shipping address). */
         readonly "request-quote": {
@@ -102,17 +108,25 @@ export interface components {
                 readonly customer_group_id: string;
                 /** If applicable, the tax exemption code of the shoppers customer account. A taxability code is expected to be able to be applied to multiple customers. This code should match the exemption codes provided by the third party integration. */
                 readonly taxability_code?: string;
+            } & {
+                readonly [key: string]: any;
             };
             /** ISO 8601 formatted date the shopper placed this order. Dates will be provided in UTC. */
             readonly transaction_date: string;
             /** One or more consignments containing items being purchased by the shopper, including shipping and handling fees that are charged for each consignment. Most orders will contain a single consignment (to a single shipping address), however the BigCommerce platform also supports "Multi-address orders" which allow shoppers to place a single order with items shipped to different addresses. */
             readonly documents: readonly components["schemas"]["request-document"][];
+        } & {
+            readonly [key: string]: any;
         };
         /** An **AdjustRequest** contains the same data as a standard **QuoteRequest** with added detail of the adjustment operation. */
-        readonly "request-adjust": {
+        readonly "request-adjust": ({
             /** Specifies the reason for the adjustment operation, for auditing purposes. May be a custom, user entered description. */
             readonly adjust_description?: string;
-        } & components["schemas"]["request-quote"];
+        } & {
+            readonly [key: string]: any;
+        }) & components["schemas"]["request-quote"] & {
+            readonly [key: string]: any;
+        };
         /** Requests may have partial Address data. For example, the BigCommerce Cart page has the "Estimate Shipping & Tax" feature which is only expected to supply Country, Region and Postal Code. */
         readonly Address: {
             /** Primary street address. */
@@ -134,6 +148,8 @@ export interface components {
             /** If this is a commercial address, the name of the company this address is for. */
             readonly company_name?: string;
             readonly type?: "RESIDENTIAL" | "COMMERCIAL";
+        } & {
+            readonly [key: string]: any;
         };
         readonly TaxClass: {
             /** The provider specific tax code for this item. Items can be classified with tax codes relevant to each Tax Provider, configured by the merchant and assigned to their products within BigCommerce. A tax code is expected to be able to be applied to multiple products. This code should match the tax codes provided by the third party intergation. */
@@ -142,12 +158,16 @@ export interface components {
             readonly class_id: string;
             /** The human readable name of this tax class in the merchants BigCommerce store. */
             readonly name: string;
+        } & {
+            readonly [key: string]: any;
         };
         readonly "response-quote": {
             /** The unique identifier of the tax quote that was requested. This must match the ID of the requested quote. */
             readonly id: string;
             /** One or more consignments containing items being purchased by the shopper, including shipping and handling fees that are charged for each consignment. Most orders will contain a single consignment (to a single shipping address), however the BigCommerce platform also supports "Multi-address orders" which allow shoppers to place a single order with items shipped to different addresses. */
             readonly documents: readonly components["schemas"]["response-document"][];
+        } & {
+            readonly [key: string]: any;
         };
         readonly "response-document": {
             /** A unique identifier for this consignment. Must match the ID of the corresponding Document Request. */
@@ -158,6 +178,8 @@ export interface components {
             readonly items: readonly components["schemas"]["response-item"][];
             readonly shipping: components["schemas"]["response-item"];
             readonly handling: components["schemas"]["response-item"];
+        } & {
+            readonly [key: string]: any;
         };
         /**
          * The tax liabilities calculated for a specific item.
@@ -170,6 +192,8 @@ export interface components {
             readonly price: components["schemas"]["response-taxprice"];
             readonly type: "item" | "wrapping" | "shipping" | "handling" | "refund";
             readonly wrapping?: components["schemas"]["response-item"];
+        } & {
+            readonly [key: string]: any;
         };
         readonly "response-taxprice": {
             /** The price of this line item inclusive of tax. Must be equal to **amount_exclusive** + **total_tax**. */
@@ -182,6 +206,8 @@ export interface components {
             readonly tax_rate: number;
             /** Breakdown of the sales taxes that applied to this item. */
             readonly sales_tax_summary: readonly components["schemas"]["SalesTax"][];
+        } & {
+            readonly [key: string]: any;
         };
         readonly SalesTax: {
             /** The human readable name of this tax. Used for reporting or if enabled under certain store configurations a break down of taxes during checkout. */
@@ -199,6 +225,8 @@ export interface components {
              * This identifier is persisted by BigCommerce and may be desirable for auditing purposes between BigCommerce and the Tax Provider. Currently supports persisting integer values only (the string type indicates we may support UUID values in the future).
              */
             readonly id?: string;
+        } & {
+            readonly [key: string]: any;
         };
     };
     readonly parameters: {

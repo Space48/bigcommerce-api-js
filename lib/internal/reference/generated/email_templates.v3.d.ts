@@ -23,8 +23,12 @@ export interface paths {
 }
 export interface components {
     readonly schemas: {
-        readonly ErrorResponse: components["schemas"]["BaseError"] & {
+        readonly ErrorResponse: components["schemas"]["BaseError"] & ({
             readonly errors?: components["schemas"]["DetailedErrors"];
+        } & {
+            readonly [key: string]: any;
+        }) & {
+            readonly [key: string]: any;
         };
         /** Error payload for the BigCommerce API. */
         readonly BaseError: {
@@ -34,6 +38,8 @@ export interface components {
             readonly title?: string;
             readonly type?: string;
             readonly instance?: string;
+        } & {
+            readonly [key: string]: any;
         };
         readonly DetailedErrors: {
             readonly [key: string]: string;
@@ -46,6 +52,8 @@ export interface components {
             readonly body?: string;
             readonly translations?: components["schemas"]["LocaleCollection"];
             readonly subject?: string;
+        } & {
+            readonly [key: string]: any;
         };
         /** A particular locale's translations. */
         readonly LocaleObject: {
@@ -55,6 +63,8 @@ export interface components {
             readonly keys?: {
                 readonly [key: string]: any;
             };
+        } & {
+            readonly [key: string]: any;
         };
         /** A collection of locale translations for the static language. */
         readonly LocaleCollection: readonly components["schemas"]["LocaleObject"][];
@@ -63,9 +73,13 @@ export interface components {
             readonly body: string;
             readonly translations?: components["schemas"]["LocaleCollection"];
             readonly subject: string;
+        } & {
+            readonly [key: string]: any;
         };
         readonly scratch: {
             readonly id?: string;
+        } & {
+            readonly [key: string]: any;
         };
     };
     readonly parameters: {
@@ -93,6 +107,8 @@ export interface operations {
                         readonly meta?: {
                             readonly [key: string]: any;
                         };
+                    } & {
+                        readonly [key: string]: any;
                     };
                 };
             };
@@ -118,6 +134,8 @@ export interface operations {
                         readonly meta?: {
                             readonly [key: string]: any;
                         };
+                    } & {
+                        readonly [key: string]: any;
                     };
                 };
             };
@@ -143,6 +161,8 @@ export interface operations {
                         readonly meta?: {
                             readonly [key: string]: any;
                         };
+                    } & {
+                        readonly [key: string]: any;
                     };
                 };
             };

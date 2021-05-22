@@ -20,6 +20,8 @@ export interface paths {
                             readonly meta?: {
                                 readonly [key: string]: any;
                             };
+                        } & {
+                            readonly [key: string]: any;
                         };
                     };
                 };
@@ -47,6 +49,8 @@ export interface paths {
                             readonly meta?: {
                                 readonly [key: string]: any;
                             };
+                        } & {
+                            readonly [key: string]: any;
                         };
                     };
                 };
@@ -77,6 +81,8 @@ export interface paths {
                             readonly meta?: {
                                 readonly [key: string]: any;
                             };
+                        } & {
+                            readonly [key: string]: any;
                         };
                     };
                 };
@@ -105,6 +111,8 @@ export interface paths {
                             readonly meta?: {
                                 readonly [key: string]: any;
                             };
+                        } & {
+                            readonly [key: string]: any;
                         };
                     };
                 };
@@ -136,6 +144,8 @@ export interface paths {
                             readonly meta?: {
                                 readonly [key: string]: any;
                             };
+                        } & {
+                            readonly [key: string]: any;
                         };
                     };
                 };
@@ -164,6 +174,8 @@ export interface paths {
                             readonly meta?: {
                                 readonly [key: string]: any;
                             };
+                        } & {
+                            readonly [key: string]: any;
                         };
                     };
                 };
@@ -195,6 +207,8 @@ export interface paths {
                             readonly meta?: {
                                 readonly [key: string]: any;
                             };
+                        } & {
+                            readonly [key: string]: any;
                         };
                     };
                 };
@@ -223,6 +237,8 @@ export interface paths {
                             readonly meta?: {
                                 readonly [key: string]: any;
                             };
+                        } & {
+                            readonly [key: string]: any;
                         };
                     };
                 };
@@ -253,6 +269,8 @@ export interface paths {
                             readonly meta?: {
                                 readonly [key: string]: any;
                             };
+                        } & {
+                            readonly [key: string]: any;
                         };
                     };
                 };
@@ -281,6 +299,8 @@ export interface paths {
                             readonly meta?: {
                                 readonly [key: string]: any;
                             };
+                        } & {
+                            readonly [key: string]: any;
                         };
                     };
                 };
@@ -348,16 +368,22 @@ export interface components {
             readonly code?: string;
             /** Flag indicates if Web Analytics Provider is enabled or not. */
             readonly enabled?: boolean;
+        } & {
+            readonly [key: string]: any;
         };
         readonly AnalyticsProviders: readonly components["schemas"]["AnalyticsProvider"][];
         readonly RobotsTxtSettings: {
             readonly robots_txt_ssl?: string;
+        } & {
+            readonly [key: string]: any;
         };
         readonly SEOSettings: {
             readonly page_title?: string;
             readonly meta_description?: string;
             readonly www_redirect?: "www" | "no-www" | "none";
             readonly meta_keywords?: string;
+        } & {
+            readonly [key: string]: any;
         };
         readonly StorefrontCategorySettings: {
             readonly listing_mode?: {
@@ -365,6 +391,8 @@ export interface components {
             };
             readonly default_product_sort?: components["schemas"]["ProductSortEnumValues"];
             readonly category_tree_depth?: number;
+        } & {
+            readonly [key: string]: any;
         };
         readonly StorefrontSearchSettings: {
             readonly default_product_sort?: components["schemas"]["ProductSortEnumValues"];
@@ -372,18 +400,24 @@ export interface components {
             /** Controls whether Product Filtering feature is active on the storefront. Only supports manipulation on a global level. */
             readonly product_filtering_enabled?: boolean;
             readonly search_suggest?: boolean;
+        } & {
+            readonly [key: string]: any;
         };
         /** The basic profile settings for a store, used to give the shopper information about the business from which they are purchasing. */
         readonly StoreProfile: {
             readonly store_phone?: string;
             readonly store_name?: string;
             readonly store_address?: string;
+        } & {
+            readonly [key: string]: any;
         };
         readonly StorefrontStatus: {
             readonly down_for_maintenance_message?: string;
             readonly prelaunch_message?: string;
             /** A read-only value representing the auto-generated storefront password. */
             readonly prelaunch_password?: string;
+        } & {
+            readonly [key: string]: any;
         };
         /** The available sorts for PLP pages. */
         readonly ProductSortEnumValues: "featured" | "bestselling" | "newest" | "atoz" | "ztoa" | "highestprice" | "lowestprice" | "bestreviewed";
@@ -394,7 +428,11 @@ export interface components {
                 readonly enabled?: boolean;
                 readonly max_age_months?: components["schemas"]["HSTSMaxAgeEnumValues"];
                 readonly includeSubDomains?: boolean;
+            } & {
+                readonly [key: string]: any;
             };
+        } & {
+            readonly [key: string]: any;
         };
         readonly HSTSMaxAgeEnumValues: 0 | 3 | 6 | 12;
         readonly MetaPaginationObject: {
@@ -407,15 +445,25 @@ export interface components {
                 readonly links?: {
                     readonly next?: string;
                     readonly current?: string;
+                } & {
+                    readonly [key: string]: any;
                 };
+            } & {
+                readonly [key: string]: any;
             };
+        } & {
+            readonly [key: string]: any;
         };
         readonly AvailableFilter: {
             readonly id?: number;
             readonly type?: "price" | "category" | "brand" | "rating" | "other" | "product";
             readonly name?: string;
+        } & {
+            readonly [key: string]: any;
         };
-        readonly EnabledFilter: components["schemas"]["EnabledProductFilter"] | components["schemas"]["EnabledPriceFilter"] | components["schemas"]["EnabledCategoryFilter"] | components["schemas"]["EnabledBrandFilter"] | components["schemas"]["EnabledRatingFilter"] | components["schemas"]["EnabledMiscFilter"];
+        readonly EnabledFilter: (components["schemas"]["EnabledProductFilter"] | components["schemas"]["EnabledPriceFilter"] | components["schemas"]["EnabledCategoryFilter"] | components["schemas"]["EnabledBrandFilter"] | components["schemas"]["EnabledRatingFilter"] | components["schemas"]["EnabledMiscFilter"]) & {
+            readonly [key: string]: any;
+        };
         /** A filter that uses product options and custom field data. */
         readonly EnabledProductFilter: {
             readonly id?: number;
@@ -425,6 +473,8 @@ export interface components {
             readonly collapsed_by_default?: boolean;
             readonly items_to_show?: 5 | 10 | 15;
             readonly sort_by?: "alpha" | "option_values" | "item_count";
+        } & {
+            readonly [key: string]: any;
         };
         /** A filter based on the product's price, shown as a price range on the storefront. */
         readonly EnabledPriceFilter: {
@@ -432,6 +482,8 @@ export interface components {
             readonly display_name?: string;
             readonly type?: "price";
             readonly collapsed_by_default?: boolean;
+        } & {
+            readonly [key: string]: any;
         };
         /** A storefront filter for product category */
         readonly EnabledCategoryFilter: {
@@ -441,6 +493,8 @@ export interface components {
             readonly items_to_show?: 5 | 10 | 15;
             readonly collapsed_by_default?: boolean;
             readonly display_product_count?: boolean;
+        } & {
+            readonly [key: string]: any;
         };
         /** A filter based on product review ratings. */
         readonly EnabledRatingFilter: {
@@ -448,6 +502,8 @@ export interface components {
             readonly display_name?: string;
             readonly type?: "rating";
             readonly collapsed_by_default?: boolean;
+        } & {
+            readonly [key: string]: any;
         };
         /** A storefront filter for product brand */
         readonly EnabledBrandFilter: {
@@ -458,16 +514,22 @@ export interface components {
             readonly items_to_show?: 5 | 10 | 15;
             readonly collapsed_by_default?: boolean;
             readonly display_product_count?: boolean;
+        } & {
+            readonly [key: string]: any;
         };
         readonly EnabledFilters: readonly components["schemas"]["EnabledFilter"][];
         /** A new set of enabled Product Filtering filters which should display in a particular context, such as on a particular Channel, or while viewing a particular Category. Array order indicates the display order on the storefront. */
         readonly EnabledFiltersOverride: {
             readonly scope?: components["schemas"]["SearchFilterOverrideScopeIdentifier"];
             readonly data?: components["schemas"]["EnabledFilters"];
+        } & {
+            readonly [key: string]: any;
         };
         readonly SearchFilterOverrideScopeIdentifier: {
             readonly channel_id?: number;
             readonly category_id?: number;
+        } & {
+            readonly [key: string]: any;
         };
         readonly EnabledTransactionalEmails: {
             readonly abandoned_cart_email?: boolean;
@@ -481,26 +543,42 @@ export interface components {
             readonly return_confirmation_email?: boolean;
             readonly return_statuschange_email?: boolean;
             readonly product_review_email?: boolean;
+        } & {
+            readonly [key: string]: any;
         };
         /** A standard error object. */
         readonly Error: {
             readonly code: string;
             readonly message?: string;
+        } & {
+            readonly [key: string]: any;
         };
         readonly ErrorResponse400: {
             readonly schema?: components["schemas"]["Error"];
+        } & {
+            readonly [key: string]: any;
         };
         readonly ErrorResponse404: {
             readonly schema?: components["schemas"]["Error"];
+        } & {
+            readonly [key: string]: any;
         };
         readonly ErrorResponse409: {
             readonly schema?: components["schemas"]["Error"];
+        } & {
+            readonly [key: string]: any;
         };
         readonly ErrorResponse422: {
             readonly schema?: components["schemas"]["Error"];
+        } & {
+            readonly [key: string]: any;
         };
-        readonly ErrorResponse: components["schemas"]["BaseError"] & {
+        readonly ErrorResponse: components["schemas"]["BaseError"] & ({
             readonly errors?: components["schemas"]["DetailedErrors"];
+        } & {
+            readonly [key: string]: any;
+        }) & {
+            readonly [key: string]: any;
         };
         /** Error payload for the BigCommerce API. */
         readonly BaseError: {
@@ -510,6 +588,8 @@ export interface components {
             readonly title?: string;
             readonly type?: string;
             readonly instance?: string;
+        } & {
+            readonly [key: string]: any;
         };
         readonly DetailedErrors: {
             readonly [key: string]: string;
@@ -524,6 +604,8 @@ export interface components {
             readonly show_in_stock_filter?: boolean;
             readonly show_product_count?: boolean;
             readonly collapsed_by_default?: boolean;
+        } & {
+            readonly [key: string]: any;
         };
         readonly AvailablePriceFilter: {
             readonly id?: string;
@@ -531,29 +613,41 @@ export interface components {
             readonly name?: string;
             readonly price_range_min?: number;
             readonly price_range_max?: number;
+        } & {
+            readonly [key: string]: any;
         };
         readonly AvailableOtherFilter: {
             readonly id?: string;
             readonly type?: "other";
             readonly name?: string;
+        } & {
+            readonly [key: string]: any;
         };
         readonly SearchFilterOverrideContextIdentifier: {
             readonly channel_id?: number;
             readonly category_id?: number;
+        } & {
+            readonly [key: string]: any;
         };
         readonly LogoSettings: {
             readonly logo_image_url?: string;
             readonly logo_text?: string;
             readonly type?: "image" | "text";
             readonly favicon_url?: string;
+        } & {
+            readonly [key: string]: any;
         };
         readonly ContentSortEnumValues: "relevance" | "atoz" | "ztoa";
-        readonly ConfiguredFilter: components["schemas"]["EnabledProductFilter"] | components["schemas"]["EnabledPriceFilter"] | components["schemas"]["EnabledCategoryFilter"] | components["schemas"]["EnabledBrandFilter"] | components["schemas"]["EnabledRatingFilter"] | components["schemas"]["EnabledMiscFilter"];
+        readonly ConfiguredFilter: (components["schemas"]["EnabledProductFilter"] | components["schemas"]["EnabledPriceFilter"] | components["schemas"]["EnabledCategoryFilter"] | components["schemas"]["EnabledBrandFilter"] | components["schemas"]["EnabledRatingFilter"] | components["schemas"]["EnabledMiscFilter"]) & {
+            readonly [key: string]: any;
+        };
         readonly ConfiguredFilters: readonly components["schemas"]["ConfiguredFilter"][];
         /** A new set of enabled Product Filtering filters which should display in a particular context, such as on a particular Channel, or while viewing a particular Category. Array order indicates the display order on the storefront. */
         readonly ConfiguredFiltersOverride: {
             readonly data?: components["schemas"]["ConfiguredFilters"];
             readonly context?: components["schemas"]["SearchFilterOverrideContextIdentifier"];
+        } & {
+            readonly [key: string]: any;
         };
     };
     readonly parameters: {
@@ -650,6 +744,8 @@ export interface operations {
                         readonly meta?: {
                             readonly [key: string]: any;
                         };
+                    } & {
+                        readonly [key: string]: any;
                     };
                 };
             };
@@ -665,6 +761,8 @@ export interface operations {
                         readonly meta?: {
                             readonly [key: string]: any;
                         };
+                    } & {
+                        readonly [key: string]: any;
                     };
                 };
             };
@@ -693,6 +791,8 @@ export interface operations {
                         readonly meta?: {
                             readonly [key: string]: any;
                         };
+                    } & {
+                        readonly [key: string]: any;
                     };
                 };
             };
@@ -723,6 +823,8 @@ export interface operations {
                     readonly "application/json": {
                         readonly data?: readonly components["schemas"]["ConfiguredFiltersOverride"][];
                         readonly meta?: components["schemas"]["MetaPaginationObject"];
+                    } & {
+                        readonly [key: string]: any;
                     };
                 };
             };
@@ -748,6 +850,8 @@ export interface operations {
                         readonly meta?: {
                             readonly [key: string]: any;
                         };
+                    } & {
+                        readonly [key: string]: any;
                     };
                 };
             };
@@ -790,6 +894,8 @@ export interface operations {
                         readonly meta?: {
                             readonly [key: string]: any;
                         };
+                    } & {
+                        readonly [key: string]: any;
                     };
                 };
             };
@@ -812,6 +918,8 @@ export interface operations {
                         readonly meta?: {
                             readonly [key: string]: any;
                         };
+                    } & {
+                        readonly [key: string]: any;
                     };
                 };
             };

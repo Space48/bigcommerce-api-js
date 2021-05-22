@@ -73,7 +73,11 @@ export interface components {
                  * Merchants may enable any **configured** tax provider for storefront tax quotation.
                  */
                 readonly configured?: boolean;
+            } & {
+                readonly [key: string]: any;
             };
+        } & {
+            readonly [key: string]: any;
         };
     };
     readonly parameters: {
@@ -158,6 +162,8 @@ export interface operations {
                     /** Public identifying information representing a unique account on the tax provider's infrastructure. Should not contain any personal identifying information (e.g. a personal email address). */
                     readonly username?: string;
                     readonly password?: string;
+                } & {
+                    readonly [key: string]: any;
                 };
             };
         };
