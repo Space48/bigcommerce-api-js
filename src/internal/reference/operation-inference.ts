@@ -23,11 +23,18 @@ type PathOperationIndex<Path extends string, PathSpec> = 1 extends 0 ? never : {
     // oas 2
     : PathSpec[K] extends { parameters?: infer Params, responses?: infer Responses }
       ? {
-        readonly parameters: unknown extends Params ? {} : Params
+        readonly parameters: unknown extends Params ? {} : CorrectOas2RequestBody<Params>
         readonly response: Response<Responses>
       }
     : never
 };
+
+type CorrectOas2RequestBody<Params> =
+  Params extends { body?: infer Body }
+    ? Omit<Params, 'body'> & { body: RealOas2RequestBody<Body> }
+    : Params;
+
+type RealOas2RequestBody<T> = T extends { [key: string]: infer RealBody } ? RealBody : never;
 
 type RequestMethodLc = Lowercase<RequestMethod>;
 
