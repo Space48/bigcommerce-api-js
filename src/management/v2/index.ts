@@ -127,7 +127,7 @@ export class Client {
 
   private checkResponseStatus(requestLine: string, response: Response): void {
     if (response.status > 299) {
-      throw new Error(`ERROR DURING ${requestLine}: ${response.status} - ${response.body}`);
+      throw new Error(`ERROR DURING ${requestLine}: ${response.status} - ${JSON.stringify(response.body)}`);
     }
   }
 }
