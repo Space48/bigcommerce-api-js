@@ -38,6 +38,7 @@ export class Client {
   private readonly headers = {
     Accept: "application/json",
     "X-Auth-Token": this.config.accessToken,
+    "Accept-Encoding": "gzip",
   };
 
   send<ReqLine extends NoParamsRequestLine>(requestLine: ReqLine): Promise<InferResponse<ReqLine, {}>>
@@ -54,19 +55,38 @@ export class Client {
     const path = resolvePath(paramaterizedPath, params?.path ?? {});
     const queryParams = stringify(params?.query ?? {}, { arrayFormat: "comma" } );
     const queryString = queryParams.length ? `?${queryParams}` : "";
-    const res = await fetch(`https://api.bigcommerce.com/stores/${this.config.storeHash}/v3${path}${queryString}`, {
-      method,
-      headers: {
-        ...this.headers,
-        'Content-Type': params?.body && 'application/json',
-      },
-      agent: this.config.agent,
-      body: params?.body && JSON.stringify(params.body),
-    } as any);
-    const body = await res.text();
+    const body = params?.body && JSON.stringify(params.body);
+    const fetchFn = (): ReturnType<typeof fetch> => {
+      return fetch(
+        `https://api.bigcommerce.com/stores/${this.config.storeHash}/v3${path}${queryString}`,
+        {
+          method,
+          headers: {
+            ...this.headers,
+            'Content-Type': params?.body && 'application/json',
+          },
+          agent: this.config.agent,
+          body,
+        } as any,
+      );
+    };
+    let response;
+    for (let i = 0; i < 50; i++) {
+      response = await fetchFn();
+      if (response.status === 429) {
+        const timeout = response.headers.get("X-Rate-Limit-Time-Reset-Ms");
+        await new Promise<void>(
+          resolve => setTimeout(() => resolve(), timeout ? Number(timeout) : ((i + 1) * 10)),
+        );
+      } else {
+        break;
+      }
+    }
+    const res = response;
+    const responseBody = await res!.text();
     return {
-      status: res.status,
-      body: body && JSON.parse(body),
+      status: res!.status,
+      body: responseBody && JSON.parse(responseBody),
     };
   }
 
