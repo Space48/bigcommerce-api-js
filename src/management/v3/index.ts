@@ -56,7 +56,7 @@ export class Client {
     const queryParams = stringify(params?.query ?? {}, { arrayFormat: "comma" } );
     const queryString = queryParams.length ? `?${queryParams}` : "";
     const body = params?.body && JSON.stringify(params.body);
-    const fetchFn = (): ReturnType<typeof fetch> => {
+    const fetchFn = () => {
       return fetch(
         `https://api.bigcommerce.com/stores/${this.config.storeHash}/v3${path}${queryString}`,
         {
