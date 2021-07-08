@@ -44,7 +44,7 @@ Sends GET requests to the paginated endpoint /v3/{path} with the specified param
 
 `v3.send(requestLine, params?): Promise<response>`
 
-Sends a request and returns the as is. Only throws if there is a network error. 4xx and 5xx responses are simply returned.
+Sends a request and returns the response as is. Only throws if there is a network error. 4xx and 5xx responses are simply returned.
 
 For example:
 ```js

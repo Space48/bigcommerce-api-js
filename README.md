@@ -1,6 +1,6 @@
 # bigcommerce-api-js
 
-A JavaScript client for BigCommerce's [Storefront](src/storefront/README.md) and [Management](src/management/README.md) APIs with full TypeScript typings of parameters and responses for all API endpoints.
+A JavaScript client for BigCommerce's [Management](src/management/README.md) API with full TypeScript typings of parameters and responses for all API endpoints.
 
 ## Features
 
@@ -11,7 +11,7 @@ A JavaScript client for BigCommerce's [Storefront](src/storefront/README.md) and
 ### Coming soon
 
 - Built in rate limiting with retry for intermittent errors such as 429 and 5xx.
-- Types declarations for webhook payloads.
+- Type declarations for webhook payloads.
 - Browser support.
 
 ## Supported environments
