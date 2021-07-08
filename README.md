@@ -14,7 +14,7 @@ A JavaScript client for BigCommerce's [Management](src/management/README.md) API
 - Type declarations for webhook payloads.
 - Browser support.
 
-## Supported environments
+### Supported environments
 
 - Node.js >=10
 - Browser support is coming soon.
