@@ -1,6 +1,6 @@
 const blacklist = [
   ".spectral.yaml",
-  "channels.v3.yml", // fails to build
+  //"channels.v3.yml", // fails to build
   "customers_v2.yml", // duplicate of customers.v2.yml
   //"orders.v2.oas2.yml",
   //"tax.v3.yml", // fails to build
@@ -21,6 +21,7 @@ const allFiles = [
   "channels.v3.yml",
   "checkouts.sf.yml",
   "checkouts.v3.yml",
+  "consent.sf.yml",
   "currencies.v2.yml",
   "current_customer.yml",
   "custom-template-associations.v3.yml",
@@ -36,6 +37,7 @@ const allFiles = [
   "orders.sf.yml",
   "orders.v2.oas2.yml",
   "orders.v3.yml",
+  "pages.v3.yml",
   "payment_methods.v2.yml",
   "payment_processing.yml",
   "price_lists.v3.yml",
@@ -56,7 +58,6 @@ const allFiles = [
   "tax_classes.v2.yml",
   "tax_provider.yml",
   "themes.v3.yml",
-  "webhooks.v2.yml",
   "webhooks.v3.yml",
   "widgets.v3.yml",
   "wishlists.v3.yml",

@@ -245,7 +245,7 @@ export interface paths {
   };
   readonly "/orders/{order_id}/shipping_addresses/{shipping_address_id}/shipping_quotes": {
     /**
-     * Gets all shipping quotes associated to an order.
+     * Gets all shipping quotes persisted on an order.
      *
      * This is a read only endpoint and the output can vary based on the shipping quote. A shipping quote can only be generated using the storefront at this time. Orders that are created in the control panel or via the API return a 204 for this endpoint since a shipping quote is not generated during that process.
      */
@@ -2063,7 +2063,7 @@ export interface operations {
     };
   };
   /**
-   * Gets all shipping quotes associated to an order.
+   * Gets all shipping quotes persisted on an order.
    *
    * This is a read only endpoint and the output can vary based on the shipping quote. A shipping quote can only be generated using the storefront at this time. Orders that are created in the control panel or via the API return a 204 for this endpoint since a shipping quote is not generated during that process.
    */

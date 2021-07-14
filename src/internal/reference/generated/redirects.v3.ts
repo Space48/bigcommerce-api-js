@@ -92,9 +92,9 @@ export interface operations {
         readonly limit?: number;
         /** Specifies the page number in a limited (paginated) list of items. Used to paginate large collections. */
         readonly page?: number;
-        /** Sorts a collection by a specified field. */
+        /** Field name to sort by. Note: Since redirect `id` increments when new redirects are added, you can use that field to sort by redirect create date. */
         readonly sort?: "from_path" | "type" | "site_id";
-        /** Sort direction. */
+        /** Sort direction. Acceptable values are `asc`, `desc`. */
         readonly direction?: "asc" | "desc";
         /** Indicates whether to include redirect sub-resources. Only `to_url` is supported. */
         readonly include?: "to_url";

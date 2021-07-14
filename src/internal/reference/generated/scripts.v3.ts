@@ -193,7 +193,7 @@ export interface definitions {
     readonly kind?: "src" | "script_tag";
     /** The client id of the API user that created this script, or blank if created by other means. */
     readonly api_client_id?: string;
-    /** What category of script this is for the purposes of GDPR/CCPA compliance. */
+    /** Consent category for GDPR and CCPA compliance. Defaults to `uknown` when not specified. Scripts with an `uknown` consent category do not display on stores with customer cookie consent banners enabled. */
     readonly consent_category?:
       | "essential"
       | "functional"
@@ -256,7 +256,7 @@ export interface operations {
         readonly page?: number;
         /** Controls the number of items per page in a limited (paginated) list of products. */
         readonly limit?: number;
-        /** Field name to sort the scripts by. */
+        /** Field name to sort the scripts by. Note: Since `id` increments when new scripts are added, you can use that field to sort by script create date. */
         readonly sort?:
           | "name"
           | "description"

@@ -30,19 +30,26 @@ export interface paths {
   };
   readonly "/checkouts/{checkoutId}/consignments": {
     /**
-     * Adds a new *Consignment* to *Checkout*.
+     * Adds a new consignment to a checkout.
      *
      *
-     * There are two steps to add a new shipping address and shipping options with line items.
-     * * Add a new Consignment to Checkout.
-     * 	* Send a POST to Consignments with each shipping address and line items IDs. Each address can have its own line item IDs.
+     * There are two steps to create a new consignment with a shipping address, line items, and shipping option.
+     * 1. Add a new consignment to a checkout. Append the following query parameter to your `POST` request to also return `available_shipping_options` necessary for step two: `?include=consignments.available_shipping_options`.
+     * 2. [Update the consignment](https://developer.bigcommerce.com/api-reference/cart-checkout/server-server-checkout-api/checkout-consignments/checkoutsconsignmentsbycheckoutidandconsignmentidput) with one of the available shipping options returned from your `POST` request.
      *
-     * * [Update the Consignment](https://developer.bigcommerce.com/api-reference/cart-checkout/server-server-checkout-api/checkout-consignments/checkoutsconsignmentsbycheckoutidandconsignmentidput) with Shipping Options.
+     * Though the only required `shipping_address` properties to create a consignment are `email` and `country_code`, to successfully [create an order](https://developer.bigcommerce.com/api-reference/store-management/checkouts/checkout-orders/createanorder) the `shipping_address` requires the following properties:
+     * * `first_name`
+     * * `last_name`
+     * * `address1`
+     * * `city`
+     * * `country`
+     * * `email`
+     * * `country_code`
      *
+     * Depending on the country, the following `shipping_address` properties can also be required:
      *
-     * **Required Fields**
-     * * shipping_address
-     * * line_items
+     * * `postal_code`
+     * * `state_or_province`
      */
     readonly post: operations["CheckoutsConsignmentsByCheckoutIdPost"];
   };
@@ -51,19 +58,14 @@ export interface paths {
      * Updates an existing consignment. Shipping address, line item IDs or the shipping option ID can be updated using this endpoint.
      *
      * There are two steps to add a new shipping address and shipping options with line items.
-     * 1. Add a [new Consignment](/api-reference/cart-checkout/server-server-checkout-api/checkout-consignments/checkoutsconsignmentsbycheckoutidpost) to Checkout.
-     * 2. Update the Consignment with Shipping Options.
-     * 	1. Update each *Consignment* `shipping_option_id` (shipping address and line items) with the `available_shipping_option > id` from Step One.
-     *
-     *
-     * **Required Fields**
-     * * shipping_option_id
+     * 1. Add a new [consignment](/api-reference/store-management/checkouts/checkout-consignments/checkoutsconsignmentsbycheckoutidpost) to a checkout.
+     * 2. Assign a shipping option to the new consignment by sending a `PUT` request to update the consignment's `shipping_option_id` with a returned value from `data.consignments[N].available_shipping_option[N].id` in step one.
      */
     readonly put: operations["CheckoutsConsignmentsByCheckoutIdAndConsignmentIdPut"];
     /**
-     * Removes an existing consignment from checkout.
+     * Removes an existing consignment from a checkout.
      *
-     * Removing the last consigment will remove the Cart from the customer it is assigned to. Create a new rediret url for the customer to access it again.
+     * Removing the last consigment will remove the Cart from the customer it is assigned to. Create a new redirect url for the customer to access it again.
      */
     readonly delete: operations["CheckoutsConsignmentsByCheckoutIdAndConsignmentIdDelete"];
   };
@@ -114,15 +116,15 @@ export interface definitions {
         /** ISO-4217 currency code. (See: http://en.wikipedia.org/wiki/ISO_4217.) */
         readonly code?: string;
       };
-      /** Cost of cart's contents, before applying discounts. */
+      /** Sum of cart line-item amounts before cart-level discounts, coupons, or taxes. */
       readonly base_amount?: number;
       /** ID of channel */
       readonly channel_id?: number;
       /** Discounted amount. */
       readonly discount_amount?: number;
-      /** Sum of line-items amounts, minus cart-level discounts and coupons including tax */
+      /** Sum of cart line-item amounts minus cart-level discounts and coupons including tax */
       readonly cart_amount_inc_tax?: number;
-      /** Sum of line-items amounts, minus cart-level discounts and coupons excluding tax */
+      /** Sum of cart line-item amounts minus cart-level discounts and coupons excluding tax */
       readonly cart_amount_ex_tax?: number;
       readonly coupons?: readonly {
         /** the coupon code */
@@ -409,6 +411,7 @@ export interface definitions {
     readonly country_code: string;
     readonly postal_code?: string;
     readonly phone?: string;
+    /** You can retreive custom fields from the [Get Form Fields](https://developer.bigcommerce.com/api-reference/storefront/form-fields/form-fields/getformfields) endpoint. */
     readonly custom_fields?: readonly {
       readonly field_id?: string;
       /** This can also be an array for fields that need to support list of values (e.g., a set of check boxes.) */
@@ -430,6 +433,7 @@ export interface definitions {
       readonly country_code: string;
       readonly postal_code?: string;
       readonly phone?: string;
+      /** You can retreive custom fields from the [Get Form Fields](https://developer.bigcommerce.com/api-reference/storefront/form-fields/form-fields/getformfields) endpoint. */
       readonly custom_fields?: readonly {
         readonly field_id?: string;
         /** This can also be an array for fields that need to support list of values (e.g., a set of check boxes.) */
@@ -437,12 +441,12 @@ export interface definitions {
       }[];
     };
     readonly line_items?: readonly {
-      /** Corresponds to `line_items` > `id in Checkout response. */
+      /** Corresponds to `line_items.physical_items[N].id` value from `GET`checkout response. */
       readonly item_id: string;
       readonly quantity: number;
     }[];
   };
-  /** One or more of these three fields are mandatory. Shipping address and line items can be updated in one request. Shipping option ID has to be updated in a separate request, since changing the address or line items can invalidate the previously available shipping options. */
+  /** One or more of these three fields are mandatory. `shipping_address` and `line_items` can be updated in one request. `shipping_option_id` has to be updated in a separate request since changing the address or line items can invalidate the previously available shipping options. */
   readonly UpdateConsignmentRequest: {
     readonly shipping_address?: {
       readonly first_name?: string;
@@ -465,7 +469,7 @@ export interface definitions {
       }[];
     };
     readonly line_items?: readonly {
-      /** Corresponds to `line_items` > `id in Checkout response. */
+      /** Corresponds to `line_items.physical_items[N].id` value from `GET`checkout response. */
       readonly item_id: string;
       readonly quantity: number;
     }[];
@@ -598,19 +602,26 @@ export interface operations {
     };
   };
   /**
-   * Adds a new *Consignment* to *Checkout*.
+   * Adds a new consignment to a checkout.
    *
    *
-   * There are two steps to add a new shipping address and shipping options with line items.
-   * * Add a new Consignment to Checkout.
-   * 	* Send a POST to Consignments with each shipping address and line items IDs. Each address can have its own line item IDs.
+   * There are two steps to create a new consignment with a shipping address, line items, and shipping option.
+   * 1. Add a new consignment to a checkout. Append the following query parameter to your `POST` request to also return `available_shipping_options` necessary for step two: `?include=consignments.available_shipping_options`.
+   * 2. [Update the consignment](https://developer.bigcommerce.com/api-reference/cart-checkout/server-server-checkout-api/checkout-consignments/checkoutsconsignmentsbycheckoutidandconsignmentidput) with one of the available shipping options returned from your `POST` request.
    *
-   * * [Update the Consignment](https://developer.bigcommerce.com/api-reference/cart-checkout/server-server-checkout-api/checkout-consignments/checkoutsconsignmentsbycheckoutidandconsignmentidput) with Shipping Options.
+   * Though the only required `shipping_address` properties to create a consignment are `email` and `country_code`, to successfully [create an order](https://developer.bigcommerce.com/api-reference/store-management/checkouts/checkout-orders/createanorder) the `shipping_address` requires the following properties:
+   * * `first_name`
+   * * `last_name`
+   * * `address1`
+   * * `city`
+   * * `country`
+   * * `email`
+   * * `country_code`
    *
+   * Depending on the country, the following `shipping_address` properties can also be required:
    *
-   * **Required Fields**
-   * * shipping_address
-   * * line_items
+   * * `postal_code`
+   * * `state_or_province`
    */
   readonly CheckoutsConsignmentsByCheckoutIdPost: {
     readonly parameters: {
@@ -637,13 +648,8 @@ export interface operations {
    * Updates an existing consignment. Shipping address, line item IDs or the shipping option ID can be updated using this endpoint.
    *
    * There are two steps to add a new shipping address and shipping options with line items.
-   * 1. Add a [new Consignment](/api-reference/cart-checkout/server-server-checkout-api/checkout-consignments/checkoutsconsignmentsbycheckoutidpost) to Checkout.
-   * 2. Update the Consignment with Shipping Options.
-   * 	1. Update each *Consignment* `shipping_option_id` (shipping address and line items) with the `available_shipping_option > id` from Step One.
-   *
-   *
-   * **Required Fields**
-   * * shipping_option_id
+   * 1. Add a new [consignment](/api-reference/store-management/checkouts/checkout-consignments/checkoutsconsignmentsbycheckoutidpost) to a checkout.
+   * 2. Assign a shipping option to the new consignment by sending a `PUT` request to update the consignment's `shipping_option_id` with a returned value from `data.consignments[N].available_shipping_option[N].id` in step one.
    */
   readonly CheckoutsConsignmentsByCheckoutIdAndConsignmentIdPut: {
     readonly parameters: {
@@ -669,9 +675,9 @@ export interface operations {
     };
   };
   /**
-   * Removes an existing consignment from checkout.
+   * Removes an existing consignment from a checkout.
    *
-   * Removing the last consigment will remove the Cart from the customer it is assigned to. Create a new rediret url for the customer to access it again.
+   * Removing the last consigment will remove the Cart from the customer it is assigned to. Create a new redirect url for the customer to access it again.
    */
   readonly CheckoutsConsignmentsByCheckoutIdAndConsignmentIdDelete: {
     readonly parameters: {

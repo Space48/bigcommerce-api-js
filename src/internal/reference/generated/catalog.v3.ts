@@ -991,7 +991,7 @@ export interface paths {
   readonly "/catalog/variants": {
     /** Returns a list of all variants in your catalog. Optional parameters can be passed in. */
     readonly get: operations["getVariants"];
-    /** Creates or updates a batch of `Variant` objects. At the time of writing, the current limit is `50` variants. This limit is subject to change. */
+    /** Updates a batch of `variant` objects. At the time of writing, the limit is 50 variants. This limit is subject to change. */
     readonly put: operations["updateVariantsBatch"];
   };
   readonly "/catalog/summary": {
@@ -1011,6 +1011,49 @@ export interface paths {
      * * "primary_category_name"
      */
     readonly get: operations["getCatalogSummary"];
+  };
+  readonly "/catalog/categories/{category_id}/products/sort-order": {
+    /**
+     * Returns a list of products and their sort order for a specific category.
+     *
+     * **Usage Notes**
+     * * Data pairs are displayed in ascending order based on products' `sort_order` values.
+     * * `null` values are allowed for products without specified `sort_order` values.
+     * * Products with `sort_order` value of `null` will be displayed after products with valid numerical values.
+     *
+     * <div class="HubBlock--callout">
+     * <div class="CalloutBlock--info">
+     * <div class="HubBlock-content">
+     *
+     * > ### Note
+     * > This endpoint is in beta.
+     *
+     * </div>
+     * </div>
+     * </div>
+     */
+    readonly get: operations["getsortorders"];
+    /**
+     * Updates *Sort Order* of products within a specific category.
+     *
+     * <div class="HubBlock--callout">
+     * <div class="CalloutBlock--info">
+     * <div class="HubBlock-content">
+     *
+     * > ### Note
+     * > This endpoint is in beta.
+     *
+     * </div>
+     * </div>
+     * </div>
+     */
+    readonly put: operations["updatesortorder"];
+    readonly parameters: {
+      readonly path: {
+        /** The ID of the `Category` to which the resource belongs. */
+        readonly category_id: number;
+      };
+    };
   };
 }
 
@@ -1925,7 +1968,7 @@ export interface definitions {
   };
   /** Common ProductImage properties. */
   readonly productImage_Base: {
-    /** The local path to the original image file uploaded to BigCommerce. */
+    /** The local path to the original image file uploaded to BigCommerce. Limit of 1MB per file. */
     readonly image_file?: string;
     /** Flag for identifying whether the image is used as the product's thumbnail. */
     readonly is_thumbnail?: boolean;
@@ -2231,7 +2274,7 @@ export interface definitions {
   /** The model for a PUT to update a custom field on a product. */
   readonly productCustomField_Put: {
     /**
-     * The unique numeric ID of the custom field; increments sequentially.
+     * The unique numeric ID of the custom field; increments sequentially. Required to update existing custom field in /PUT request.
      * Read-Only
      */
     readonly id?: number;
@@ -2625,6 +2668,8 @@ export interface definitions {
     readonly retail_price?: number;
     /** If entered, the sale price will be used instead of value in the price field when calculating the product's cost. */
     readonly sale_price?: number;
+    /** Minimum Advertised Price */
+    readonly map_price?: number;
     /** The ID of the tax class applied to the product. (NOTE: Value ignored if automatic tax is enabled.) */
     readonly tax_class_id?: number;
     /** Accepts AvaTax System Tax Codes, which identify products and services that fall into special sales-tax categories. By using these codes, merchants who subscribe to BigCommerce's Avalara Premium integration can calculate sales taxes more accurately. Stores without Avalara Premium will ignore the code when calculating sales tax. Do not pass more than one code. The codes are case-sensitive. For details, please see Avalara's documentation. */
@@ -2771,6 +2816,12 @@ export interface definitions {
     readonly type?: string;
   } & {
     readonly errors?: definitions["detailedErrors"];
+  };
+  /** The relative priority of the product among other products inside the category. */
+  readonly productSortOrder: {
+    /** The ID of the associated product. */
+    readonly product_id: number;
+    readonly sort_order: number;
   };
 }
 
@@ -4275,6 +4326,27 @@ export interface responses {
       readonly meta?: definitions["metaCollection_Full"];
     };
   };
+  /** The requested category was not found. */
+  readonly Error404Response: {
+    readonly schema: definitions["error_Base"];
+  };
+  /**
+   * Unprocessable entity.
+   *
+   * Please verify if all requested products are assigned to the category.
+   *
+   * Please verify if all required fields are present in the request body and are filled with values correctly.
+   */
+  readonly Error422Response: {
+    readonly schema: definitions["error_Base"];
+  };
+  readonly ProductSortOrderResponse: {
+    readonly schema: {
+      readonly data?: readonly definitions["productSortOrder"][];
+    } & {
+      readonly meta?: definitions["metaCollection_Full"];
+    };
+  };
 }
 
 export interface operations {
@@ -4292,8 +4364,6 @@ export interface operations {
         readonly "id:less"?: parameters["FilterIdLess"];
         /** Filter items by name. */
         readonly name?: string;
-        /** Filter items by sku. */
-        readonly sku?: string;
         /** Filter items by upc. */
         readonly upc?: string;
         /** Filter items by price. */
@@ -4318,9 +4388,9 @@ export interface operations {
         readonly "date_last_imported:min"?: string;
         /** Filter items based on whether the product is currently visible on the storefront. */
         readonly is_visible?: boolean;
-        /** Filter items by is_featured. `0` for true, `1` for false. */
+        /** Filter items by is_featured. `1` for true, `0` for false. */
         readonly is_featured?: 1 | 0;
-        /** Filter items by is_free_shipping. */
+        /** Filter items by is_free_shipping. `1` for true, `0` for false. */
         readonly is_free_shipping?: number;
         /** Filter items by inventory_level. */
         readonly inventory_level?: number;
@@ -4385,6 +4455,8 @@ export interface operations {
           | "total_sold";
         /** Filter items by categories. Use for products in multiple categories. For example, `categories:in=12`. */
         readonly "categories:in"?: number;
+        /** Filter items by sku. */
+        readonly "sku:in"?: readonly any[];
       };
     };
     readonly responses: {
@@ -4800,7 +4872,7 @@ export interface operations {
         } & {
           /** Must be a fully qualified URL path, including protocol. Limit of 8MB per file. */
           readonly image_url?: string;
-          /** Must be sent as a multipart/form-data field in the request body. */
+          /** Must be sent as a multipart/form-data field in the request body. Limit of 1MB per file. */
           readonly image_file?: string;
         };
       };
@@ -8935,6 +9007,8 @@ export interface operations {
         readonly page?: number;
         /** Controls the number of items per page in a limited (paginated) list of products. */
         readonly limit?: number;
+        /** Filter items by status. `1` for approved, `0` for pending. */
+        readonly status?: number;
       };
       readonly header: {
         readonly Accept: string;
@@ -10733,11 +10807,7 @@ export interface operations {
         readonly include_fields?: readonly string[];
         /** Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. */
         readonly exclude_fields?: string;
-        /**
-         * A comma-separated list of ids of Products whose prices were requested. For example:
-         * `?product_id=:id`
-         * `?product_id:in=77,80,81`
-         */
+        /** A comma-separated list of IDs of products whose variants were requested. For example:`?product_id=:id``?product_id:in=77,80,81` */
         readonly product_id?: string;
       };
       readonly header: {
@@ -10816,7 +10886,7 @@ export interface operations {
       };
     };
   };
-  /** Creates or updates a batch of `Variant` objects. At the time of writing, the current limit is `50` variants. This limit is subject to change. */
+  /** Updates a batch of `variant` objects. At the time of writing, the limit is 50 variants. This limit is subject to change. */
   readonly updateVariantsBatch: {
     readonly parameters: {
       readonly body: {
@@ -11014,6 +11084,75 @@ export interface operations {
           readonly meta?: { readonly [key: string]: any };
         };
       };
+    };
+  };
+  /**
+   * Returns a list of products and their sort order for a specific category.
+   *
+   * **Usage Notes**
+   * * Data pairs are displayed in ascending order based on products' `sort_order` values.
+   * * `null` values are allowed for products without specified `sort_order` values.
+   * * Products with `sort_order` value of `null` will be displayed after products with valid numerical values.
+   *
+   * <div class="HubBlock--callout">
+   * <div class="CalloutBlock--info">
+   * <div class="HubBlock-content">
+   *
+   * > ### Note
+   * > This endpoint is in beta.
+   *
+   * </div>
+   * </div>
+   * </div>
+   */
+  readonly getsortorders: {
+    readonly parameters: {
+      readonly path: {
+        /** The ID of the `Category` to which the resource belongs. */
+        readonly category_id: number;
+      };
+      readonly header: {
+        readonly Accept: string;
+        readonly "Content-Type": string;
+      };
+    };
+    readonly responses: {
+      readonly 200: responses["ProductSortOrderResponse"];
+      readonly 404: responses["Error404Response"];
+    };
+  };
+  /**
+   * Updates *Sort Order* of products within a specific category.
+   *
+   * <div class="HubBlock--callout">
+   * <div class="CalloutBlock--info">
+   * <div class="HubBlock-content">
+   *
+   * > ### Note
+   * > This endpoint is in beta.
+   *
+   * </div>
+   * </div>
+   * </div>
+   */
+  readonly updatesortorder: {
+    readonly parameters: {
+      readonly path: {
+        /** The ID of the `Category` to which the resource belongs. */
+        readonly category_id: number;
+      };
+      readonly header: {
+        readonly Accept: string;
+        readonly "Content-Type": string;
+      };
+      readonly body: {
+        readonly body?: definitions["productSortOrder"];
+      };
+    };
+    readonly responses: {
+      readonly 200: responses["ProductSortOrderResponse"];
+      readonly 404: responses["Error404Response"];
+      readonly 422: responses["Error422Response"];
     };
   };
 }

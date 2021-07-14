@@ -10,7 +10,6 @@ import type * as shipping from "./shipping.v2"
 import type * as store_content from "./store_content.v2"
 import type * as store_information from "./store_information.v2"
 import type * as tax_classes from "./tax_classes.v2"
-import type * as webhooks from "./webhooks.v2"
 
       export type Operation =
         & InferOperationIndex<currencies.paths>
@@ -22,6 +21,5 @@ import type * as webhooks from "./webhooks.v2"
 & InferOperationIndex<store_content.paths>
 & InferOperationIndex<store_information.paths>
 & InferOperationIndex<tax_classes.paths>
-& InferOperationIndex<webhooks.paths>
       ;
     

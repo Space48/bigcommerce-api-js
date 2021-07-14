@@ -245,13 +245,17 @@ export interface definitions {
     readonly label?: string;
     readonly id?: string;
     /** number of elements in the list to display by default. */
-    readonly defaultCount?: string;
+    readonly defaultCount?: number;
     /** name for each element in the list */
     readonly entryLabel?: string;
     /** used to display an image stored at the specified attribute name */
-    readonly thumbnail?: string;
+    readonly thumbnail?: {
+      readonly type?: string;
+      readonly valueKey?: string;
+    };
     /** The schema used for each element in the array. */
-    readonly schema?: readonly any[];
+    readonly schema?: readonly (Partial<definitions["widgetSchemaHidden"]> &
+      Partial<definitions["widgetSchemaTab"]>)[];
   };
   /** For examples of each type of setting, see [Page Builder > Schema Settings](https://developer.bigcommerce.com/stencil-docs/page-builder/schema-settings/alignment) in Theme Docs. */
   readonly widgetSchemaSetting_Base: {

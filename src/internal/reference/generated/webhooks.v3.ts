@@ -11,7 +11,7 @@ export interface paths {
      * *Note: BigCommerce determines the `client_id` from the `access_token`.*
      */
     readonly get: operations["getAllWebhooks"];
-    /** Creates a webhook. Only one webhook at a time can be created. Custom headers can be added. */
+    /** Creates a webhook. Only one webhook at a time can be created. Custom headers can be added. Destination URL must be served on port 443 (custom ports are not currently supported). */
     readonly post: operations["createWebhooks"];
   };
   readonly "/hooks/{id}": {
@@ -44,7 +44,7 @@ export interface components {
     readonly webhook_Base: {
       /** Event you subscribe to */
       readonly scope: string;
-      /** URL must be active and return a 200 response */
+      /** URL must be active, return a 200 response, and be served on port 443 (custom ports not currently supported). */
       readonly destination: string;
       /** If webhook is active or not */
       readonly is_active: boolean;
@@ -173,7 +173,7 @@ export interface operations {
       readonly 200: components["responses"]["webhooks_Resp"];
     };
   };
-  /** Creates a webhook. Only one webhook at a time can be created. Custom headers can be added. */
+  /** Creates a webhook. Only one webhook at a time can be created. Custom headers can be added. Destination URL must be served on port 443 (custom ports are not currently supported). */
   readonly createWebhooks: {
     readonly parameters: {
       readonly header: {

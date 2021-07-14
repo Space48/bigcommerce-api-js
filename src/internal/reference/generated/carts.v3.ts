@@ -9,6 +9,7 @@ export interface paths {
      * Creates a **Cart**.
      *
      * **Required Fields**
+     *
      * |Field|Details|
      * |-|-|
      * |`line_items`||
@@ -157,6 +158,7 @@ export interface definitions {
     /** If no channel is specified, defaults to 1. */
     readonly channel_id?: number;
     readonly currency?: {
+      /** The [transactional currency](https://developer.bigcommerce.com/api-docs/multi-currency/guide/introduction#multi-currency-definitions) code for the cart as a [ISO-4217](https://www.iso.org/iso-4217-currency-codes.html) formatted string; required when multi-currency is enabled. Passing in a non-transactional display currency will result in a `400` error. */
       readonly code?: string;
     };
     /** Accepts string of format `xx` or `xx-YY`. */
@@ -243,15 +245,15 @@ export interface definitions {
     readonly email?: string;
     /** This will always be the same between cart and checkout. */
     readonly currency?: {
-      /** ISO-4217 currency code. (See: http://en.wikipedia.org/wiki/ISO_4217.) */
+      /** The [transactional currency](https://developer.bigcommerce.com/api-docs/multi-currency/guide/introduction#multi-currency-definitions) code for the cart as a [ISO-4217](https://www.iso.org/iso-4217-currency-codes.html) formatted string. */
       readonly code?: string;
     };
     readonly tax_included?: boolean;
-    /** Cost of cart's contents, before applying discounts. */
+    /** Sum of cart line-item amounts before cart-level discounts, coupons, or taxes. */
     readonly base_amount?: number;
     /** Discounted amount. */
     readonly discount_amount?: number;
-    /** Sum of line-items amounts, minus cart-level discounts and coupons. This amount includes taxes (where applicable). */
+    /** Sum of cart line-item amounts minus cart-level discounts and coupons. This amount includes taxes (where applicable). */
     readonly cart_amount?: number;
     readonly coupons?: readonly definitions["AppliedCoupon"][];
     readonly discounts?: readonly {
@@ -260,7 +262,7 @@ export interface definitions {
       /** The discounted amount. */
       readonly discounted_amount?: number;
     }[];
-    readonly line_items?: {
+    readonly line_items?: readonly {
       readonly physical_items: readonly ({
         /** The line-item ID. */
         readonly id?: string;
@@ -299,7 +301,6 @@ export interface definitions {
               readonly name?: string;
               /**
                * The discount type.
-               *
                * - type 0: per_item_discount
                * - type 1: percentage_discount
                * - type 2: per_total_discount
@@ -385,7 +386,6 @@ export interface definitions {
               readonly name?: string;
               /**
                * The discount type.
-               *
                * - type 0: per_item_discount
                * - type 1: percentage_discount
                * - type 2: per_total_discount
@@ -467,7 +467,7 @@ export interface definitions {
         /** Item's list price multiplied by quantity. */
         readonly extended_list_price?: number;
       }[];
-    };
+    }[];
     /** Time when the cart was created. */
     readonly created_time?: string;
     /** Time when the cart was last updated. */
@@ -1054,6 +1054,8 @@ export interface definitions {
       readonly name?: string;
       /** Override selected Option Value */
       readonly value?: string;
+      readonly name_id?: number;
+      readonly value_id?: number;
     }[];
   }[];
   readonly Cart_Line_Item_Update_Post: {
@@ -1126,6 +1128,7 @@ export interface operations {
    * Creates a **Cart**.
    *
    * **Required Fields**
+   *
    * |Field|Details|
    * |-|-|
    * |`line_items`||

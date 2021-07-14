@@ -33,9 +33,6 @@ export interface paths {
      * Updates a wishlist.
      *
      * Use this endpoint to update existing wishlist items, change the wishlist's name and whether the wishlist is available publicly. To add or delete a wishlist item, see [Wishlist Items](https://developer.bigcommerce.com/api-reference/store-management/wishlists/wishlists-items).
-     *
-     * **Required Fields**
-     * * customer_id
      */
     readonly put: operations["WishlistsByIdPut"];
     /** Deletes a wishlist. */
@@ -81,7 +78,7 @@ export interface definitions {
     /** The title of the wishlist. */
     readonly name?: string;
     /** Array of wishlist items. */
-    readonly items?: readonly {
+    readonly items: readonly {
       /** The ID of the item. */
       readonly id?: number;
       /** The ID of the product. */
@@ -328,9 +325,6 @@ export interface operations {
    * Updates a wishlist.
    *
    * Use this endpoint to update existing wishlist items, change the wishlist's name and whether the wishlist is available publicly. To add or delete a wishlist item, see [Wishlist Items](https://developer.bigcommerce.com/api-reference/store-management/wishlists/wishlists-items).
-   *
-   * **Required Fields**
-   * * customer_id
    */
   readonly WishlistsByIdPut: {
     readonly parameters: {

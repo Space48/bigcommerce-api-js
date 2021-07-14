@@ -211,6 +211,17 @@ export interface components {
           readonly lineItems: readonly components["schemas"]["requestCartPostLineItem"][];
           readonly giftCertificates: components["schemas"]["requestLineItemGiftCertificate"];
         };
+    readonly requestLineItemPut:
+      | {
+          readonly lineItem: components["schemas"]["requestCartPostLineItem"];
+        }
+      | {
+          readonly giftCertificates: components["schemas"]["requestLineItemGiftCertificate"];
+        }
+      | {
+          readonly lineItem: components["schemas"]["requestCartPostLineItem"];
+          readonly giftCertificates: components["schemas"]["requestLineItemGiftCertificate"];
+        };
     /** This will always be the same between cart and checkout. */
     readonly responseCartCurrency: {
       /** ISO-4217 currency code. (See: http://en.wikipedia.org/wiki/ISO_4217.) */
@@ -656,7 +667,7 @@ export interface operations {
     };
     readonly requestBody: {
       readonly content: {
-        readonly "application/json": components["schemas"]["LineItemsRequest"];
+        readonly "application/json": components["schemas"]["requestLineItemPut"];
       };
     };
   };

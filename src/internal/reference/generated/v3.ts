@@ -4,11 +4,13 @@
       import type * as abandoned_carts from "./abandoned_carts.v3"
 import type * as carts from "./carts.v3"
 import type * as catalog from "./catalog.v3"
+import type * as channels from "./channels.v3"
 import type * as checkouts from "./checkouts.v3"
 import type * as custom_template_associations from "./custom_template_associations.v3"
 import type * as customers from "./customers.v3"
 import type * as email_templates from "./email_templates.v3"
 import type * as orders from "./orders.v3"
+import type * as pages from "./pages.v3"
 import type * as price_lists from "./price_lists.v3"
 import type * as redirects from "./redirects.v3"
 import type * as scripts from "./scripts.v3"
@@ -27,11 +29,13 @@ import type * as wishlists from "./wishlists.v3"
         & InferOperationIndex<abandoned_carts.paths>
 & InferOperationIndex<carts.paths>
 & InferOperationIndex<catalog.paths>
+& InferOperationIndex<channels.paths>
 & InferOperationIndex<checkouts.paths>
 & InferOperationIndex<custom_template_associations.paths>
 & InferOperationIndex<customers.paths>
 & InferOperationIndex<email_templates.paths>
 & InferOperationIndex<orders.paths>
+& InferOperationIndex<pages.paths>
 & InferOperationIndex<price_lists.paths>
 & InferOperationIndex<redirects.paths>
 & InferOperationIndex<scripts.paths>
