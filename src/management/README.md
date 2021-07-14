@@ -1,6 +1,6 @@
 # BigCommerce Management API client
 
-A JavaScript client for BigCommerce's Management API with full TypeScript typings of parameters and responses.
+A JavaScript client for BigCommerce's Management API with full TypeScript typings for all API endpoints.
 
 # Getting started
 

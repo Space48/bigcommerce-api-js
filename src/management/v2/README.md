@@ -1,6 +1,6 @@
 # BigCommerce Management V2 API client
 
-A JavaScript client for BigCommerce's Management V2 API with full TypeScript coverage.
+A JavaScript client for BigCommerce's Management V2 API with full TypeScript typings for all API endpoints.
 
 For non-V2 specific documentation see the [Management API readme](../README.md).
 
