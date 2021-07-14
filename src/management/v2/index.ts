@@ -79,6 +79,9 @@ export class Client {
 
   async delete(path: string, params?: Parameters): Promise<unknown> {
     const res = await this.send(`DELETE ${path}`, params);
+    if (res.status === 204) {
+      return null;
+    }
     this.checkResponseStatus(`DELETE ${path}`, res);
     return res.body;
   }
