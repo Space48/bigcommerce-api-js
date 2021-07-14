@@ -492,6 +492,8 @@ export interface parameters {
     /** If the groups is for guests. There can only be one customer group for guests at a time. */
     readonly is_group_for_guests: boolean;
 }
+export interface responses {
+}
 export interface operations {
     /** Returns a list of all *Customers*. Default sorting is by customer id, from lowest to highest. Optional parameters can be passed in. */
     readonly getAllCustomers: {
@@ -1097,6 +1099,13 @@ export interface operations {
             readonly 200: {
                 readonly schema: definitions["customerGroup_Full"];
             };
+            /** The customer group was created, but the sitewide discount update failed. You may retry the request. */
+            readonly 207: {
+                readonly schema: {
+                    readonly status?: number;
+                    readonly message?: string;
+                };
+            };
         };
     };
     /**
@@ -1167,6 +1176,13 @@ export interface operations {
         readonly responses: {
             readonly 200: {
                 readonly schema: definitions["customerGroup_Full"];
+            };
+            /** The customer group was updated, but the sitewide discount update failed. You may retry the request. */
+            readonly 207: {
+                readonly schema: {
+                    readonly status: number;
+                    readonly message: string;
+                };
             };
         };
     };

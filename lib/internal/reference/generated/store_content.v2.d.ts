@@ -61,10 +61,10 @@ export interface paths {
         readonly get: operations["getACountOfAllBlogPosts"];
     };
     readonly "/pages": {
-        /** Returns a list of *Pages*. Default sorting is by auto-generated ID from oldests to newest. This endpoint is deprecated. Use [Pages V3](https://developer.bigcommerce.com/api-reference/store-management/pages) instead. */
+        /** Returns a list of *Pages*. Default sorting is by auto-generated ID from oldests to newest. This endpoint is deprecated. */
         readonly get: operations["getAllPages"];
         /**
-         * Creates a *Page*. The payload limit is 1MB. This endpoint is deprecated. Use [Pages V3](https://developer.bigcommerce.com/api-reference/store-management/pages) instead.
+         * Creates a *Page*. The payload limit is 1MB. This endpoint is deprecated.
          *
          * **Required Fields**
          * *   `type`
@@ -83,16 +83,16 @@ export interface paths {
         readonly post: operations["createAPage"];
     };
     readonly "/pages/{id}": {
-        /** Returns a *Page*. This endpoint is deprecated. Use [Pages V3](https://developer.bigcommerce.com/api-reference/store-management/pages) instead. */
+        /** Returns a *Page*. This endpoint is deprecated. */
         readonly get: operations["getAPage"];
         /**
-         * Updates a *Page*. The payload limit is 1MB. This endpoint is deprecated. Use [Pages V3](https://developer.bigcommerce.com/api-reference/store-management/pages) instead.
+         * Updates a *Page*. The payload limit is 1MB. This endpoint is deprecated.
          *
          * **Read Only Fields**
          * * id
          */
         readonly put: operations["updateAPage"];
-        /** Deletes a *Page*. This endpoint is deprecated. Use [Pages V3](https://developer.bigcommerce.com/api-reference/store-management/pages) instead. */
+        /** Deletes a *Page*. This endpoint is deprecated. */
         readonly delete: operations["deleteAPage"];
         readonly parameters: {
             readonly path: {
@@ -476,7 +476,7 @@ export interface operations {
             readonly query: {
                 /** Filter param. */
                 readonly is_published?: string;
-                /** Filter param. */
+                /** Filter param. Value must be URL encoded. */
                 readonly url?: string;
                 /** Filter param. */
                 readonly tag?: string;
@@ -626,7 +626,7 @@ export interface operations {
             };
         };
     };
-    /** Returns a list of *Pages*. Default sorting is by auto-generated ID from oldests to newest. This endpoint is deprecated. Use [Pages V3](https://developer.bigcommerce.com/api-reference/store-management/pages) instead. */
+    /** Returns a list of *Pages*. Default sorting is by auto-generated ID from oldests to newest. This endpoint is deprecated. */
     readonly getAllPages: {
         readonly parameters: {
             readonly header: {
@@ -647,7 +647,7 @@ export interface operations {
         };
     };
     /**
-     * Creates a *Page*. The payload limit is 1MB. This endpoint is deprecated. Use [Pages V3](https://developer.bigcommerce.com/api-reference/store-management/pages) instead.
+     * Creates a *Page*. The payload limit is 1MB. This endpoint is deprecated.
      *
      * **Required Fields**
      * *   `type`
@@ -679,7 +679,7 @@ export interface operations {
             };
         };
     };
-    /** Returns a *Page*. This endpoint is deprecated. Use [Pages V3](https://developer.bigcommerce.com/api-reference/store-management/pages) instead. */
+    /** Returns a *Page*. This endpoint is deprecated. */
     readonly getAPage: {
         readonly parameters: {
             readonly path: {
@@ -698,7 +698,7 @@ export interface operations {
         };
     };
     /**
-     * Updates a *Page*. The payload limit is 1MB. This endpoint is deprecated. Use [Pages V3](https://developer.bigcommerce.com/api-reference/store-management/pages) instead.
+     * Updates a *Page*. The payload limit is 1MB. This endpoint is deprecated.
      *
      * **Read Only Fields**
      * * id
@@ -722,7 +722,7 @@ export interface operations {
             };
         };
     };
-    /** Deletes a *Page*. This endpoint is deprecated. Use [Pages V3](https://developer.bigcommerce.com/api-reference/store-management/pages) instead. */
+    /** Deletes a *Page*. This endpoint is deprecated. */
     readonly deleteAPage: {
         readonly parameters: {
             readonly path: {

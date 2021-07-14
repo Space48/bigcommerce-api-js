@@ -54,13 +54,12 @@ export interface paths {
          * * attribute_value -- This is input as a string, regardless of the [Type](/api-reference/customer-subscribers/v3-customers-api/models/type).
          *
          * **Notes**
-         * For multi-storefront merchants who wants to give:
-         * * Global access:
-         *   * The channel listed in `origin_channel_id` needs `allow_global_logins=true` in their channel settings
-         *   * Leave `channel_ids` empty
-         * * Channel restricted access:
-         *   * The channel listed in `origin_channel_id` needs to have `allow_global_logins=false` in their channel settings
-         *   *  Either leave `channel_ids` empty to use the current channel or give the list of channels we grant access
+         * A customer can be created with global access or channel-specific access.
+         * * **Global access:**
+         *   * Make sure the channel has `allow_global_logins` enabled. This is on by default only for the default storefront. Find more info at [Customer Settings > Channel](https://developer.bigcommerce.com/api-reference/store-management/customers-v3/customer-settings-channel/customersettingschannelget)
+         *   * Omit `channel_ids` field, or provide `channel_ids: null`.
+         * * **Channel-specific access:**
+         *   * Provide a `channel_ids` array containing the channels accessible by the customer.
          */
         readonly post: operations["CustomersPost"];
         /**
@@ -166,7 +165,7 @@ export interface paths {
          *
          * **Notes**
          *
-         * Once the data type is set, it can not be changed. The attribute will need to be deleted then created again with the new data type. This will also delete it from the customer.
+         * Once the data type is set, it cannot be changed. The attribute will need to be deleted then created again with the new data type. This will also delete it from the customer.
          *
          * Customer attributes are created separately from the customer. After the name and type are created, then the attributes can be added to the customer.
          *
@@ -190,11 +189,6 @@ export interface paths {
          * Upsert checks for an existing record. If there is none, it creates the record, if there is a matching record, it updates that record.
          *
          * Up to 10 per call are allowed.
-         *
-         * **Required Fields**
-         * * customer_id -- ID of the *Customer*
-         * * id -- ID of the *Customer Attribute*
-         * * value -- Value of the *Customer Attribute*
          */
         readonly put: operations["CustomersAttributeValuesPut"];
         /**
@@ -206,12 +200,18 @@ export interface paths {
         readonly delete: operations["CustomersAttributeValuesDelete"];
     };
     readonly "/customers/form-field-values": {
-        /** Returns a list of Form Field Values for the Customer or Customer Address object. */
+        /**
+         * Returns a list of form field values for the Customer or Customer Address object.
+         *
+         * To learn about adding and managing form fields, see [Adding and Editing Fields in the Account Signup Form](https://support.bigcommerce.com/s/article/Editing-Form-Fields).
+         */
         readonly get: operations["CustomerFormFieldsGet"];
         /**
-         * Upserts Customer Form Field Values. Updates the form field values on the Customer or Customer Address. Multiple form field values can be updated in one call.
+         * Updates form field values on the Customer or Customer Address objects. Multiple form field values can be updated in one call.
          *
          * Upsert checks for an existing record, if there is none it creates the record, if there is a matching record it updates that record.
+         *
+         * To learn more about editing form fields, see [Adding and Editing Fields in the Account Signup Form](https://support.bigcommerce.com/s/article/Editing-Form-Fields).
          */
         readonly put: operations["CustomerFormFieldValuePUT"];
     };
@@ -314,7 +314,7 @@ export interface components {
             };
             /** Array of customer addresses. Limited to 10 */
             readonly addresses?: readonly components["schemas"]["address_Full"][];
-            /** Array of customer attributes. Limited to 10 */
+            /** Array of customer attributes. Limited to 10. */
             readonly attributes?: readonly components["schemas"]["attribute_Full"][];
             /** Array of form fields. Controlled by `formfields` parameter. */
             readonly form_fields?: readonly components["schemas"]["formFieldValue_Full"][];
@@ -341,8 +341,8 @@ export interface components {
             /** ID of the group which this customer belongs to. */
             readonly customer_group_id?: number;
             /** Array of customer addresses. Limited to 10 */
-            readonly addresses?: readonly components["schemas"]["customerAddresses_Base"][];
-            /** Array of customer attributes. Limited to 10 */
+            readonly addresses: readonly components["schemas"]["customerAddresses_Base"][];
+            /** Array of customer attributes. Limited to 10. */
             readonly attributes?: readonly components["schemas"]["customerAttributes_Base"][];
             readonly authentication?: components["schemas"]["customerAuthentication_PostPut"];
             /** It determines if the customer is signed up to receive either product review or abandoned cart emails or recieve both emails. */
@@ -392,7 +392,7 @@ export interface components {
             readonly id?: number;
             /** Attribute ID. */
             readonly attribute_id: number;
-            /** Attribute value. This will always be a string, regardless of the attributes type. */
+            /** Attribute value. This will always be a string, regardless of the attribute's type. */
             readonly value: string;
             /** Customer ID. */
             readonly customer_id: number;
@@ -640,17 +640,12 @@ export interface components {
             /** The date of which the customer attribute value was created. */
             readonly date_created?: string;
         }[];
-        /**
-         * The `attributes` array for the `customer` object used in `POST` requests to `/customers`.
-         *
-         * Array of customer attributes. Limited to 10.
-         */
-        readonly customerAttributes_Base: readonly {
+        readonly customerAttributes_Base: {
             /** Attribute ID. */
-            readonly attribute_id: number;
-            /** Attribute value. This will always be a string, regardless of the attributes type. */
-            readonly value: string;
-        }[];
+            readonly attribute_id?: number;
+            /** Attribute value. This will always be a string, regardless of the attribute's type. */
+            readonly attribute_value?: string;
+        };
         readonly attribute_Base: {
             /** Attribute name. */
             readonly name: string;
@@ -726,7 +721,6 @@ export interface components {
             /** ISO-3166-1 2 letter country code */
             readonly country_code?: string;
             readonly phone?: string;
-            readonly store_credit_amounts?: components["schemas"]["CustomerStoredCreditAmounts"];
         };
         /** Store credit. */
         readonly CustomerStoredCreditAmounts: readonly {
@@ -920,7 +914,7 @@ export interface components {
                         /** Attribute ID. */
                         readonly attribute_id: number;
                         /** Attribute value. This will always be a string, regardless of the attributes type. */
-                        readonly value: string;
+                        readonly attribute_value: string;
                         /** Attribute value ID. */
                         readonly id?: number;
                         /** Customer ID. */
@@ -1336,13 +1330,12 @@ export interface operations {
      * * attribute_value -- This is input as a string, regardless of the [Type](/api-reference/customer-subscribers/v3-customers-api/models/type).
      *
      * **Notes**
-     * For multi-storefront merchants who wants to give:
-     * * Global access:
-     *   * The channel listed in `origin_channel_id` needs `allow_global_logins=true` in their channel settings
-     *   * Leave `channel_ids` empty
-     * * Channel restricted access:
-     *   * The channel listed in `origin_channel_id` needs to have `allow_global_logins=false` in their channel settings
-     *   *  Either leave `channel_ids` empty to use the current channel or give the list of channels we grant access
+     * A customer can be created with global access or channel-specific access.
+     * * **Global access:**
+     *   * Make sure the channel has `allow_global_logins` enabled. This is on by default only for the default storefront. Find more info at [Customer Settings > Channel](https://developer.bigcommerce.com/api-reference/store-management/customers-v3/customer-settings-channel/customersettingschannelget)
+     *   * Omit `channel_ids` field, or provide `channel_ids: null`.
+     * * **Channel-specific access:**
+     *   * Provide a `channel_ids` array containing the channels accessible by the customer.
      */
     readonly CustomersPost: {
         readonly responses: {
@@ -1769,7 +1762,7 @@ export interface operations {
      *
      * **Notes**
      *
-     * Once the data type is set, it can not be changed. The attribute will need to be deleted then created again with the new data type. This will also delete it from the customer.
+     * Once the data type is set, it cannot be changed. The attribute will need to be deleted then created again with the new data type. This will also delete it from the customer.
      *
      * Customer attributes are created separately from the customer. After the name and type are created, then the attributes can be added to the customer.
      *
@@ -1870,11 +1863,6 @@ export interface operations {
      * Upsert checks for an existing record. If there is none, it creates the record, if there is a matching record, it updates that record.
      *
      * Up to 10 per call are allowed.
-     *
-     * **Required Fields**
-     * * customer_id -- ID of the *Customer*
-     * * id -- ID of the *Customer Attribute*
-     * * value -- Value of the *Customer Attribute*
      */
     readonly CustomersAttributeValuesPut: {
         readonly parameters: {
@@ -1932,7 +1920,11 @@ export interface operations {
             readonly 204: never;
         };
     };
-    /** Returns a list of Form Field Values for the Customer or Customer Address object. */
+    /**
+     * Returns a list of form field values for the Customer or Customer Address object.
+     *
+     * To learn about adding and managing form fields, see [Adding and Editing Fields in the Account Signup Form](https://support.bigcommerce.com/s/article/Editing-Form-Fields).
+     */
     readonly CustomerFormFieldsGet: {
         readonly parameters: {
             readonly header: {
@@ -1985,13 +1977,15 @@ export interface operations {
         };
     };
     /**
-     * Upserts Customer Form Field Values. Updates the form field values on the Customer or Customer Address. Multiple form field values can be updated in one call.
+     * Updates form field values on the Customer or Customer Address objects. Multiple form field values can be updated in one call.
      *
      * Upsert checks for an existing record, if there is none it creates the record, if there is a matching record it updates that record.
+     *
+     * To learn more about editing form fields, see [Adding and Editing Fields in the Account Signup Form](https://support.bigcommerce.com/s/article/Editing-Form-Fields).
      */
     readonly CustomerFormFieldValuePUT: {
         readonly responses: {
-            readonly 200: components["responses"]["FormFieldValueCollectionResponse"];
+            readonly 200: components["responses"]["FormFieldValuesResponse"];
             /** The form field value was not valid. This is the result of missing required fields, or of invalid data. See the response for more details. */
             readonly 422: {
                 readonly content: {

@@ -4,7 +4,7 @@
  */
 export interface paths {
     readonly "/pricing/products": {
-        /** Get get a product or SKU's price for a specific channel, currency, and customer group. */
+        /** Calculate batch pricing for products for a specific channel, currency, and customer group. */
         readonly post: operations["get-prices"];
     };
 }
@@ -341,7 +341,7 @@ export interface definitions {
     };
 }
 export interface operations {
-    /** Get get a product or SKU's price for a specific channel, currency, and customer group. */
+    /** Calculate batch pricing for products for a specific channel, currency, and customer group. */
     readonly "get-prices": {
         readonly parameters: {
             readonly body: {

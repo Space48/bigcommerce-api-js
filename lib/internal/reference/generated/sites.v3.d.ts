@@ -185,7 +185,7 @@ export interface definitions {
     };
     /** Route object used in responses. */
     readonly siteRoute_Full: {
-        /** Unique ID for this route. Required when updating an existing route */
+        /** Unique ID for this route. Required when updating an existing route. */
         readonly id?: number;
     } & definitions["siteRoute_Base"];
     readonly put_Site: {
@@ -257,9 +257,9 @@ export interface definitions {
         /** The type of resource being routed to; [supported types](https://developer.bigcommerce.com/api-reference/cart-checkout/sites-routes-api#route-types). */
         readonly type?: "product" | "brand" | "category" | "page" | "blog" | "home" | "cart" | "checkout" | "search" | "account" | "login" | "returns" | "static";
         /**
-         * (entity_id?) For a given type, which resources should match this route? e.g For a route with the type: "product" and matching: "5" this route would be used for the product with the ID of 5.
+         * Depending on the resource type, this can be an ID (matching a specific item), or a "*" wildcard (matching all items of that type).
          *
-         * Depending on the type of resource, this may be an ID (matching a specific item), or a "*" wildcard matching all items of that type.
+         * For example, a route with a type: "product" and matching: "5" will be used for the product with the ID of 5.
          */
         readonly matching?: string;
         /**
@@ -271,6 +271,25 @@ export interface definitions {
          * - `{language}` The **language** string that the client is using
          */
         readonly route?: string;
+    };
+    readonly siteRoutes_Route_Base: {
+        /** The type of resource being routed to; [supported types](https://developer.bigcommerce.com/api-reference/cart-checkout/sites-routes-api#route-types). */
+        readonly type: "product" | "brand" | "category" | "page" | "blog" | "home" | "cart" | "checkout" | "search" | "account" | "login" | "returns" | "static";
+        /**
+         * Depending on the resource type, this can be an ID (matching a specific item), or a "*" wildcard (matching all items of that type).
+         *
+         * For example, a route with a type: "product" and matching: "5" will be used for the product with the ID of 5.
+         */
+        readonly matching: string;
+        /**
+         * The route template that will be used to generate the URL for the requested resource.
+         *
+         * Supports several tokens:
+         * - `{id}` The **ID** of the requested item
+         * - `{slug}` The **slug** for the requested item (if available). Note: the `slug` value may contain `/` slash
+         * - `{language}` The **language** string that the client is using
+         */
+        readonly route: string;
     };
 }
 export interface parameters {
@@ -531,7 +550,7 @@ export interface operations {
                 readonly route_id: number;
             };
             readonly body: {
-                readonly body: definitions["siteRoute_Full"];
+                readonly body: definitions["siteRoutes_Route_Base"];
             };
         };
         readonly responses: {

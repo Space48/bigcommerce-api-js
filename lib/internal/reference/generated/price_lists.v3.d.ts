@@ -874,7 +874,12 @@ export interface operations {
             };
         };
         readonly responses: {
-            readonly 204: never;
+            /** `204 No Content`. Action has been enacted and no further information is to be supplied. `null` is returned. */
+            readonly 204: {
+                readonly schema: {
+                    readonly [key: string]: any;
+                };
+            };
         };
     };
     /** Returns a single *Price List*. */
@@ -1013,7 +1018,12 @@ export interface operations {
             };
         };
         readonly responses: {
-            readonly 204: never;
+            /** `204 No Content`. Action has been enacted and no further information is to be supplied. `null` is returned. */
+            readonly 204: {
+                readonly schema: {
+                    readonly [key: string]: any;
+                };
+            };
         };
     };
     /** Returns a list of *Price List Records* associated with a *Price List*. */

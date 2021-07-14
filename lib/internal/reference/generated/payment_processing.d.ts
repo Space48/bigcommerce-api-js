@@ -22,6 +22,10 @@ export interface paths {
         /**
          * Returns a list of accepted payment methods based on the `order_id`.
          *
+         * **Notes**
+         * * Use the [Create an Order](https://developer.bigcommerce.com/api-reference/store-management/checkouts/checkout-orders/createanorder) endpoint, to generate the `order_id`.
+         * * Orders created will be set to incomplete order status.
+         *
          * **Required Fields**
          * * order_id
          */
@@ -92,7 +96,7 @@ export interface components {
             readonly expiry_month: number;
             /** Expiry year of this card */
             readonly expiry_year: number;
-            /** Verification value of this card */
+            /** Verification value of this card (CVV or last_4) */
             readonly verification_value?: string;
             /** Issue month of this card */
             readonly issue_month?: number;
@@ -364,6 +368,8 @@ export interface operations {
                         readonly instrument: components["schemas"]["Card"] | components["schemas"]["StoredCard"] | components["schemas"]["StoredPaypalAccount"];
                         /** Identifier for payment method that will be used for this payment and `id` from the Get Accepted Payment Methods API */
                         readonly payment_method_id: string;
+                        /** To use `save_instrument`, configure the payment gateway to accept stored cards. */
+                        readonly save_instrument?: boolean;
                     };
                 };
             };
@@ -527,6 +533,10 @@ export interface operations {
     };
     /**
      * Returns a list of accepted payment methods based on the `order_id`.
+     *
+     * **Notes**
+     * * Use the [Create an Order](https://developer.bigcommerce.com/api-reference/store-management/checkouts/checkout-orders/createanorder) endpoint, to generate the `order_id`.
+     * * Orders created will be set to incomplete order status.
      *
      * **Required Fields**
      * * order_id

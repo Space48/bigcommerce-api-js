@@ -89,6 +89,7 @@ export interface paths {
          *
          * > ### Note
          * > * The `email` property is only required if the customer is a guest shopper. Otherwise, it is set automatically.
+         * > * Sending `email` property as a payload in POST request triggers the abandoned cart notification process.
          * > * The Send a Test Request feature is not currently supported for this endpoint.
          *
          * </div>
@@ -1242,6 +1243,7 @@ export interface operations {
      *
      * > ### Note
      * > * The `email` property is only required if the customer is a guest shopper. Otherwise, it is set automatically.
+     * > * Sending `email` property as a payload in POST request triggers the abandoned cart notification process.
      * > * The Send a Test Request feature is not currently supported for this endpoint.
      *
      * </div>
@@ -1447,6 +1449,12 @@ export interface operations {
         readonly responses: {
             readonly 200: {
                 readonly schema: definitions["checkout_Full"];
+            };
+            /** Gift certificate code not found */
+            readonly 404: {
+                readonly schema: {
+                    readonly [key: string]: any;
+                };
             };
         };
     };

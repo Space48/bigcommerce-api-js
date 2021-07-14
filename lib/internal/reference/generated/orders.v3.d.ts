@@ -3,6 +3,26 @@
  * Do not make direct changes to the file.
  */
 export interface paths {
+    readonly "/orders/{order_id}/payment_actions/capture": {
+        /**
+         * Capture the payment for an order updating the `payment_status` to `capture pending`.
+         *
+         * Requires at least one of the following scopes:
+         * * `store_v2_orders`
+         * * `store_v2_transactions`
+         */
+        readonly post: operations["paymentactioncapture"];
+    };
+    readonly "/orders/{order_id}/payment_actions/void": {
+        /**
+         * Void the payment for an order updating the `payment_status` to `void pending`.
+         *
+         * Requires at least one of the following scopes:
+         * * `store_v2_orders`
+         * * `store_v2_transactions`
+         */
+        readonly post: operations["paymentactionvoid"];
+    };
     readonly "/orders/{order_id}/transactions": {
         /**
          * Returns an **order's** transactions.
@@ -10,9 +30,14 @@ export interface paths {
          * **Usage Notes**
          * * Depending on the payment method, different information will be available (not all payment gateways return full card or fraud detail).
          * * Transactions are not created for the following payment methods:
-         * 	* Test Payment Gateway
-         * 	* PayPal Express
-         * 	* Amazon Pay
+         *   * Test Payment Gateway
+         *   * PayPal Express
+         *   * Amazon Pay
+         *
+         *
+         * Requires at least one of the following scopes:
+         * * `store_v2_transactions_read_only`
+         * * `store_v2_transactions`
          */
         readonly get: operations["getTransactions"];
         readonly parameters: {
@@ -22,14 +47,14 @@ export interface paths {
             };
         };
     };
-    readonly "/orders/payment_actions/refunds": {
-        /** Returns a list of refunds ordered by refund ID in ascending order. */
-        readonly get: operations["getrefunds"];
-        /** Creates a refund. This endpoint will accept a batch of one or more. */
-        readonly post: operations["postrefunds"];
-    };
     readonly "/orders/{order_id}/payment_actions/refund_quotes": {
-        /** Calculate the tax amount, total refund amount and get availble payment options for an order refund by providing items and costs or quantities to refund. */
+        /**
+         * Calculate the tax amount, total refund amount and get available payment options for an order refund by providing items and costs or quantities to refund.
+         *
+         * Requires at least one of the following scopes:
+         * * `store_v2_orders`
+         * * `store_v2_transactions`
+         */
         readonly post: operations["postrefundquote"];
         readonly parameters: {
             readonly path: {
@@ -38,9 +63,23 @@ export interface paths {
         };
     };
     readonly "/orders/{order_id}/payment_actions/refunds": {
-        /** Returns a list of refunds ordered by refund ID in ascending order for the given order. */
+        /**
+         * Returns a list of refunds ordered by refund ID in ascending order for the given order.
+         *
+         * Requires at least one of the following scopes:
+         * * `store_v2_transactions_read_only`
+         * * `store_v2_transactions`
+         * * `store_v2_orders_read_only`
+         * * `store_v2_orders`
+         */
         readonly get: operations["getorderrefunds"];
-        /** Creates a refund. */
+        /**
+         * Creates a refund.
+         *
+         * Requires at least one of the following scopes:
+         * * `store_v2_orders`
+         * * `store_v2_transactions`
+         */
         readonly post: operations["postrefund"];
         readonly parameters: {
             readonly path: {
@@ -53,8 +92,34 @@ export interface paths {
          * Calculate the tax amount, total refund amount and get availble payment options for an order refund by providing items and costs or quantities to refund.
          *
          * This endpoint will accept a batch of one or more.
+         *
+         * Requires at least one of the following scopes:
+         * * `store_v2_orders`
+         * * `store_v2_transactions`
          */
         readonly post: operations["postrefundquotes"];
+    };
+    readonly "/orders/payment_actions/refunds": {
+        /**
+         * Returns a list of refunds ordered by refund ID in ascending order.
+         *
+         * Requires at least one of the following scopes:
+         * * `store_v2_transactions_read_only`
+         * * `store_v2_transactions`
+         * * `store_v2_orders_read_only`
+         * * `store_v2_orders`
+         */
+        readonly get: operations["getrefunds"];
+        /**
+         * Creates a refund.
+         *
+         * This endpoint will accept a batch of one or more.
+         *
+         * Requires at least one of the following scopes:
+         * * `store_v2_orders`
+         * * `store_v2_transactions`
+         */
+        readonly post: operations["postrefunds"];
     };
     readonly "/orders/{order_id}/metafields": {
         /** Gets a `Metafield` object list, by `order_id`. */
@@ -927,6 +992,12 @@ export interface responses {
             readonly [key: string]: any;
         };
     };
+    /** Resource Created. */
+    readonly "201_Created": {
+        readonly schema: {
+            readonly [key: string]: any;
+        };
+    };
     readonly RefundCollection_Resp: {
         readonly schema: {
             /** Collection of Refunds */
@@ -999,14 +1070,75 @@ export interface responses {
 }
 export interface operations {
     /**
+     * Capture the payment for an order updating the `payment_status` to `capture pending`.
+     *
+     * Requires at least one of the following scopes:
+     * * `store_v2_orders`
+     * * `store_v2_transactions`
+     */
+    readonly paymentactioncapture: {
+        readonly parameters: {
+            readonly path: {
+                /** ID of the order */
+                readonly order_id: number;
+            };
+            readonly header: {
+                readonly Accept?: parameters["Accept"];
+                readonly "Content-Type"?: parameters["Content-Type"];
+            };
+        };
+        readonly responses: {
+            readonly 201: responses["201_Created"];
+            readonly 400: responses["400_BadRequest"];
+            readonly 404: responses["404_NotFound"];
+            readonly 422: responses["422_UnprocessableEntity"];
+            readonly 502: responses["502_GatewayError"];
+            readonly 503: responses["503_ServiceUnavailable"];
+            readonly 504: responses["504_GatewayTimeout"];
+        };
+    };
+    /**
+     * Void the payment for an order updating the `payment_status` to `void pending`.
+     *
+     * Requires at least one of the following scopes:
+     * * `store_v2_orders`
+     * * `store_v2_transactions`
+     */
+    readonly paymentactionvoid: {
+        readonly parameters: {
+            readonly path: {
+                /** ID of the order */
+                readonly order_id: number;
+            };
+            readonly header: {
+                readonly Accept?: parameters["Accept"];
+                readonly "Content-Type"?: parameters["Content-Type"];
+            };
+        };
+        readonly responses: {
+            readonly 201: responses["201_Created"];
+            readonly 400: responses["400_BadRequest"];
+            readonly 404: responses["404_NotFound"];
+            readonly 422: responses["422_UnprocessableEntity"];
+            readonly 502: responses["502_GatewayError"];
+            readonly 503: responses["503_ServiceUnavailable"];
+            readonly 504: responses["504_GatewayTimeout"];
+        };
+    };
+    /**
      * Returns an **order's** transactions.
      *
      * **Usage Notes**
      * * Depending on the payment method, different information will be available (not all payment gateways return full card or fraud detail).
      * * Transactions are not created for the following payment methods:
-     * 	* Test Payment Gateway
-     * 	* PayPal Express
-     * 	* Amazon Pay
+     *   * Test Payment Gateway
+     *   * PayPal Express
+     *   * Amazon Pay
+     *
+     *
+     * Requires at least one of the following scopes:
+     * * `store_v2_transactions_read_only`
+     * * `store_v2_transactions`
      */
     readonly getTransactions: {
         readonly parameters: {
@@ -1045,7 +1177,135 @@ export interface operations {
             };
         };
     };
-    /** Returns a list of refunds ordered by refund ID in ascending order. */
+    /**
+     * Calculate the tax amount, total refund amount and get available payment options for an order refund by providing items and costs or quantities to refund.
+     *
+     * Requires at least one of the following scopes:
+     * * `store_v2_orders`
+     * * `store_v2_transactions`
+     */
+    readonly postrefundquote: {
+        readonly parameters: {
+            readonly path: {
+                /** Order id */
+                readonly order_id: number;
+            };
+            readonly body: {
+                readonly body: definitions["RefundQuote_Post"];
+            };
+            readonly header: {
+                readonly Accept?: parameters["Accept"];
+                readonly "Content-Type"?: parameters["Content-Type"];
+            };
+        };
+        readonly responses: {
+            readonly 201: responses["RefundQuote_Resp"];
+            readonly 422: responses["422_UnprocessableEntity"];
+        };
+    };
+    /**
+     * Returns a list of refunds ordered by refund ID in ascending order for the given order.
+     *
+     * Requires at least one of the following scopes:
+     * * `store_v2_transactions_read_only`
+     * * `store_v2_transactions`
+     * * `store_v2_orders_read_only`
+     * * `store_v2_orders`
+     */
+    readonly getorderrefunds: {
+        readonly parameters: {
+            readonly path: {
+                readonly order_id: string;
+            };
+            readonly header: {
+                readonly Accept?: parameters["Accept"];
+                readonly "Content-Type"?: parameters["Content-Type"];
+            };
+        };
+        readonly responses: {
+            readonly 200: responses["RefundCollection_Resp"];
+        };
+    };
+    /**
+     * Creates a refund.
+     *
+     * Requires at least one of the following scopes:
+     * * `store_v2_orders`
+     * * `store_v2_transactions`
+     */
+    readonly postrefund: {
+        readonly parameters: {
+            readonly path: {
+                /** order id */
+                readonly order_id: number;
+            };
+            readonly body: {
+                readonly body: definitions["RefundRequest_Post"];
+            };
+            readonly header: {
+                readonly Accept?: parameters["Accept"];
+                readonly "Content-Type"?: parameters["Content-Type"];
+            };
+        };
+        readonly responses: {
+            readonly 201: responses["Refund_Resp"];
+            /** Service Unavailable */
+            readonly 503: {
+                readonly schema: {
+                    readonly data?: readonly definitions["FailedQuoteError"][];
+                    readonly meta?: definitions["Meta"];
+                };
+            };
+        };
+    };
+    /**
+     * Calculate the tax amount, total refund amount and get availble payment options for an order refund by providing items and costs or quantities to refund.
+     *
+     * This endpoint will accept a batch of one or more.
+     *
+     * Requires at least one of the following scopes:
+     * * `store_v2_orders`
+     * * `store_v2_transactions`
+     */
+    readonly postrefundquotes: {
+        readonly parameters: {
+            readonly body: {
+                readonly body: definitions["PostRefundQuotesRequest"];
+            };
+            readonly header: {
+                readonly Accept?: parameters["Accept"];
+                readonly "Content-Type"?: parameters["Content-Type"];
+            };
+        };
+        readonly responses: {
+            readonly 201: responses["RefundQuotesBATCH_Resp"];
+            /** Partial success/failure response. Status to roll up to the most severe individual failure to the whole request. */
+            readonly 422: {
+                readonly schema: {
+                    readonly data?: readonly definitions["RefundQuote_Full"][];
+                    readonly errors?: readonly definitions["FailedQuoteError"][];
+                    readonly meta?: definitions["Meta"];
+                };
+            };
+            /** Status to roll up to the most severe individual failure to the whole request. Example shows that severe error status is rolled up to the overall response status code. */
+            readonly 503: {
+                readonly schema: {
+                    readonly data?: readonly definitions["RefundQuote_Full"][];
+                    readonly errors?: readonly definitions["FailedQuoteError"][];
+                    readonly meta?: definitions["Meta"];
+                };
+            };
+        };
+    };
+    /**
+     * Returns a list of refunds ordered by refund ID in ascending order.
+     *
+     * Requires at least one of the following scopes:
+     * * `store_v2_transactions_read_only`
+     * * `store_v2_transactions`
+     * * `store_v2_orders_read_only`
+     * * `store_v2_orders`
+     */
     readonly getrefunds: {
         readonly parameters: {
             readonly query: {
@@ -1085,7 +1345,15 @@ export interface operations {
             readonly 200: responses["RefundCollection_Resp"];
         };
     };
-    /** Creates a refund. This endpoint will accept a batch of one or more. */
+    /**
+     * Creates a refund.
+     *
+     * This endpoint will accept a batch of one or more.
+     *
+     * Requires at least one of the following scopes:
+     * * `store_v2_orders`
+     * * `store_v2_transactions`
+     */
     readonly postrefunds: {
         readonly parameters: {
             readonly body: {
@@ -1116,102 +1384,6 @@ export interface operations {
                     readonly meta?: {
                         readonly [key: string]: any;
                     };
-                };
-            };
-        };
-    };
-    /** Calculate the tax amount, total refund amount and get availble payment options for an order refund by providing items and costs or quantities to refund. */
-    readonly postrefundquote: {
-        readonly parameters: {
-            readonly path: {
-                /** Order id */
-                readonly order_id: number;
-            };
-            readonly body: {
-                readonly body: definitions["RefundQuote_Post"];
-            };
-            readonly header: {
-                readonly Accept?: parameters["Accept"];
-                readonly "Content-Type"?: parameters["Content-Type"];
-            };
-        };
-        readonly responses: {
-            readonly 201: responses["RefundQuote_Resp"];
-            readonly 422: responses["422_UnprocessableEntity"];
-        };
-    };
-    /** Returns a list of refunds ordered by refund ID in ascending order for the given order. */
-    readonly getorderrefunds: {
-        readonly parameters: {
-            readonly path: {
-                readonly order_id: string;
-            };
-            readonly header: {
-                readonly Accept?: parameters["Accept"];
-                readonly "Content-Type"?: parameters["Content-Type"];
-            };
-        };
-        readonly responses: {
-            readonly 200: responses["RefundCollection_Resp"];
-        };
-    };
-    /** Creates a refund. */
-    readonly postrefund: {
-        readonly parameters: {
-            readonly path: {
-                /** order id */
-                readonly order_id: number;
-            };
-            readonly body: {
-                readonly body: definitions["RefundRequest_Post"];
-            };
-            readonly header: {
-                readonly Accept?: parameters["Accept"];
-                readonly "Content-Type"?: parameters["Content-Type"];
-            };
-        };
-        readonly responses: {
-            readonly 201: responses["Refund_Resp"];
-            /** Service Unavailable */
-            readonly 503: {
-                readonly schema: {
-                    readonly data?: readonly definitions["FailedQuoteError"][];
-                    readonly meta?: definitions["Meta"];
-                };
-            };
-        };
-    };
-    /**
-     * Calculate the tax amount, total refund amount and get availble payment options for an order refund by providing items and costs or quantities to refund.
-     *
-     * This endpoint will accept a batch of one or more.
-     */
-    readonly postrefundquotes: {
-        readonly parameters: {
-            readonly body: {
-                readonly body: definitions["PostRefundQuotesRequest"];
-            };
-            readonly header: {
-                readonly Accept?: parameters["Accept"];
-                readonly "Content-Type"?: parameters["Content-Type"];
-            };
-        };
-        readonly responses: {
-            readonly 201: responses["RefundQuotesBATCH_Resp"];
-            /** Partial success/failure response. Status to roll up to the most severe individual failure to the whole request. */
-            readonly 422: {
-                readonly schema: {
-                    readonly data?: readonly definitions["RefundQuote_Full"][];
-                    readonly errors?: readonly definitions["FailedQuoteError"][];
-                    readonly meta?: definitions["Meta"];
-                };
-            };
-            /** Status to roll up to the most severe individual failure to the whole request. Example shows that severe error status is rolled up to the overall response status code. */
-            readonly 503: {
-                readonly schema: {
-                    readonly data?: readonly definitions["RefundQuote_Full"][];
-                    readonly errors?: readonly definitions["FailedQuoteError"][];
-                    readonly meta?: definitions["Meta"];
                 };
             };
         };

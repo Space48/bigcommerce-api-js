@@ -177,65 +177,6 @@ export interface paths {
         /** Delete storefront robots.txt. */
         readonly delete: operations["delete-settings-robotstxt"];
     };
-    readonly "/settings/storefront/category": {
-        /** Get storefront category settings. */
-        readonly get: {
-            readonly parameters: {
-                readonly query: {
-                    /** Channel ID to use for channel-specific setting. If omitted, you will interact with the global setting only. */
-                    readonly channel_id?: components["parameters"]["ChannelIdParam"];
-                };
-            };
-            readonly responses: {
-                /** OK */
-                readonly 200: {
-                    readonly content: {
-                        readonly "application/json": {
-                            readonly data?: components["schemas"]["StorefrontCategorySettings"];
-                            readonly meta?: {
-                                readonly [key: string]: any;
-                            };
-                        };
-                    };
-                };
-                /** Provided settings could not be applied for some reason - detailed errors in the response. */
-                readonly 422: {
-                    readonly content: {
-                        readonly "application/json": components["schemas"]["ErrorResponse"];
-                    };
-                };
-            };
-        };
-        /** Update storefront category settings. */
-        readonly put: {
-            readonly parameters: {
-                readonly query: {
-                    /** Channel ID to use for channel-specific setting. If omitted, you will interact with the global setting only. */
-                    readonly channel_id?: components["parameters"]["ChannelIdParam"];
-                };
-            };
-            readonly responses: {
-                /** OK */
-                readonly 200: {
-                    readonly content: {
-                        readonly "application/json": {
-                            readonly data?: components["schemas"]["StorefrontCategorySettings"];
-                            readonly meta?: {
-                                readonly [key: string]: any;
-                            };
-                        };
-                    };
-                };
-            };
-            readonly requestBody: {
-                readonly content: {
-                    readonly "application/json": components["schemas"]["StorefrontCategorySettings"];
-                };
-            };
-        };
-        /** Delete storefront category settings. */
-        readonly delete: operations["delete-settings-storefrontcategory"];
-    };
     readonly "/settings/storefront/search": {
         /** Get storefront search settings. */
         readonly get: {
@@ -336,6 +277,55 @@ export interface paths {
         /** Delete channel specific overrides for email settings. */
         readonly delete: operations["delete-settings-transactional-emails-enabled"];
     };
+    readonly "/settings/store/locale": {
+        /** Returns global locale settings. */
+        readonly get: {
+            readonly responses: {
+                readonly 200: {
+                    readonly content: {
+                        readonly "application/json": {
+                            readonly data?: components["schemas"]["Locale"];
+                            readonly meta?: {
+                                readonly [key: string]: any;
+                            };
+                        };
+                    };
+                };
+                /** Provided settings could not be applied for some reason - detailed errors in the response. */
+                readonly 422: {
+                    readonly content: {
+                        readonly "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        /** Updates global locale settings. */
+        readonly put: {
+            readonly responses: {
+                readonly 200: {
+                    readonly content: {
+                        readonly "application/json": {
+                            readonly data?: components["schemas"]["Locale"];
+                            readonly meta?: {
+                                readonly [key: string]: any;
+                            };
+                        };
+                    };
+                };
+                /** Provided settings could not be applied for some reason - detailed errors in the response. */
+                readonly 422: {
+                    readonly content: {
+                        readonly "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+            readonly requestBody: {
+                readonly content: {
+                    readonly "application/json": components["schemas"]["Locale"];
+                };
+            };
+        };
+    };
 }
 export interface components {
     readonly schemas: {
@@ -359,13 +349,6 @@ export interface components {
             readonly www_redirect?: "www" | "no-www" | "none";
             readonly meta_keywords?: string;
         };
-        readonly StorefrontCategorySettings: {
-            readonly listing_mode?: {
-                readonly [key: string]: any;
-            };
-            readonly default_product_sort?: components["schemas"]["ProductSortEnumValues"];
-            readonly category_tree_depth?: number;
-        };
         readonly StorefrontSearchSettings: {
             readonly default_product_sort?: components["schemas"]["ProductSortEnumValues"];
             readonly content_product_sort?: components["schemas"]["ContentSortEnumValues"];
@@ -378,6 +361,11 @@ export interface components {
             readonly store_phone?: string;
             readonly store_name?: string;
             readonly store_address?: string;
+        };
+        /** The basic locale settings for a store, used to give shopper information about languages, countries, etc. */
+        readonly Locale: {
+            readonly default_shopper_language?: string;
+            readonly store_country?: string;
         };
         readonly StorefrontStatus: {
             readonly down_for_maintenance_message?: string;
@@ -473,11 +461,11 @@ export interface components {
             readonly abandoned_cart_email?: boolean;
             readonly account_details_changed_email?: boolean;
             readonly combined_order_status_email?: boolean;
-            readonly create_account_email?: boolean;
-            readonly create_guest_account_email?: boolean;
-            readonly gift_certificate_email?: boolean;
+            readonly createaccount_email?: boolean;
+            readonly createguestaccount_email?: boolean;
+            readonly giftcertificate_email?: boolean;
             readonly invoice_email?: boolean;
-            readonly order_message_notification_email?: boolean;
+            readonly ordermessage_notification?: boolean;
             readonly return_confirmation_email?: boolean;
             readonly return_statuschange_email?: boolean;
             readonly product_review_email?: boolean;
@@ -597,21 +585,6 @@ export interface operations {
     };
     /** Delete storefront robots.txt. */
     readonly "delete-settings-robotstxt": {
-        readonly parameters: {
-            readonly query: {
-                /** Required Channel ID. This delete operation will delete overridden settings for this channel, thus restoring them to the global defaults. */
-                readonly channel_id: components["parameters"]["RequiredChannelIdParamForDelete"];
-                /** Array of strings (CSV) representing which configuration keys should be cleared (un-overridden) for the Channel. */
-                readonly keys: components["parameters"]["KeysToDelete"];
-            };
-        };
-        readonly responses: {
-            /** OK */
-            readonly 200: unknown;
-        };
-    };
-    /** Delete storefront category settings. */
-    readonly "delete-settings-storefrontcategory": {
         readonly parameters: {
             readonly query: {
                 /** Required Channel ID. This delete operation will delete overridden settings for this channel, thus restoring them to the global defaults. */
