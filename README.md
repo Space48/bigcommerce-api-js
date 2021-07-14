@@ -31,8 +31,6 @@ To get started with the JavaScript client you'll need to install it, and then fo
 
 ### Node
 
-Using the [GitHub npm registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry):
-
 ```sh
 npm install @space48/bigcommerce-api
 ```
