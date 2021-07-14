@@ -11,7 +11,7 @@ To get started with the Management API client you'll need to install it, and the
 - [Using ES6 import](#using-es6-import)
 - [Your first request](#your-first-request)
 - [How-to guides](#how-to-guides)
-- [Documentation/References](#documentationreferences)
+- [References](#references)
 
 ## Installation
 
@@ -149,9 +149,7 @@ bigCommerce.v3.post('/customers', {
 
 > Note: When using the V3 client, `get()`, `post()`, `put()` and `delete()` return response.body.data on success whereas the equivalent V2 methods return response.body. If you require access to response.body.meta when sending a V3 request you should use the `Management.v3.send()` method.
 
-## Documentation/References
-
-To help you get the most out of this SDK, we've prepared reference documentation, tutorials and other examples that will help you learn and understand how to use this library.
+## References
 
 ### Configuration
 
