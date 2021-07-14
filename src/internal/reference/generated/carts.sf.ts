@@ -111,7 +111,7 @@ export interface paths {
 
 export interface components {
   readonly schemas: {
-    readonly responseCartCoupons: readonly ({
+    readonly responseCartCoupons: readonly {
       /** The coupon code. */
       readonly code: string;
       /**
@@ -129,13 +129,13 @@ export interface components {
       readonly discountedAmount?: number;
       /** The coupon ID. */
       readonly id?: string;
-    } & { readonly [key: string]: any })[];
-    readonly responseCartDiscounts: readonly ({
+    }[];
+    readonly responseCartDiscounts: readonly {
       /** The discounted amount applied within a given context. */
       readonly discountedAmount?: number;
       /** ID of the applied discount. */
       readonly id?: string;
-    } & { readonly [key: string]: any })[];
+    }[];
     /** Cart object used in storefront cart responses. */
     readonly responseCart: {
       /** Cart ID, provided after creating a cart with a POST. */
@@ -162,32 +162,29 @@ export interface components {
       readonly updatedTime?: string;
       /** Locale of the cart. */
       readonly locale?: string;
-    } & { readonly [key: string]: any };
+    };
     /** Cart object used in create cart requests. */
-    readonly requestCart: (
-      | ({
+    readonly requestCart:
+      | {
           readonly lineItems: readonly components["schemas"]["requestCartPostLineItem"][];
           readonly locale?: string;
-        } & { readonly [key: string]: any })
-      | ({
+        }
+      | {
           readonly giftCertificates: readonly components["schemas"]["requestLineItemGiftCertificate"][];
           readonly locale?: string;
-        } & { readonly [key: string]: any })
-      | ({
+        }
+      | {
           readonly lineItems: readonly components["schemas"]["requestCartPostLineItem"][];
           readonly giftCertificates: components["schemas"]["requestLineItemGiftCertificate"];
           readonly locale?: string;
-        } & { readonly [key: string]: any })
-    ) & { readonly [key: string]: any };
-    readonly responseCartLineItemsPhysicalItemGiftWrapping:
-      | ({
-          /** Gift-wrapping price per product. */
-          readonly amount?: number;
-          readonly message?: string;
-          /** Name of the gift-wrapping option. */
-          readonly name?: string;
-        } & { readonly [key: string]: any })
-      | null;
+        };
+    readonly responseCartLineItemsPhysicalItemGiftWrapping: {
+      /** Gift-wrapping price per product. */
+      readonly amount?: number;
+      readonly message?: string;
+      /** Name of the gift-wrapping option. */
+      readonly name?: string;
+    } | null;
     readonly requestLineItemGiftCertificate: {
       /** Gift-certificate amount. */
       readonly amount: number;
@@ -201,25 +198,24 @@ export interface components {
       readonly sender: components["schemas"]["requestLineItemGiftCertificateSender"];
       /** Currently supports `Birthday`, `Boy`, `Celebration`, `Christmas`, `General`, and `Girl`. */
       readonly theme: string;
-    } & { readonly [key: string]: any };
+    };
     /** Cart object used in add items requests. */
-    readonly LineItemsRequest: (
-      | ({
+    readonly LineItemsRequest:
+      | {
           readonly lineItems: readonly components["schemas"]["requestCartPostLineItem"][];
-        } & { readonly [key: string]: any })
-      | ({
+        }
+      | {
           readonly giftCertificates: readonly components["schemas"]["requestLineItemGiftCertificate"][];
-        } & { readonly [key: string]: any })
-      | ({
+        }
+      | {
           readonly lineItems: readonly components["schemas"]["requestCartPostLineItem"][];
           readonly giftCertificates: components["schemas"]["requestLineItemGiftCertificate"];
-        } & { readonly [key: string]: any })
-    ) & { readonly [key: string]: any };
+        };
     /** This will always be the same between cart and checkout. */
     readonly responseCartCurrency: {
       /** ISO-4217 currency code. (See: http://en.wikipedia.org/wiki/ISO_4217.) */
       readonly code?: string;
-    } & { readonly [key: string]: any };
+    };
     readonly responseCartLineItems: {
       readonly customItems?: readonly components["schemas"]["responseCartLineItemsCustomItems"][];
       /** Array of `ItemDigital` objects. */
@@ -228,7 +224,7 @@ export interface components {
       readonly giftCertificates?: readonly components["schemas"]["responseCartLineItemsGiftCertificates"][];
       /** Array of `ItemPhysical` objects. */
       readonly physicalItems?: readonly components["schemas"]["responseCartLineItemsItemsPhysicalItemsItems"][];
-    } & { readonly [key: string]: any };
+    };
     /**
      * **Read Only**
      *
@@ -245,10 +241,8 @@ export interface components {
       readonly quantity?: number;
       /** Custom item sku */
       readonly sku?: string;
-    } & { readonly [key: string]: any };
-    readonly responseCartLineItemsDigitalItems: components["schemas"]["responseCartLineItemsDigitalItemsAllOf0"] & {
-      readonly [key: string]: any;
     };
+    readonly responseCartLineItemsDigitalItems: components["schemas"]["responseCartLineItemsDigitalItemsAllOf0"];
     readonly responseCartLineItemsDigitalItemsAllOf0: {
       /** The list of selected options for this product. */
       readonly options?: readonly components["schemas"]["responseCartLineItemsDigitalItemsAllOf0OptionsItems"][];
@@ -288,13 +282,13 @@ export interface components {
       readonly url?: string;
       /** ID of the variant. */
       readonly variantId?: number;
-    } & { readonly [key: string]: any };
+    };
     readonly responseCartLineItemsDigitalItemsAllOf0DiscountsItems: {
       /** The discounted amount applied within a given context. */
       readonly discountedAmount?: number;
       /** ID of the applied discount. */
       readonly id?: number;
-    } & { readonly [key: string]: any };
+    };
     readonly responseCartLineItemsDigitalItemsAllOf0OptionsItems: {
       /** The product option name. For example, Color or Size */
       readonly name?: string;
@@ -304,7 +298,7 @@ export interface components {
       readonly value?: string;
       /** The product option value identifier. */
       readonly valueId?: number;
-    } & { readonly [key: string]: any };
+    };
     readonly responseCartLineItemsGiftCertificates: {
       /** Value must be between 1.00 and 1,000.00 in the store's default currency. */
       readonly amount: number;
@@ -320,23 +314,21 @@ export interface components {
       readonly sender: components["schemas"]["responseCartLineItemsGiftCertificatesSender"];
       /** Currently supports `Birthday`, `Boy`, `Celebration`, `Christmas`, `General`, and `Girl`. */
       readonly theme: string;
-    } & { readonly [key: string]: any };
+    };
     readonly responseCartLineItemsGiftCertificatesRecipient: {
       /** Contact's email address. */
       readonly email?: string;
       /** Contact's name. */
       readonly name?: string;
-    } & { readonly [key: string]: any };
+    };
     readonly responseCartLineItemsGiftCertificatesSender: {
       /** Contact's email address. */
       readonly email?: string;
       /** Contact's name. */
       readonly name?: string;
-    } & { readonly [key: string]: any };
+    };
     readonly responseCartLineItemsItemsPhysicalItemsItems: components["schemas"]["responseCartBaseItem"] &
-      components["schemas"]["responseCartLineItemsItemsPhysicalItemsItemsAllOf1"] & {
-        readonly [key: string]: any;
-      };
+      components["schemas"]["responseCartLineItemsItemsPhysicalItemsItemsAllOf1"];
     readonly responseCartBaseItem: {
       /** The list of selected options for this product. */
       readonly options?: readonly components["schemas"]["responseCartLineItemsItemsPhysicalItemsItemsAllOf0OptionsItems"][];
@@ -375,7 +367,7 @@ export interface components {
       readonly url?: string;
       /** ID of the variant. */
       readonly variantId?: number;
-    } & { readonly [key: string]: any };
+    };
     readonly responseCartLineItemsItemsPhysicalItemsItemsAllOf0OptionsItems: {
       /** The product option name. For example, Color or Size */
       readonly name?: string;
@@ -385,66 +377,57 @@ export interface components {
       readonly value?: string;
       /** The product option value identifier. */
       readonly valueId?: number;
-    } & { readonly [key: string]: any };
+    };
     readonly responseCartLineItemsItemsPhysicalItemsItemsAllOf1: {
       readonly giftWrapping?: components["schemas"]["responseCartLineItemsPhysicalItemGiftWrapping"];
       /** Whether this item requires shipping to a physical address. */
       readonly isShippingRequired?: boolean;
-    } & { readonly [key: string]: any };
-    readonly requestCartPostLineItem: (Partial<
-      {
+    };
+    readonly requestCartPostLineItem: Partial<{
+      /** ID of the product. */
+      readonly productId: number;
+      /** Quantity of this item. */
+      readonly quantity: number;
+    }> &
+      Partial<{
         /** ID of the product. */
         readonly productId: number;
         /** Quantity of this item. */
         readonly quantity: number;
-      } & { readonly [key: string]: any }
-    > &
-      Partial<
-        {
-          /** ID of the product. */
-          readonly productId: number;
-          /** Quantity of this item. */
-          readonly quantity: number;
-          /** ID of the variant. */
-          readonly variantId: number;
-        } & { readonly [key: string]: any }
-      > &
-      Partial<
-        {
-          /** ID of the product. */
-          readonly productId: number;
-          /** Quantity of this item. */
-          readonly quantity: number;
-          readonly optionSelections: readonly (Partial<
-            {
-              /** ID of the option. */
-              readonly optionId?: number;
-              /** Value of the option. */
-              readonly optionValue?: (
-                | string
-                | number
-                | ({
-                    readonly month?: string;
-                    readonly day?: string;
-                    readonly year?: string;
-                  } & { readonly [key: string]: any })
-              ) & { readonly [key: string]: any };
-            } & { readonly [key: string]: any }
-          > & { readonly [key: string]: any })[];
-        } & { readonly [key: string]: any }
-      >) & { readonly [key: string]: any };
+        /** ID of the variant. */
+        readonly variantId: number;
+      }> &
+      Partial<{
+        /** ID of the product. */
+        readonly productId: number;
+        /** Quantity of this item. */
+        readonly quantity: number;
+        readonly optionSelections: readonly Partial<{
+          /** ID of the option. */
+          readonly optionId?: number;
+          /** Value of the option. */
+          readonly optionValue?:
+            | string
+            | number
+            | {
+                readonly month?: string;
+                readonly day?: string;
+                readonly year?: string;
+              };
+        }>[];
+      }>;
     readonly requestLineItemGiftCertificateRecipient: {
       /** Contact's email address. */
       readonly email?: string;
       /** Contact's name. */
       readonly name?: string;
-    } & { readonly [key: string]: any };
+    };
     readonly requestLineItemGiftCertificateSender: {
       /** Contact's email address. */
       readonly email?: string;
       /** Contact's name. */
       readonly name?: string;
-    } & { readonly [key: string]: any };
+    };
   };
   readonly responses: {
     /** Post Carts Response */

@@ -256,11 +256,11 @@ export interface components {
       /** The total number of pages in the collection. */
       readonly total_pages?: number;
       readonly links?: components["schemas"]["Links"];
-    } & { readonly [key: string]: any };
+    };
     /** Data about the response, including pagination and collection totals. */
     readonly _metaCollection: {
       readonly pagination?: components["schemas"]["Pagination"];
-    } & { readonly [key: string]: any };
+    };
     readonly ErrorResponse: {
       /** The HTTP status code. */
       readonly status?: number;
@@ -269,7 +269,7 @@ export interface components {
       readonly type?: string;
       readonly instance?: string;
       readonly errors?: { readonly [key: string]: string };
-    } & { readonly [key: string]: any };
+    };
     /** Error payload for the BigCommerce API. */
     readonly _error: {
       /** The HTTP status code. */
@@ -278,7 +278,7 @@ export interface components {
       readonly title?: string;
       readonly type?: string;
       readonly instance?: string;
-    } & { readonly [key: string]: any };
+    };
     readonly customer_Full: {
       /** The email of the customer. Must be unique. */
       readonly email?: string;
@@ -311,7 +311,7 @@ export interface components {
       readonly authentication?: {
         /** If `true`, this customer will be forced to change password on next login. */
         readonly force_password_reset?: boolean;
-      } & { readonly [key: string]: any };
+      };
       /** Array of customer addresses. Limited to 10 */
       readonly addresses?: readonly components["schemas"]["address_Full"][];
       /** Array of customer attributes. Limited to 10 */
@@ -322,7 +322,7 @@ export interface components {
       /** It determines if the customer is signed up to receive either product review or abandoned cart emails or recieve both emails. */
       readonly accepts_product_review_abandoned_cart_emails?: boolean;
       readonly channel_ids?: components["schemas"]["customerChannelIds"];
-    } & { readonly [key: string]: any };
+    };
     readonly customer_Post: {
       /** The email of the customer. Must be unique. */
       readonly email: string;
@@ -352,7 +352,7 @@ export interface components {
       readonly origin_channel_id?: number;
       /** Array of channels the customer can access */
       readonly channel_ids?: readonly number[];
-    } & { readonly [key: string]: any };
+    };
     readonly customer_Put: {
       /** The email of the customer. Must be unique. */
       readonly email?: string;
@@ -380,14 +380,13 @@ export interface components {
       readonly store_credit_amounts?: components["schemas"]["CustomerStoredCreditAmounts"];
       /** Arrays of channels the customer can access */
       readonly channel_ids?: readonly number[];
-    } & { readonly [key: string]: any };
-    readonly attributeValue_Full: components["schemas"]["attribueValue_Base"] &
-      ({
-        /** The date on which the customer attribute value was modified. */
-        readonly date_modified?: string;
-        /** The date of which the customer attribute value was created. */
-        readonly date_created?: string;
-      } & { readonly [key: string]: any }) & { readonly [key: string]: any };
+    };
+    readonly attributeValue_Full: components["schemas"]["attribueValue_Base"] & {
+      /** The date on which the customer attribute value was modified. */
+      readonly date_modified?: string;
+      /** The date of which the customer attribute value was created. */
+      readonly date_created?: string;
+    };
     readonly attribueValue_Base: {
       /** Attribute value ID. */
       readonly id?: number;
@@ -397,13 +396,13 @@ export interface components {
       readonly value: string;
       /** Customer ID. */
       readonly customer_id: number;
-    } & { readonly [key: string]: any };
+    };
     readonly customerAttributeValue_Full: {
       /** Attribute ID. */
       readonly attribute_id: number;
       /** Attribute value. This will always be a string, regardless of the attributes type. */
       readonly attribute_value: string;
-    } & { readonly [key: string]: any };
+    };
     readonly attribute_Full: {
       /** Attribute name. */
       readonly name: string;
@@ -415,20 +414,20 @@ export interface components {
       readonly date_modified?: string;
       /** The date of which the customer attribute was created. */
       readonly date_created?: string;
-    } & { readonly [key: string]: any };
+    };
     /** Once the data type is set, it can not be changed. The attribute will need to be deleted then created again with the new data type. This will also delete it from the customer. */
     readonly attribute_Put: {
       /** Attribute name. */
       readonly name: string;
       /** Attribute ID. */
       readonly id: number;
-    } & { readonly [key: string]: any };
+    };
     readonly attribute_Post: {
       /** Attribute name. */
       readonly name: string;
       /** Attribute type should match one of: string, number, date. When doing a */
       readonly type: "string" | "number" | "date";
-    } & { readonly [key: string]: any };
+    };
     readonly address_Full: {
       /** The first name of the customer address. */
       readonly first_name: string;
@@ -460,7 +459,7 @@ export interface components {
       readonly country?: string;
       /** Array of form fields. Controlled by `formfields` parameter. */
       readonly form_fields?: readonly components["schemas"]["formFieldValue_Full"][];
-    } & { readonly [key: string]: any };
+    };
     readonly address_Put: {
       /** The first name of the customer address. */
       readonly first_name: string;
@@ -488,7 +487,7 @@ export interface components {
       readonly customer_id: number;
       /** The unique numeric ID of the address. */
       readonly id: number;
-    } & { readonly [key: string]: any };
+    };
     readonly address_Post: {
       /** The first name of the customer address. */
       readonly first_name: string;
@@ -514,7 +513,7 @@ export interface components {
       readonly address_type?: "residential" | "commercial";
       /** The customer ID. */
       readonly customer_id: number;
-    } & { readonly [key: string]: any };
+    };
     /** The `address` object for the `customer` object's `addresses` array. */
     readonly customerAddresses_Base: {
       /** The first name of the customer address. */
@@ -539,19 +538,18 @@ export interface components {
       readonly phone?: string;
       /** The address type. Residential or Commercial */
       readonly address_type?: "residential" | "commercial";
-    } & { readonly [key: string]: any };
-    readonly customerAuthentication_PostPut: ({
+    };
+    readonly customerAuthentication_PostPut: {
       /** If `true`, this customer will be forced to change password on next login. */
       readonly force_password_reset?: boolean;
-    } & { readonly [key: string]: any }) &
-      ({
-        /** New password for customer. Write only field */
-        readonly new_password?: string;
-      } & { readonly [key: string]: any }) & { readonly [key: string]: any };
+    } & {
+      /** New password for customer. Write only field */
+      readonly new_password?: string;
+    };
     readonly customerAuthentication_Base: {
       /** If `true`, this customer will be forced to change password on next login. */
       readonly force_password_reset?: boolean;
-    } & { readonly [key: string]: any };
+    };
     /** The address type. Residential or Commercial */
     readonly addressType: "residential" | "commercial";
     /** Pagination links for the previous and next parts of the whole collection. */
@@ -562,45 +560,37 @@ export interface components {
       readonly current?: string;
       /** Link to the next page returned in the response. */
       readonly next?: string;
-    } & { readonly [key: string]: any };
+    };
     /** Attribute type should match one of: string, number, date. When doing a */
     readonly Type: "string" | "number" | "date";
-    readonly CustomerFormFieldValue: ({
+    readonly CustomerFormFieldValue: {
       /** The form field name. */
       readonly name: string;
-      readonly value: (string | number | readonly string[]) & {
-        readonly [key: string]: any;
-      };
-    } & { readonly [key: string]: any }) &
-      ({
-        readonly customer_id: number;
-      } & { readonly [key: string]: any }) & { readonly [key: string]: any };
-    readonly formFieldValue_Full: (
-      | ({
+      readonly value: string | number | readonly string[];
+    } & {
+      readonly customer_id: number;
+    };
+    readonly formFieldValue_Full:
+      | {
           /** The form field name. */
           readonly name: string;
-          readonly value: (string | number | readonly string[]) & {
-            readonly [key: string]: any;
-          };
+          readonly value: string | number | readonly string[];
           readonly customer_id: number;
-        } & { readonly [key: string]: any })
-      | ({
+        }
+      | {
           /** The form field name. */
           readonly name: string;
-          readonly value: (string | number | readonly string[]) & {
-            readonly [key: string]: any;
-          };
+          readonly value: string | number | readonly string[];
           /** The Customer Address ID. */
           readonly address_id: number;
-        } & { readonly [key: string]: any })
-    ) & { readonly [key: string]: any };
+        };
     /** Response payload for the BigCommerce API. */
     readonly consent_Full: {
       readonly allow?: readonly components["schemas"]["consentAllow"][];
       readonly deny?: readonly components["schemas"]["Deny"][];
       /** The date of which the customer consent was last updated. */
       readonly updated_at?: string;
-    } & { readonly [key: string]: any };
+    };
     /** Response payload for the BigCommerce API. */
     readonly DeclareCustomerConsentResponse: {
       /** Customer ID. */
@@ -609,7 +599,7 @@ export interface components {
       readonly deny?: readonly components["schemas"]["Deny"][];
       /** The date of which the customer consent was last updated. */
       readonly updated_at?: string;
-    } & { readonly [key: string]: any };
+    };
     readonly consentAllow: readonly (
       | "essential"
       | "functional"
@@ -626,7 +616,7 @@ export interface components {
     readonly DeclareCustomerConsentRequest: {
       readonly allow?: readonly components["schemas"]["consentAllow"][];
       readonly deny?: readonly components["schemas"]["Deny"][];
-    } & { readonly [key: string]: any };
+    };
     readonly customer_Base: {
       /** The email of the customer. Must be unique. */
       readonly email?: string;
@@ -644,9 +634,9 @@ export interface components {
       readonly tax_exempt_category?: string;
       /** ID of the group which this customer belongs to. */
       readonly customer_group_id?: number;
-    } & { readonly [key: string]: any };
+    };
     /** Array of customer attributes. Limited to 10 */
-    readonly customerAttributes_Full: readonly ({
+    readonly customerAttributes_Full: readonly {
       /** Attribute ID. */
       readonly attribute_id: number;
       /** Attribute value. This will always be a string, regardless of the attributes type. */
@@ -659,18 +649,18 @@ export interface components {
       readonly date_modified?: string;
       /** The date of which the customer attribute value was created. */
       readonly date_created?: string;
-    } & { readonly [key: string]: any })[];
+    }[];
     /**
      * The `attributes` array for the `customer` object used in `POST` requests to `/customers`.
      *
      * Array of customer attributes. Limited to 10.
      */
-    readonly customerAttributes_Base: readonly ({
+    readonly customerAttributes_Base: readonly {
       /** Attribute ID. */
       readonly attribute_id: number;
       /** Attribute value. This will always be a string, regardless of the attributes type. */
       readonly value: string;
-    } & { readonly [key: string]: any })[];
+    }[];
     readonly attribute_Base: {
       /** Attribute name. */
       readonly name: string;
@@ -682,7 +672,7 @@ export interface components {
       readonly date_modified?: string;
       /** The date of which the customer attribute was created. */
       readonly date_created?: string;
-    } & { readonly [key: string]: any };
+    };
     /** Array of channel ids the Customer has access to. */
     readonly customerChannelIds: readonly number[];
     /** Details about a stored card instrument which includes details around billing, last 4 digits, issuer, etc. */
@@ -704,7 +694,7 @@ export interface components {
       /** Last four digits of this card */
       readonly last_4?: string;
       readonly billing_address?: components["schemas"]["BillingAddress"];
-    } & { readonly [key: string]: any };
+    };
     /** A PayPal account stored instrument */
     readonly PayPalAccountInstrument: {
       /** Instrument type */
@@ -715,7 +705,7 @@ export interface components {
       readonly is_default?: boolean;
       /** PayPal email address */
       readonly email?: string;
-    } & { readonly [key: string]: any };
+    };
     /** A stored bank account instrument */
     readonly BankAccountInstrument: {
       /** Instrument type */
@@ -728,7 +718,7 @@ export interface components {
       readonly masked_account_number?: string;
       /** Issuer identifier for the account */
       readonly issuer?: string;
-    } & { readonly [key: string]: any };
+    };
     readonly BillingAddress: {
       /** First name of the card holder */
       readonly first_name?: string;
@@ -747,11 +737,11 @@ export interface components {
       readonly country_code?: string;
       readonly phone?: string;
       readonly store_credit_amounts?: components["schemas"]["CustomerStoredCreditAmounts"];
-    } & { readonly [key: string]: any };
+    };
     /** Store credit. */
-    readonly CustomerStoredCreditAmounts: readonly ({
+    readonly CustomerStoredCreditAmounts: readonly {
       readonly amount?: number;
-    } & { readonly [key: string]: any })[];
+    }[];
     /** Customer Settings */
     readonly CustomerSettingsObject: {
       /** Controls the privacy settings */
@@ -760,15 +750,15 @@ export interface components {
         readonly ask_shopper_for_tracking_consent?: boolean;
         /** The URL for a website's privacy policy */
         readonly policy_url?: string;
-      } & { readonly [key: string]: any };
+      };
       /** The settings for a collection of customers */
       readonly customer_group_settings?: {
         /** The ID for a guest customer group */
         readonly guest_customer_group_id?: number;
         /** The ID for a default customer group */
         readonly default_customer_group_id?: number;
-      } & { readonly [key: string]: any };
-    } & { readonly [key: string]: any };
+      };
+    };
     readonly CustomerChannelSettingsObject: {
       /** Controls the privacy settings */
       readonly privacy_settings?: {
@@ -776,20 +766,20 @@ export interface components {
         readonly ask_shopper_for_tracking_consent?: boolean;
         /** The URL for a website's privacy policy */
         readonly policy_url?: string;
-      } & { readonly [key: string]: any };
+      };
       /** The settings for a collection of customers */
       readonly customer_group_settings?: {
         /** The ID for a guest customer group */
         readonly guest_customer_group_id?: number;
         /** The ID for a default customer group */
         readonly default_customer_group_id?: number;
-      } & { readonly [key: string]: any };
+      };
       /**
        * * Determines if a channel allows global customer to login
        * * Determines if customers created on this channel will get global access/login
        */
       readonly allow_global_logins?: boolean;
-    } & { readonly [key: string]: any };
+    };
     readonly ValidateCustomerCredentialsObject: {
       /** Customer email address */
       readonly email: string;
@@ -797,13 +787,13 @@ export interface components {
       readonly password: string;
       /** ChannelId to check the customer credentials against - If this field is empty we will use channel 1 */
       readonly channel_id?: number;
-    } & { readonly [key: string]: any };
+    };
     readonly ValidateCustomerCredentialsResponseObject: {
       /** returns the customer Id */
       readonly customer_id?: number | null;
       /** indicates if the provided credentials are valid */
       readonly is_valid?: boolean;
-    } & { readonly [key: string]: any };
+    };
   };
   readonly responses: {
     /** Customer Collection Response */
@@ -812,7 +802,7 @@ export interface components {
         readonly "application/json": {
           readonly data?: readonly components["schemas"]["customer_Full"][];
           readonly meta?: components["schemas"]["_metaCollection"];
-        } & { readonly [key: string]: any };
+        };
       };
     };
     /** Customer Response */
@@ -821,14 +811,14 @@ export interface components {
         readonly "application/json": {
           readonly data?: readonly components["schemas"]["customer_Full"][];
           readonly meta?: { readonly [key: string]: any };
-        } & { readonly [key: string]: any };
+        };
         readonly "with include": unknown;
       };
     };
     readonly AddressCollectionResponse: {
       readonly content: {
         readonly "application/json": {
-          readonly data?: readonly ({
+          readonly data?: readonly {
             /** The first name of the customer address. */
             readonly first_name: string;
             /** The last name of the customer address. */
@@ -858,42 +848,32 @@ export interface components {
             /** The country name of the customer address. */
             readonly country?: string;
             /** Array of form fields. Controlled by `formfields` parameter. */
-            readonly form_fields?: readonly ((
-              | (({
+            readonly form_fields?: readonly (
+              | ({
                   /** The form field name. */
                   readonly name: string;
-                  readonly value: (string | number | readonly string[]) & {
-                    readonly [key: string]: any;
-                  };
-                } & { readonly [key: string]: any }) &
-                  ({
-                    readonly customer_id: number;
-                  } & { readonly [key: string]: any }) & {
-                    readonly [key: string]: any;
-                  })
-              | (({
+                  readonly value: string | number | readonly string[];
+                } & {
+                  readonly customer_id: number;
+                })
+              | ({
                   /** The form field name. */
                   readonly name: string;
-                  readonly value: (string | number | readonly string[]) & {
-                    readonly [key: string]: any;
-                  };
-                } & { readonly [key: string]: any }) &
-                  ({
-                    /** The Customer Address ID. */
-                    readonly address_id: number;
-                  } & { readonly [key: string]: any }) & {
-                    readonly [key: string]: any;
-                  })
-            ) & { readonly [key: string]: any })[];
-          } & { readonly [key: string]: any })[];
+                  readonly value: string | number | readonly string[];
+                } & {
+                  /** The Customer Address ID. */
+                  readonly address_id: number;
+                })
+            )[];
+          }[];
           readonly meta?: components["schemas"]["_metaCollection"];
-        } & { readonly [key: string]: any };
+        };
       };
     };
     readonly AddressResponse: {
       readonly content: {
         readonly "application/json": {
-          readonly data?: readonly ({
+          readonly data?: readonly {
             /** The first name of the customer address. */
             readonly first_name: string;
             /** The last name of the customer address. */
@@ -923,42 +903,32 @@ export interface components {
             /** The country name of the customer address. */
             readonly country?: string;
             /** Array of form fields. Controlled by `formfields` parameter. */
-            readonly form_fields?: readonly ((
-              | (({
+            readonly form_fields?: readonly (
+              | ({
                   /** The form field name. */
                   readonly name: string;
-                  readonly value: (string | number | readonly string[]) & {
-                    readonly [key: string]: any;
-                  };
-                } & { readonly [key: string]: any }) &
-                  ({
-                    readonly customer_id: number;
-                  } & { readonly [key: string]: any }) & {
-                    readonly [key: string]: any;
-                  })
-              | (({
+                  readonly value: string | number | readonly string[];
+                } & {
+                  readonly customer_id: number;
+                })
+              | ({
                   /** The form field name. */
                   readonly name: string;
-                  readonly value: (string | number | readonly string[]) & {
-                    readonly [key: string]: any;
-                  };
-                } & { readonly [key: string]: any }) &
-                  ({
-                    /** The Customer Address ID. */
-                    readonly address_id: number;
-                  } & { readonly [key: string]: any }) & {
-                    readonly [key: string]: any;
-                  })
-            ) & { readonly [key: string]: any })[];
-          } & { readonly [key: string]: any })[];
+                  readonly value: string | number | readonly string[];
+                } & {
+                  /** The Customer Address ID. */
+                  readonly address_id: number;
+                })
+            )[];
+          }[];
           readonly meta?: { readonly [key: string]: any };
-        } & { readonly [key: string]: any };
+        };
       };
     };
     readonly CustomerAttributeValueCollectionResponse: {
       readonly content: {
         readonly "application/json": {
-          readonly data?: readonly ({
+          readonly data?: readonly {
             /** Attribute ID. */
             readonly attribute_id: number;
             /** Attribute value. This will always be a string, regardless of the attributes type. */
@@ -971,7 +941,7 @@ export interface components {
             readonly date_modified?: string;
             /** The date of which the customer attribute value was created. */
             readonly date_created?: string;
-          } & { readonly [key: string]: any })[];
+          }[];
           /** Data about the response, including pagination and collection totals. */
           readonly meta?: {
             /** Data about the response, including pagination and collection totals. */
@@ -994,16 +964,16 @@ export interface components {
                 readonly current?: string;
                 /** Link to the next page returned in the response. */
                 readonly next?: string;
-              } & { readonly [key: string]: any };
-            } & { readonly [key: string]: any };
-          } & { readonly [key: string]: any };
-        } & { readonly [key: string]: any };
+              };
+            };
+          };
+        };
       };
     };
     readonly CustomerAttributeValueResponse: {
       readonly content: {
         readonly "application/json": {
-          readonly data?: readonly ({
+          readonly data?: readonly {
             /** Attribute ID. */
             readonly attribute_id: number;
             /** Attribute value. This will always be a string, regardless of the attributes type. */
@@ -1016,15 +986,15 @@ export interface components {
             readonly date_modified?: string;
             /** The date of which the customer attribute value was created. */
             readonly date_created?: string;
-          } & { readonly [key: string]: any })[];
+          }[];
           readonly meta?: { readonly [key: string]: any };
-        } & { readonly [key: string]: any };
+        };
       };
     };
     readonly CustomerAttributeCollectionResponse: {
       readonly content: {
         readonly "application/json": {
-          readonly data?: readonly ({
+          readonly data?: readonly {
             /** Attribute ID. */
             readonly attribute_id: number;
             /** Attribute value. This will always be a string, regardless of the attributes type. */
@@ -1037,18 +1007,18 @@ export interface components {
             readonly date_modified?: string;
             /** The date of which the customer attribute value was created. */
             readonly date_created?: string;
-          } & { readonly [key: string]: any })[];
+          }[];
           /** Data about the response, including pagination and collection totals. */
           readonly meta?: {
             readonly pagination?: any;
-          } & { readonly [key: string]: any };
-        } & { readonly [key: string]: any };
+          };
+        };
       };
     };
     readonly CustomerAttributesResponse: {
       readonly content: {
         readonly "application/json": {
-          readonly data?: readonly ({
+          readonly data?: readonly {
             /** Attribute name. */
             readonly name: string;
             /** Attribute type should match one of: string, number, date. When doing a */
@@ -1059,41 +1029,31 @@ export interface components {
             readonly date_modified?: string;
             /** The date of which the customer attribute was created. */
             readonly date_created?: string;
-          } & { readonly [key: string]: any })[];
+          }[];
           readonly meta?: { readonly [key: string]: any };
-        } & { readonly [key: string]: any };
+        };
       };
     };
     readonly FormFieldValueCollectionResponse: {
       readonly content: {
         readonly "application/json": {
-          readonly data?: readonly ((
-            | (({
+          readonly data?: readonly (
+            | ({
                 /** The form field name. */
                 readonly name: string;
-                readonly value: (string | number | readonly string[]) & {
-                  readonly [key: string]: any;
-                };
-              } & { readonly [key: string]: any }) &
-                ({
-                  readonly customer_id: number;
-                } & { readonly [key: string]: any }) & {
-                  readonly [key: string]: any;
-                })
-            | (({
+                readonly value: string | number | readonly string[];
+              } & {
+                readonly customer_id: number;
+              })
+            | ({
                 /** The form field name. */
                 readonly name: string;
-                readonly value: (string | number | readonly string[]) & {
-                  readonly [key: string]: any;
-                };
-              } & { readonly [key: string]: any }) &
-                ({
-                  /** The Customer Address ID. */
-                  readonly address_id: number;
-                } & { readonly [key: string]: any }) & {
-                  readonly [key: string]: any;
-                })
-          ) & { readonly [key: string]: any })[];
+                readonly value: string | number | readonly string[];
+              } & {
+                /** The Customer Address ID. */
+                readonly address_id: number;
+              })
+          )[];
           /** Data about the response, including pagination and collection totals. */
           readonly meta?: {
             /** Data about the response, including pagination and collection totals. */
@@ -1116,44 +1076,34 @@ export interface components {
                 readonly current?: string;
                 /** Link to the next page returned in the response. */
                 readonly next?: string;
-              } & { readonly [key: string]: any };
-            } & { readonly [key: string]: any };
-          } & { readonly [key: string]: any };
-        } & { readonly [key: string]: any };
+              };
+            };
+          };
+        };
       };
     };
     readonly FormFieldValuesResponse: {
       readonly content: {
         readonly "application/json": {
-          readonly data?: readonly ((
-            | (({
+          readonly data?: readonly (
+            | ({
                 /** The form field name. */
                 readonly name: string;
-                readonly value: (string | number | readonly string[]) & {
-                  readonly [key: string]: any;
-                };
-              } & { readonly [key: string]: any }) &
-                ({
-                  readonly customer_id: number;
-                } & { readonly [key: string]: any }) & {
-                  readonly [key: string]: any;
-                })
-            | (({
+                readonly value: string | number | readonly string[];
+              } & {
+                readonly customer_id: number;
+              })
+            | ({
                 /** The form field name. */
                 readonly name: string;
-                readonly value: (string | number | readonly string[]) & {
-                  readonly [key: string]: any;
-                };
-              } & { readonly [key: string]: any }) &
-                ({
-                  /** The Customer Address ID. */
-                  readonly address_id: number;
-                } & { readonly [key: string]: any }) & {
-                  readonly [key: string]: any;
-                })
-          ) & { readonly [key: string]: any })[];
+                readonly value: string | number | readonly string[];
+              } & {
+                /** The Customer Address ID. */
+                readonly address_id: number;
+              })
+          )[];
           readonly meta?: { readonly [key: string]: any };
-        } & { readonly [key: string]: any };
+        };
       };
     };
     readonly consent_Resp: {
@@ -1384,7 +1334,7 @@ export interface operations {
             readonly type?: string;
             readonly instance?: string;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
     };
@@ -1439,7 +1389,7 @@ export interface operations {
             readonly type?: string;
             readonly instance?: string;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
     };
@@ -1535,7 +1485,7 @@ export interface operations {
             readonly type?: string;
             readonly instance?: string;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
     };
@@ -1578,7 +1528,7 @@ export interface operations {
             readonly type?: string;
             readonly instance?: string;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
     };
@@ -1632,7 +1582,7 @@ export interface operations {
             readonly type?: string;
             readonly instance?: string;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
       /** Allowed number of requests exceeded */
@@ -1645,7 +1595,7 @@ export interface operations {
             readonly title?: string;
             readonly type?: string;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
     };
@@ -1664,7 +1614,7 @@ export interface operations {
           readonly "application/json": {
             readonly data?: components["schemas"]["CustomerSettingsObject"];
             readonly meta?: { readonly [key: string]: any };
-          } & { readonly [key: string]: any };
+          };
         };
       };
     };
@@ -1678,7 +1628,7 @@ export interface operations {
           readonly "application/json": {
             readonly data?: components["schemas"]["CustomerSettingsObject"];
             readonly meta?: { readonly [key: string]: any };
-          } & { readonly [key: string]: any };
+          };
         };
       };
     };
@@ -1708,7 +1658,7 @@ export interface operations {
           readonly "application/json": {
             readonly data?: components["schemas"]["CustomerChannelSettingsObject"];
             readonly meta?: { readonly [key: string]: any };
-          } & { readonly [key: string]: any };
+          };
         };
       };
     };
@@ -1737,7 +1687,7 @@ export interface operations {
           readonly "application/json": {
             readonly data?: components["schemas"]["CustomerSettingsObject"];
             readonly meta?: { readonly [key: string]: any };
-          } & { readonly [key: string]: any };
+          };
         };
       };
     };
@@ -1811,7 +1761,7 @@ export interface operations {
             readonly type?: string;
             readonly instance?: string;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
     };
@@ -1856,7 +1806,7 @@ export interface operations {
             readonly type?: string;
             readonly instance?: string;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
     };
@@ -1955,7 +1905,7 @@ export interface operations {
             readonly type?: string;
             readonly instance?: string;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
     };
@@ -2042,7 +1992,7 @@ export interface operations {
             readonly type?: string;
             readonly instance?: string;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
     };
@@ -2066,7 +2016,7 @@ export interface operations {
             readonly type?: string;
             readonly instance?: string;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
     };
@@ -2166,11 +2116,11 @@ export interface operations {
       /** OK */
       readonly 200: {
         readonly content: {
-          readonly "application/json": readonly ((
+          readonly "application/json": readonly (
             | components["schemas"]["CardInstrument"]
             | components["schemas"]["PayPalAccountInstrument"]
             | components["schemas"]["BankAccountInstrument"]
-          ) & { readonly [key: string]: any })[];
+          )[];
         };
       };
       /** Unauthorized */

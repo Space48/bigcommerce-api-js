@@ -2,7 +2,7 @@ const blacklist = [
   ".spectral.yaml",
   "channels.v3.yml", // fails to build
   "customers_v2.yml", // duplicate of customers.v2.yml
-  "orders.v2.oas2.yml",
+  //"orders.v2.oas2.yml",
   //"tax.v3.yml", // fails to build
 ];
 

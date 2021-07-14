@@ -41,8 +41,8 @@ export interface components {
         readonly instrument: { readonly [key: string]: any };
         /** Identifier for payment method that will be used for this payment */
         readonly payment_method_id: string;
-      } & { readonly [key: string]: any };
-    } & { readonly [key: string]: any };
+      };
+    };
     readonly Payment: {
       /** Amount in smallest currency unit */
       readonly amount?: number;
@@ -51,7 +51,7 @@ export interface components {
       readonly instrument: { readonly [key: string]: any };
       /** Identifier for payment method that will be used for this payment */
       readonly payment_method_id: string;
-    } & { readonly [key: string]: any };
+    };
     readonly SuccessPaymentResponse: {
       /** Identifier for this transaction */
       readonly id?: string;
@@ -59,7 +59,7 @@ export interface components {
       readonly transaction_type?: "authorization" | "purchase";
       /** Status to indicate a success response */
       readonly status?: "success" | "pending";
-    } & { readonly [key: string]: any };
+    };
     /** Transaction type for this payment */
     readonly TransactionType: "authorization" | "purchase";
     /** Status to indicate a success response */
@@ -76,7 +76,7 @@ export interface components {
       /** Code representing the particular error */
       readonly code?: number;
       readonly errors?: { readonly [key: string]: string };
-    } & { readonly [key: string]: any };
+    };
     readonly Card: {
       /** Type to classify this payment instrument */
       readonly type: string;
@@ -96,19 +96,19 @@ export interface components {
       readonly issue_year?: number;
       /** Issue number of this card */
       readonly issue_number?: number;
-    } & { readonly [key: string]: any };
+    };
     readonly StoredCard: {
       /** Type to classify this payment instrument */
       readonly type: string;
       /** Identifier representing this stored card */
       readonly token: string;
-    } & { readonly [key: string]: any };
+    };
     readonly BasePaymentResponse: {
       /** Identifier for this transaction */
       readonly id?: string;
       /** Transaction type for this payment */
       readonly transaction_type?: "authorization" | "purchase";
-    } & { readonly [key: string]: any };
+    };
     readonly PendingPaymentResponse: {
       /** Identifier for this transaction */
       readonly id?: string;
@@ -116,31 +116,31 @@ export interface components {
       readonly transaction_type?: "authorization" | "purchase";
       /** Status to indicate a success response */
       readonly status?: "success" | "pending";
-    } & { readonly [key: string]: any };
+    };
     readonly StoredPaypalAccount: {
       /** Type to classify this payment instrument */
       readonly type: "stored_paypal_account";
       /** Identifier representing this stored paypal account */
       readonly token: string;
-    } & { readonly [key: string]: any };
+    };
     readonly Order: {
       /** Identifier for the order */
       readonly id: number;
       /** Whether this is a recurring order. If the order is recurring this field should be set to true in order to let the payment gateway know. */
       readonly is_recurring?: boolean;
-    } & { readonly [key: string]: any };
+    };
     readonly PaymentAccessTokenRequest: {
       readonly order: {
         /** Identifier for the order */
         readonly id: number;
         /** Whether this is a recurring order. If the order is recurring this field should be set to true in order to let the payment gateway know. */
         readonly is_recurring?: boolean;
-      } & { readonly [key: string]: any };
-    } & { readonly [key: string]: any };
+      };
+    };
     readonly PaymentAccessToken: {
       /** Payment access token. This token is required in subsequent payment request to Payment API endpoint. */
       readonly id: string;
-    } & { readonly [key: string]: any };
+    };
     readonly paymentMethodStoredInstrument: {
       /** Brand of this card such as VISA or Mastercard */
       readonly brand: string;
@@ -158,14 +158,14 @@ export interface components {
       readonly is_default: boolean;
       /** Type to classify this stored card */
       readonly type: string;
-    } & { readonly [key: string]: any };
+    };
     readonly paymentMethod_Full: {
       /** Identifier for this payment method */
       readonly id: string;
       /** Name of this payment method */
       readonly name: string;
       readonly stored_instruments?: readonly components["schemas"]["paymentMethodStoredInstrument"][];
-      readonly supported_instruments: readonly ({
+      readonly supported_instruments: readonly {
         /** Type of this instrument */
         readonly instrument_type:
           | "VISA"
@@ -179,12 +179,12 @@ export interface components {
           | "STORED_CARD";
         /** Whether verification value is required for payment */
         readonly verification_value_required?: boolean;
-      } & { readonly [key: string]: any })[];
+      }[];
       /** Whether this payment method is on test mode */
       readonly test_mode: boolean;
       /** Type to classify this payment method */
       readonly type: string;
-    } & { readonly [key: string]: any };
+    };
     readonly SupportedCardInstrument: {
       /** Type of this instrument */
       readonly instrument_type:
@@ -199,7 +199,7 @@ export interface components {
         | "STORED_CARD";
       /** Whether verification value is required for payment */
       readonly verification_value_required?: boolean;
-    } & { readonly [key: string]: any };
+    };
     readonly Error: {
       /** HTTP status code */
       readonly status: number;
@@ -211,7 +211,7 @@ export interface components {
       readonly type: string;
       /** Code representing the particular error */
       readonly code?: number;
-    } & { readonly [key: string]: any };
+    };
     readonly ErrorResponse: {
       /** HTTP status code */
       readonly status: number;
@@ -224,7 +224,7 @@ export interface components {
       /** Code representing the particular error */
       readonly code?: number;
       readonly errors?: { readonly [key: string]: string };
-    } & { readonly [key: string]: any };
+    };
     /** Type of this instrument */
     readonly InstrumentType:
       | "VISA"
@@ -245,25 +245,25 @@ export interface components {
       readonly is_default: boolean;
       /** Type to classify this stored account */
       readonly type: "stored_paypal_account";
-    } & { readonly [key: string]: any };
+    };
     readonly SupportedPaypalAccountInstrument: {
       /** Type of this instrument */
       readonly instrument_type: "STORED_PAYPAL_ACCOUNT";
-    } & { readonly [key: string]: any };
+    };
   };
   readonly responses: {
     readonly paymentsMethods_Resp: {
       readonly content: {
         readonly "application/json": {
           readonly data?: readonly components["schemas"]["paymentMethod_Full"][];
-        } & { readonly [key: string]: any };
+        };
       };
     };
     readonly paymentAccessToken_Resp: {
       readonly content: {
         readonly "application/json": {
           readonly data?: components["schemas"]["PaymentAccessToken"];
-        } & { readonly [key: string]: any };
+        };
       };
     };
   };
@@ -295,7 +295,7 @@ export interface operations {
             readonly transaction_type?: "authorization" | "purchase";
             /** Status to indicate a success response */
             readonly status?: "success" | "pending";
-          } & { readonly [key: string]: any };
+          };
         };
       };
       /** Payment request has been rejected due to malformed request */
@@ -313,7 +313,7 @@ export interface operations {
             /** Code representing the particular error */
             readonly code?: number;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
       /** Valid authentication required */
@@ -331,7 +331,7 @@ export interface operations {
             /** Code representing the particular error */
             readonly code?: number;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
       /** Payment request has been rejected due to missing, invalid data or declined by payment provider */
@@ -349,7 +349,7 @@ export interface operations {
             /** Code representing the particular error */
             readonly code?: number;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
       /** Internal server error */
@@ -367,7 +367,7 @@ export interface operations {
             /** Code representing the particular error */
             readonly code?: number;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
     };
@@ -375,15 +375,14 @@ export interface operations {
       readonly content: {
         readonly "application/json": {
           readonly payment: {
-            readonly instrument: (
+            readonly instrument:
               | components["schemas"]["Card"]
               | components["schemas"]["StoredCard"]
-              | components["schemas"]["StoredPaypalAccount"]
-            ) & { readonly [key: string]: any };
+              | components["schemas"]["StoredPaypalAccount"];
             /** Identifier for payment method that will be used for this payment and `id` from the Get Accepted Payment Methods API */
             readonly payment_method_id: string;
-          } & { readonly [key: string]: any };
-        } & { readonly [key: string]: any };
+          };
+        };
       };
     };
   };
@@ -410,8 +409,8 @@ export interface operations {
             readonly data?: {
               /** Payment access token. This token is required in subsequent payment request to Payment API endpoint. */
               readonly id: string;
-            } & { readonly [key: string]: any };
-          } & { readonly [key: string]: any };
+            };
+          };
         };
       };
       /** Request has been rejected */
@@ -429,7 +428,7 @@ export interface operations {
             /** Code representing the particular error */
             readonly code?: number;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
       /** Valid authentication required */
@@ -447,7 +446,7 @@ export interface operations {
             /** Code representing the particular error */
             readonly code?: number;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
       /** Request has been rejected due to resource not being found */
@@ -465,7 +464,7 @@ export interface operations {
             /** Code representing the particular error */
             readonly code?: number;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
       /** Request has been rejected due to conflict with the current state of the target resource */
@@ -483,7 +482,7 @@ export interface operations {
             /** Code representing the particular error */
             readonly code?: number;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
       /** Request has been rejected due to missing or invalid data */
@@ -501,7 +500,7 @@ export interface operations {
             /** Code representing the particular error */
             readonly code?: number;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
       /** Internal server error */
@@ -519,7 +518,7 @@ export interface operations {
             /** Code representing the particular error */
             readonly code?: number;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
     };
@@ -527,7 +526,7 @@ export interface operations {
       readonly content: {
         readonly "application/json": {
           readonly order: components["schemas"]["Order"];
-        } & { readonly [key: string]: any };
+        };
       };
     };
   };
@@ -565,7 +564,7 @@ export interface operations {
             /** Code representing the particular error */
             readonly code?: number;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
       /** Valid authentication required */
@@ -583,7 +582,7 @@ export interface operations {
             /** Code representing the particular error */
             readonly code?: number;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
       /** Request has been rejected due to resource not being found */
@@ -601,7 +600,7 @@ export interface operations {
             /** Code representing the particular error */
             readonly code?: number;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
       /** Request has been rejected due to missing or invalid data */
@@ -619,7 +618,7 @@ export interface operations {
             /** Code representing the particular error */
             readonly code?: number;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
       /** Internal server error */
@@ -637,7 +636,7 @@ export interface operations {
             /** Code representing the particular error */
             readonly code?: number;
             readonly errors?: { readonly [key: string]: string };
-          } & { readonly [key: string]: any };
+          };
         };
       };
     };
@@ -645,7 +644,7 @@ export interface operations {
       readonly content: {
         readonly "application/json": {
           readonly order_id?: number;
-        } & { readonly [key: string]: any };
+        };
         readonly "application/xml": { readonly [key: string]: any };
       };
     };

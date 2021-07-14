@@ -37,11 +37,11 @@ export interface components {
       /** Has customer provided consent to receive marketing emails. */
       readonly acceptsMarketingEmails?: boolean;
       readonly customFields?: readonly components["schemas"]["CustomFields"][];
-    } & { readonly [key: string]: any };
+    };
     readonly CustomFields: {
       readonly fieldId?: string;
       readonly fieldValue?: string;
-    } & { readonly [key: string]: any };
+    };
   };
 }
 

@@ -20,19 +20,19 @@ export interface components {
     readonly Error: {
       readonly status?: number;
       readonly message?: string;
-    } & { readonly [key: string]: any };
+    };
     readonly ErrorResponse400: {
       readonly schema?: components["schemas"]["Error"];
-    } & { readonly [key: string]: any };
+    };
     readonly ErrorResponse404: {
       readonly schema?: components["schemas"]["Error"];
-    } & { readonly [key: string]: any };
+    };
     readonly ErrorResponse409: {
       readonly schema?: components["schemas"]["Error"];
-    } & { readonly [key: string]: any };
+    };
     readonly ErrorResponse422: {
       readonly schema?: components["schemas"]["Error"];
-    } & { readonly [key: string]: any };
+    };
     readonly MetaPaginationObject: {
       readonly pagination?: {
         readonly total?: number;
@@ -43,9 +43,9 @@ export interface components {
         readonly links?: {
           readonly next?: string;
           readonly current?: string;
-        } & { readonly [key: string]: any };
-      } & { readonly [key: string]: any };
-    } & { readonly [key: string]: any };
+        };
+      };
+    };
     readonly DetailedErrors: { readonly [key: string]: string };
     /** Error payload for the BigCommerce API. */
     readonly BaseError: {
@@ -55,11 +55,10 @@ export interface components {
       readonly title?: string;
       readonly type?: string;
       readonly instance?: string;
-    } & { readonly [key: string]: any };
-    readonly ErrorResponse: components["schemas"]["BaseError"] &
-      ({
-        readonly errors?: components["schemas"]["DetailedErrors"];
-      } & { readonly [key: string]: any }) & { readonly [key: string]: any };
+    };
+    readonly ErrorResponse: components["schemas"]["BaseError"] & {
+      readonly errors?: components["schemas"]["DetailedErrors"];
+    };
     readonly CustomTemplateAssociation: {
       readonly id?: number;
       readonly channel_id?: number;
@@ -70,13 +69,13 @@ export interface components {
       readonly is_valid?: boolean;
       readonly date_created?: string;
       readonly date_modified?: string;
-    } & { readonly [key: string]: any };
+    };
     readonly CustomTemplateAssociationUpsert: {
       readonly channel_id: number;
       readonly entity_type: "product" | "category" | "brand" | "page";
       readonly entity_id: number;
       readonly file_name: string;
-    } & { readonly [key: string]: any };
+    };
   };
 }
 
@@ -106,7 +105,7 @@ export interface operations {
           readonly "application/json": {
             readonly data?: readonly components["schemas"]["CustomTemplateAssociation"][];
             readonly meta?: components["schemas"]["MetaPaginationObject"];
-          } & { readonly [key: string]: any };
+          };
         };
       };
     };

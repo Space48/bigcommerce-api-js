@@ -35,15 +35,11 @@ export interface components {
             /** The error title describing the particular error. */
             readonly title?: string;
             readonly type?: string;
-        } & {
-            readonly [key: string]: any;
         };
         readonly errorDetailed_Full: {
             readonly errors?: {
                 readonly [key: string]: string;
             };
-        } & {
-            readonly [key: string]: any;
         };
         readonly webhook_Base: {
             /** Event you subscribe to */
@@ -55,13 +51,9 @@ export interface components {
             /** You can pass in any number of custom headers to validate webhooks being returned. */
             readonly headers: {
                 readonly custom?: string;
-            } & {
-                readonly [key: string]: any;
             };
-        } & {
-            readonly [key: string]: any;
         };
-        readonly webhook_Full: ({
+        readonly webhook_Full: {
             /** Id of the webhook */
             readonly id?: number;
             /** Client ID, unique to the store */
@@ -72,11 +64,7 @@ export interface components {
             readonly created_at?: number;
             /** Updated time */
             readonly updated_at?: number;
-        } & {
-            readonly [key: string]: any;
-        }) & components["schemas"]["webhook_Base"] & {
-            readonly [key: string]: any;
-        };
+        } & components["schemas"]["webhook_Base"];
         /** Data about the response, including pagination and collection totals. */
         readonly Pagination: {
             /** Offset. */
@@ -85,8 +73,6 @@ export interface components {
             readonly limit?: number;
             /** Total number of items. */
             readonly total_items?: number;
-        } & {
-            readonly [key: string]: any;
         };
     };
     readonly responses: {
@@ -96,11 +82,7 @@ export interface components {
                     readonly data?: readonly components["schemas"]["webhook_Full"][];
                     readonly meta?: {
                         readonly pagination?: components["schemas"]["Pagination"];
-                    } & {
-                        readonly [key: string]: any;
                     };
-                } & {
-                    readonly [key: string]: any;
                 };
                 readonly v2: readonly components["schemas"]["webhook_Full"][];
             };
@@ -147,11 +129,7 @@ export interface components {
                     readonly errors?: {
                         readonly name?: string;
                         readonly "primary_contact.district"?: string;
-                    } & {
-                        readonly [key: string]: any;
                     };
-                } & {
-                    readonly [key: string]: any;
                 };
             };
         };
@@ -169,8 +147,6 @@ export interface components {
                     readonly meta?: {
                         readonly [key: string]: any;
                     };
-                } & {
-                    readonly [key: string]: any;
                 };
                 readonly v2: components["schemas"]["webhook_Full"];
             };
