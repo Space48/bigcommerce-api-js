@@ -77,6 +77,8 @@ export class Client {
     params: Const<Params & Operation.MinimalInput<Operations[`GET ${Path}`]>>
   ): Promise<ResponseData<`GET ${Path}`, Params> | null>
 
+  get<T = unknown>(path: string, params?: Parameters): Promise<T>
+
   async get(path: string, params?: Parameters): Promise<unknown> {
     const res = await this.send(`GET ${path}`, params);
     if (res.status === 204 || res.status === 404) {
@@ -92,6 +94,8 @@ export class Client {
     path: Path,
     params: Const<Params & Operation.MinimalInput<Operations[`GET ${Path}`]>>
   ): AsyncIterable<ListItemType<Path, Params>>
+
+  list<T = unknown>(path: string, params?: Parameters): AsyncIterable<T>
 
   async *list<T>(path: string, params?: Parameters): AsyncIterable<T> {
     const MAX_PAGES = Number.MAX_SAFE_INTEGER;
@@ -113,6 +117,8 @@ export class Client {
     params: Const<Params & Operation.MinimalInput<Operations[`POST ${Path}`]>>
   ): Promise<ResponseData<`POST ${Path}`, Params>>
 
+  post<T = unknown>(path: string, params?: Parameters): Promise<T>
+
   async post(path: string, params?: Parameters): Promise<unknown> {
     const res = await this.send(`POST ${path}`, params);
     this.checkResponseStatus(`POST ${path}`, res);
@@ -126,6 +132,8 @@ export class Client {
     params: Const<Params & Operation.MinimalInput<Operations[`PUT ${Path}`]>>
   ): Promise<ResponseData<`PUT ${Path}`, Params>>
 
+  put<T = unknown>(path: string, params?: Parameters): Promise<T>
+
   async put(path: string, params?: Parameters): Promise<unknown> {
     const res = await this.send(`PUT ${path}`, params);
     this.checkResponseStatus(`PUT ${path}`, res);
@@ -138,6 +146,8 @@ export class Client {
     path: Path,
     params: Const<Params & Operation.MinimalInput<Operations[`DELETE ${Path}`]>>
   ): Promise<ResponseData<`DELETE ${Path}`, Params> | null>
+
+  delete<T = unknown>(path: string, params?: Parameters): Promise<T>
 
   async delete(path: string, params?: Parameters): Promise<unknown> {
     const res = await this.send(`DELETE ${path}`, params);
