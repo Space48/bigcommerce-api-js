@@ -1,9 +1,7 @@
-/// <reference types="node" />
 import type { V2 as reference } from "../../internal/reference";
 import type { NarrowResponse } from "./response-narrowing";
-import { Operation, OperationIndex, Parameters, Request, RequestMethod, Response } from "../../internal/operation";
+import { Operation, OperationIndex, Parameters, Request, RequestMethod, Response, Transport, FetchTransportOptions } from "../../internal/operation";
 import { Const } from "../../internal/type-utils";
-import { Agent } from "http";
 export declare type Operations = reference.Operation;
 export declare type RequestLine = keyof Operations;
 export declare type NoParamsRequestLine = keyof OperationIndex.FilterOptionalParams<Operations>;
@@ -11,15 +9,14 @@ export declare type InferResponse<ReqLine extends RequestLine, Params> = NarrowR
 export declare type ResponseData<ReqLine extends RequestLine, Params = unknown> = Response.Success<ResolveResponse<ReqLine, Params>> extends {
     readonly body: infer Data;
 } ? Data : never;
-export declare type Config = {
+export declare type Config = Omit<FetchTransportOptions, 'baseUrl' | 'headers'> & {
     readonly storeHash: string;
     readonly accessToken: string;
-    readonly agent?: Agent;
 };
 export declare class Client {
-    private readonly config;
     constructor(config: Config);
-    private readonly headers;
+    constructor(transport: Transport);
+    private readonly transport;
     send<ReqLine extends NoParamsRequestLine>(requestLine: ReqLine): Promise<InferResponse<ReqLine, {}>>;
     send<ReqLine extends RequestLine, Params extends Operation.MinimalInput<Operations[ReqLine]>>(requestLine: ReqLine, params: Const<Params & Operation.MinimalInput<Operations[ReqLine]>>): Promise<InferResponse<ReqLine, Params>>;
     send(requestLine: string, params?: Parameters): Promise<Response>;

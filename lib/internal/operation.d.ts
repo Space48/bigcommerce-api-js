@@ -1,3 +1,5 @@
+/// <reference types="node" />
+import { Agent } from "http";
 export declare type RequestMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT';
 export declare type Request<ReqLine extends RequestLine = RequestLine, Params extends Parameters = Parameters> = {
     readonly requestLine: ReqLine;
@@ -11,8 +13,8 @@ export declare type Parameters = {
     readonly header?: Record<string, any>;
 };
 export declare type Response = {
-    status: number | string;
-    body?: any;
+    readonly status: number | string;
+    readonly body?: any;
 };
 export declare namespace Response {
     type Success<T extends Response | Operation> = T extends {
@@ -42,4 +44,21 @@ declare type MakeEmptyObjectOptional<T> = 1 extends 0 ? never : ({
     readonly [K in keyof T as {} extends T[K] ? never : K]: T[K];
 });
 export declare function resolvePath(parameterizedPath: string, pathParams: Record<string, any>): string;
+export declare type Transport = (requestLine: string, params?: Parameters) => Promise<Response>;
+export declare type FetchTransportOptions = {
+    readonly baseUrl: string;
+    readonly headers: Record<string, string>;
+    readonly agent?: Agent;
+    readonly retry?: boolean | {
+        /**
+         * Return true if the request should be retried, false otherwise
+         */
+        readonly shouldRetry?: (attemptNum: number, response: globalThis.Response, requestLine: string) => boolean;
+        /**
+         * Return the backoff time in ms
+         */
+        readonly backoffTime?: (numFailures: number, response: globalThis.Response, requestLine: string) => number;
+    };
+};
+export declare function fetchTransport(options: FetchTransportOptions): Transport;
 export {};
