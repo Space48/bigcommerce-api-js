@@ -139,6 +139,7 @@ export function fetchTransport(options: FetchTransportOptions): Transport {
           ...headers,
           "Accept-Encoding": "gzip",
           'Content-Type': params?.body && 'application/json',
+          "Accept": "application/json"
         },
         agent: _agent,
         body,
