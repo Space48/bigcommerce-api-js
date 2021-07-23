@@ -1,10 +1,7 @@
 import type { V2 as reference } from "../../internal/reference";
 import type { NarrowResponse } from "./response-narrowing"
-import { Operation, OperationIndex, Parameters, Request, RequestMethod, resolvePath, Response } from "../../internal/operation";
+import { Operation, OperationIndex, Parameters, Request, RequestMethod, Response, fetchTransport, Transport, FetchTransportOptions } from "../../internal/operation";
 import { Const } from "../../internal/type-utils";
-import fetch from "cross-fetch";
-import { stringify } from "query-string";
-import { Agent } from "http";
 
 export type Operations = reference.Operation;
 
@@ -24,21 +21,28 @@ export type ResponseData<ReqLine extends RequestLine, Params = unknown> =
     ? Data
     : never;
 
-export type Config = {
-  readonly storeHash: string;
-  readonly accessToken: string;
-  readonly agent?: Agent
+export type Config = Omit<FetchTransportOptions, 'baseUrl' | 'headers'> & {
+  readonly storeHash: string
+  readonly accessToken: string
 };
 
 export class Client {
-  constructor(
-    private readonly config: Config,
-  ) {}
+  constructor(config: Config)
 
-  private readonly headers = {
-    Accept: "application/json",
-    "X-Auth-Token": this.config.accessToken,
-  };
+  constructor(transport: Transport)
+  
+  constructor(configOrTransport: Config | Transport) {
+    this.transport =
+      typeof configOrTransport === 'function'
+        ? configOrTransport
+        : fetchTransport({
+          agent: configOrTransport.agent,
+          baseUrl: `https://api.bigcommerce.com/stores/${configOrTransport.storeHash}/v2`,
+          headers: { "X-Auth-Token": configOrTransport.accessToken },
+        });
+  }
+
+  private readonly transport: Transport;
 
   send<ReqLine extends NoParamsRequestLine>(requestLine: ReqLine): Promise<InferResponse<ReqLine, {}>>
 
@@ -50,24 +54,7 @@ export class Client {
   send(requestLine: string, params?: Parameters): Promise<Response>
 
   async send(requestLine: string, params?: Parameters): Promise<Response> {
-    const [method, paramaterizedPath] = requestLine.split(" ", 2);
-    const path = resolvePath(paramaterizedPath, params?.path ?? {});
-    const queryParams = stringify(params?.query ?? {}, { arrayFormat: "comma" } );
-    const queryString = queryParams.length ? `?${queryParams}` : "";
-    const res = await fetch(`https://api.bigcommerce.com/stores/${this.config.storeHash}/v2${path}${queryString}`, {
-      method,
-      headers: {
-        ...this.headers,
-        'Content-Type': params?.body && 'application/json',
-      },
-      agent: this.config.agent,
-      body: params?.body && JSON.stringify(params.body),
-    } as any);
-    const body = await res.text();
-    return {
-      status: res.status,
-      body: body && JSON.parse(body),
-    };
+    return this.transport(requestLine, params);
   }
 
   delete<Path extends NoParamsRequestPath<'DELETE'>>(requestLine: Path): Promise<ResponseData<`DELETE ${Path}`, {}> | null>
