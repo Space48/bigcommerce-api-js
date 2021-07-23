@@ -1,5 +1,6 @@
 /// <reference types="node" />
 import { Agent } from "http";
+import { Response as FetchResponse } from "node-fetch";
 export declare type RequestMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT';
 export declare type Request<ReqLine extends RequestLine = RequestLine, Params extends Parameters = Parameters> = {
     readonly requestLine: ReqLine;
@@ -53,11 +54,11 @@ export declare type FetchTransportOptions = {
         /**
          * Return true if the request should be retried, false otherwise
          */
-        readonly shouldRetry?: (attemptNum: number, response: globalThis.Response, requestLine: string) => boolean;
+        readonly shouldRetry?: (attemptNum: number, response: FetchResponse, requestLine: string) => boolean;
         /**
          * Return the backoff time in ms
          */
-        readonly backoffTime?: (numFailures: number, response: globalThis.Response, requestLine: string) => number;
+        readonly backoffTime?: (numFailures: number, response: FetchResponse, requestLine: string) => number;
     };
 };
 export declare function fetchTransport(options: FetchTransportOptions): Transport;
