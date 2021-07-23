@@ -11,6 +11,11 @@ const rimraf = require('rimraf');
 const execAsync = promisify(exec);
 const writeFileAsync = promisify(writeFile);
 
+// files with weird names need to be grouped into sf/v2/v3 manually
+const fileGroupAssociations = {
+  'orders.v2.oas2': 'v2',
+};
+
 async function main() {
   const sourceDir = process.argv[2] || 'https://raw.githubusercontent.com/Space48/api-specs/space48-fixes/reference' // '/Users/joshdifabio/projects/bigcommerce-api-specs/reference' // 'https://raw.githubusercontent.com/bigcommerce/api-specs/master/reference';
   const tempOutputDir = await makeTempDir();
@@ -39,7 +44,8 @@ async function generateTypeScript(sourceDir, outputDir, yamlFiles) {
     const moduleName = jsIdentifier(filenameParts.join('.'));
     return {
       moduleName,
-      groupName: filenameParts.length === 2 ? jsIdentifier(filenameParts.slice(-1)[0]) : null,
+      groupName: 
+        fileGroupAssociations[moduleName] || (filenameParts.length === 2 ? jsIdentifier(filenameParts.slice(-1)[0]) : null),
       yamlFilename,
       tsFilename: `${moduleName}.ts`,
       exportName,
