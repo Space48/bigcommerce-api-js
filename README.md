@@ -7,10 +7,10 @@ A JavaScript client for BigCommerce's [Management](src/management/README.md) API
 - Full coverage of BigCommerce's Storefront (coming soon) and Management APIs.
 - Up-to-date TypeScript typings for all of BigCommerce's API endpoints.
 - Easy IDE autocompeletion of endpoints, parameters and response data thanks to TypeScript.
+- Automatic retry of intermittent errors such as 429 and 5xx with exponential backoff.
 
 ### Coming soon
 
-- Built in rate limiting with retry for intermittent errors such as 429 and 5xx.
 - Type declarations for webhook payloads.
 - Browser support.
 
