@@ -1,3 +1,8 @@
+import { stringify } from "query-string";
+import { Agent } from "http";
+import { Agent as HttpsAgent } from "https";
+import fetch from "cross-fetch";
+
 export type RequestMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT';
 
 export type Request<ReqLine extends RequestLine = RequestLine, Params extends Parameters = Parameters> = {
@@ -15,8 +20,8 @@ export type Parameters = {
 };
 
 export type Response = {
-  status: number | string
-  body?: any
+  readonly status: number | string
+  readonly body?: any
 };
 
 export namespace Response {
@@ -74,4 +79,89 @@ export function resolvePath(parameterizedPath: string, pathParams: Record<string
       return encodeURIComponent(param);
     })
     .join('/');
+}
+
+export type Transport = (requestLine: string, params?: Parameters) => Promise<Response>;
+
+export type FetchTransportOptions = {
+  readonly baseUrl: string
+  readonly headers: Record<string, string>
+  readonly agent?: Agent
+  readonly retry?: {
+    readonly decider?: (attemptNum: number, response: globalThis.Response) => boolean
+    readonly backoff?: (numFailures: number, response: globalThis.Response) => number
+  }
+};
+
+const defaultRetryConfig: FetchTransportOptions['retry'] = {
+  decider: (attemptNum, response) => {
+    if (response.status === 429 && attemptNum < 50) {
+      return true;
+    }
+    if (response.status >= 500 && response.status < 600 && attemptNum < 5) {
+      return true;
+    }
+    return false;
+  },
+
+  backoff: numFailures => {
+    const maxRandomization = 0.2;
+    const randomization = 0.9 + Math.random() * maxRandomization;
+    return numFailures * 500 * randomization;
+  },
+};
+
+export function fetchTransport(options: FetchTransportOptions): Transport {
+  const {
+    agent,
+    baseUrl,
+    headers,
+    retry,
+  } = options;
+
+  const _agent = agent || new HttpsAgent({ maxSockets: 10, keepAlive: true });
+
+  const shouldRetry = retry?.decider ?? defaultRetryConfig?.decider!;
+  const backoffTime = retry?.backoff ?? defaultRetryConfig?.backoff!;
+
+  return async (requestLine, params) => {
+    const [method, paramaterizedPath] = requestLine.split(" ", 2);
+    const path = resolvePath(paramaterizedPath, params?.path ?? {});
+    const queryParams = stringify(params?.query ?? {}, { arrayFormat: "comma" } );
+    const queryString = queryParams.length ? `?${queryParams}` : "";
+    const body = params?.body && JSON.stringify(params.body);
+    
+    const fetchFn = () => fetch(
+      `${baseUrl}${path}${queryString}`,
+      {
+        method,
+        headers: {
+          ...headers,
+          "Accept-Encoding": "gzip",
+          'Content-Type': params?.body && 'application/json',
+        },
+        agent: _agent,
+        body,
+      } as any,
+    );
+
+    let response: globalThis.Response;
+    for (let attemptNum = 1;; attemptNum++) {
+      response = await fetchFn();
+      if (shouldRetry(attemptNum, response)) {
+        await new Promise<void>(
+          resolve => setTimeout(() => resolve(), backoffTime(attemptNum, response)),
+        );
+      } else {
+        break;
+      }
+    }
+
+    const responseBody = await response!.text();
+
+    return {
+      status: response!.status,
+      body: responseBody && JSON.parse(responseBody),
+    };
+  };
 }
