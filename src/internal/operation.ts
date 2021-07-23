@@ -1,7 +1,7 @@
 import { stringify } from "query-string";
 import { Agent } from "http";
 import { Agent as HttpsAgent } from "https";
-import fetch from "cross-fetch";
+import fetch, { Response as FetchResponse } from "node-fetch";
 
 export type RequestMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT';
 
@@ -91,12 +91,12 @@ export type FetchTransportOptions = {
     /**
      * Return true if the request should be retried, false otherwise
      */
-    readonly shouldRetry?: (attemptNum: number, response: globalThis.Response, requestLine: string) => boolean
+    readonly shouldRetry?: (attemptNum: number, response: FetchResponse, requestLine: string) => boolean
 
     /**
      * Return the backoff time in ms
      */
-    readonly backoffTime?: (numFailures: number, response: globalThis.Response, requestLine: string) => number
+    readonly backoffTime?: (numFailures: number, response: FetchResponse, requestLine: string) => number
   }
 };
 
@@ -165,7 +165,7 @@ export function fetchTransport(options: FetchTransportOptions): Transport {
       } as any,
     );
 
-    let response: globalThis.Response;
+    let response: FetchResponse;
     for (let attemptNum = 1;; attemptNum++) {
       response = await fetchFn();
       if (!response.ok && shouldRetry(attemptNum, response, requestLine)) {
