@@ -158,6 +158,7 @@ export function fetchTransport(options: FetchTransportOptions): Transport {
         headers: {
           'Content-Type': params?.body ? 'application/json' : undefined,
           ...staticHeaders,
+          ...params?.header,
         },
         agent: _agent,
         body,
