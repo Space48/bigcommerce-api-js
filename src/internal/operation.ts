@@ -167,7 +167,7 @@ export function fetchTransport(options: FetchTransportOptions): Transport {
     let response: globalThis.Response;
     for (let attemptNum = 1;; attemptNum++) {
       response = await fetchFn();
-      if (shouldRetry(attemptNum, response, requestLine)) {
+      if (!response.ok && shouldRetry(attemptNum, response, requestLine)) {
         await new Promise<void>(
           resolve => setTimeout(() => resolve(), backoffTime(attemptNum, response, requestLine)),
         );
