@@ -87,14 +87,21 @@ export type FetchTransportOptions = {
   readonly baseUrl: string
   readonly headers: Record<string, string>
   readonly agent?: Agent
-  readonly retry?: {
-    readonly decider?: (attemptNum: number, response: globalThis.Response) => boolean
-    readonly backoff?: (numFailures: number, response: globalThis.Response) => number
+  readonly retry?: boolean | {
+    /**
+     * Return true if the request should be retried, false otherwise
+     */
+    readonly shouldRetry?: (attemptNum: number, response: globalThis.Response, requestLine: string) => boolean
+
+    /**
+     * Return the backoff time in ms
+     */
+    readonly backoffTime?: (numFailures: number, response: globalThis.Response, requestLine: string) => number
   }
 };
 
-const defaultRetryConfig: FetchTransportOptions['retry'] = {
-  decider: (attemptNum, response) => {
+const defaultRetryConfig: Exclude<FetchTransportOptions['retry'], boolean | undefined> = {
+  shouldRetry: (attemptNum, response) => {
     if (response.status === 429 && attemptNum < 50) {
       return true;
     }
@@ -104,7 +111,7 @@ const defaultRetryConfig: FetchTransportOptions['retry'] = {
     return false;
   },
 
-  backoff: numFailures => {
+  backoffTime: numFailures => {
     const maxRandomization = 0.2;
     const randomization = 0.9 + Math.random() * maxRandomization;
     return numFailures * 500 * randomization;
@@ -121,8 +128,15 @@ export function fetchTransport(options: FetchTransportOptions): Transport {
 
   const _agent = agent || new HttpsAgent({ maxSockets: 10, keepAlive: true });
 
-  const shouldRetry = retry?.decider ?? defaultRetryConfig?.decider!;
-  const backoffTime = retry?.backoff ?? defaultRetryConfig?.backoff!;
+  const shouldRetry =
+    retry === false ? () => false
+    : retry === true || retry?.shouldRetry === undefined ? defaultRetryConfig.shouldRetry!
+    : retry.shouldRetry;
+  
+  const backoffTime =
+    retry === false ? () => { throw new Error() }
+    : retry === true || retry?.backoffTime === undefined ? defaultRetryConfig.backoffTime!
+    : retry.backoffTime;
 
   const staticHeaders = {
     "Accept-Encoding": "gzip",
@@ -153,9 +167,9 @@ export function fetchTransport(options: FetchTransportOptions): Transport {
     let response: globalThis.Response;
     for (let attemptNum = 1;; attemptNum++) {
       response = await fetchFn();
-      if (shouldRetry(attemptNum, response)) {
+      if (shouldRetry(attemptNum, response, requestLine)) {
         await new Promise<void>(
-          resolve => setTimeout(() => resolve(), backoffTime(attemptNum, response)),
+          resolve => setTimeout(() => resolve(), backoffTime(attemptNum, response, requestLine)),
         );
       } else {
         break;
