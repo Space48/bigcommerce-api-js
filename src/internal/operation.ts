@@ -124,6 +124,12 @@ export function fetchTransport(options: FetchTransportOptions): Transport {
   const shouldRetry = retry?.decider ?? defaultRetryConfig?.decider!;
   const backoffTime = retry?.backoff ?? defaultRetryConfig?.backoff!;
 
+  const staticHeaders = {
+    "Accept-Encoding": "gzip",
+    "Accept": "application/json",
+    ...headers,
+  };
+
   return async (requestLine, params) => {
     const [method, paramaterizedPath] = requestLine.split(" ", 2);
     const path = resolvePath(paramaterizedPath, params?.path ?? {});
@@ -136,10 +142,8 @@ export function fetchTransport(options: FetchTransportOptions): Transport {
       {
         method,
         headers: {
-          ...headers,
-          "Accept-Encoding": "gzip",
-          'Content-Type': params?.body && 'application/json',
-          "Accept": "application/json"
+          'Content-Type': params?.body ? 'application/json' : undefined,
+          ...staticHeaders,
         },
         agent: _agent,
         body,
