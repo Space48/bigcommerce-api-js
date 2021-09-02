@@ -1408,7 +1408,8 @@ export interface definitions {
         readonly config?: definitions["productOptionConfig_Full"];
         /** Order in which the option is displayed on the storefront. */
         readonly sort_order?: number;
-        readonly option_values?: definitions["productOptionOptionValue_Full"];
+        /** Array of option and option values IDs that make up this variant. Will be empty if the variant is the product's base variant. */
+        readonly option_values?: readonly definitions["productOptionOptionValue_Full"][];
     };
     readonly productOption_Full: definitions["productOption_Base"] & {
         /** The unique option name, auto-generated from the display name, a timestamp, and the product ID. */
