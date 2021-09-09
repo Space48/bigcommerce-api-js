@@ -26,7 +26,7 @@ export type Config = Omit<FetchTransportOptions, 'baseUrl' | 'headers'> & {
   readonly accessToken: string
 };
 
-export class Client {
+export class Client<CustomEndpoints extends string = never> {
   constructor(config: Config)
 
   constructor(transport: Transport)
