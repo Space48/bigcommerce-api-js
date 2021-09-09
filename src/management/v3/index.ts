@@ -187,4 +187,23 @@ type NoParamsRequestPath<Method extends RequestMethod> =
 /**
  * A list of known BigCommerce endpoints which are not part of the Open API specs
  */
-type UntypedEndpoints = never;
+type UntypedEndpoints =
+  | PromoEndpoints
+  | PromoCodeEndpoints
+;
+
+type PromoEndpoints = 
+  | 'GET /promotions'
+  | 'GET /promotions/{id}'
+  | 'POST /promotions'
+  | 'PUT /promotions/{id}'
+  | 'DELETE /promotions'
+  | 'DELETE /promotions/{id}'
+;
+
+type PromoCodeEndpoints = 
+  | 'GET /promotions/{promotion_id}/codes'
+  | 'POST /promotions/{promotion_id}/codes'
+  | 'DELETE /promotions/{promotion_id}/codes'
+  | 'DELETE /promotions/{promotion_id}/codes/{code_id}'
+;
