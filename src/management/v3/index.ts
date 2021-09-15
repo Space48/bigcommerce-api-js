@@ -52,7 +52,7 @@ export class Client<CustomEndpoints extends string = never> {
     params: Const<Params & Operation.MinimalInput<Operations[ReqLine]>>
   ): Promise<InferResponse<ReqLine, Params>>
 
-  send(requestLine: UntypedEndpoints | CustomEndpoints, params?: Parameters): Promise<Response>
+  send(requestLine: string, params?: Parameters): Promise<Response>
 
   send(requestLine: string, params?: Parameters): Promise<Response> {
     return this.transport(requestLine, params);
