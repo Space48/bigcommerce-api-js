@@ -1,7 +1,7 @@
 import type { V2 as reference } from "../../internal/reference";
 import type { NarrowResponse } from "./response-narrowing"
 import { Operation, OperationIndex, Parameters, Request, RequestMethod, Response, fetchTransport, Transport, FetchTransportOptions } from "../../internal/operation";
-import { Const } from "../../internal/type-utils";
+import { Const, RemoveStart } from "../../internal/type-utils";
 
 export type Operations = reference.Operation;
 
@@ -26,7 +26,7 @@ export type Config = Omit<FetchTransportOptions, 'baseUrl' | 'headers'> & {
   readonly accessToken: string
 };
 
-export class Client {
+export class Client<CustomEndpoints extends string = never> {
   constructor(config: Config)
 
   constructor(transport: Transport)
@@ -64,7 +64,7 @@ export class Client {
     params: Const<Params & Operation.MinimalInput<Operations[`DELETE ${Path}`]>>
   ): Promise<ResponseData<`DELETE ${Path}`, Params> | null>
 
-  delete<T = unknown>(path: string, params?: Parameters): Promise<T>
+  delete<T = unknown>(path: RemoveStart<'DELETE ', UntypedEndpoints | CustomEndpoints>, params?: Parameters): Promise<T>
 
   async delete(path: string, params?: Parameters): Promise<unknown> {
     const res = await this.send(`DELETE ${path}`, params);
@@ -82,7 +82,7 @@ export class Client {
     params: Const<Params & Operation.MinimalInput<Operations[`GET ${Path}`]>>
   ): Promise<ResponseData<`GET ${Path}`, Params> | null>
 
-  get<T = unknown>(path: string, params?: Parameters): Promise<T>
+  get<T = unknown>(path: RemoveStart<'GET ', UntypedEndpoints | CustomEndpoints>, params?: Parameters): Promise<T>
 
   async get(path: string, params?: Parameters): Promise<unknown> {
     const res = await this.send(`GET ${path}`, params);
@@ -100,7 +100,7 @@ export class Client {
     params: Const<Params & Operation.MinimalInput<Operations[`POST ${Path}`]>>
   ): Promise<ResponseData<`POST ${Path}`, Params>>
 
-  post<T = unknown>(path: string, params?: Parameters): Promise<T>
+  post<T = unknown>(path: RemoveStart<'POST ', UntypedEndpoints | CustomEndpoints>, params?: Parameters): Promise<T>
 
   async post(path: string, params?: Parameters): Promise<unknown> {
     const res = await this.send(`POST ${path}`, params);
@@ -115,7 +115,7 @@ export class Client {
     params: Const<Params & Operation.MinimalInput<Operations[`PUT ${Path}`]>>
   ): Promise<ResponseData<`PUT ${Path}`, Params>>
 
-  put<T = unknown>(path: string, params?: Parameters): Promise<T>
+  put<T = unknown>(path: RemoveStart<'PUT ', UntypedEndpoints | CustomEndpoints>, params?: Parameters): Promise<T>
 
   async put(path: string, params?: Parameters): Promise<unknown> {
     const res = await this.send(`PUT ${path}`, params);
@@ -142,3 +142,10 @@ type RequestPath<Method extends RequestMethod> =
 
 type NoParamsRequestPath<Method extends RequestMethod> =
   NoParamsRequestLine & `${Method} ${any}` extends `${Method} ${infer Path}` ? Path : never;
+
+/**
+ * A list of known BigCommerce endpoints which are not part of the Open API specs
+ */
+type UntypedEndpoints =
+ | never
+;

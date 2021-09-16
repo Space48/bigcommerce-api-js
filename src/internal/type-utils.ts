@@ -8,3 +8,6 @@ type Narrowable =
   | bigint
   | boolean
   | readonly any[];
+
+export type RemoveStart<Start extends string, Subject extends string> =
+  Subject extends `${Start}${infer End}` ? End : never
