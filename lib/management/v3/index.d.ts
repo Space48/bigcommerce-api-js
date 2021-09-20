@@ -2,6 +2,7 @@ import type { V3 as reference } from "../../internal/reference";
 import type { NarrowResponse } from "./response-narrowing";
 import { Operation, OperationIndex, Parameters, Request, RequestMethod, Response, Transport, FetchTransportOptions } from "../../internal/operation";
 import { Const } from "../../internal/type-utils";
+import { RemoveStart } from "../../internal/type-utils";
 export declare type Operations = reference.Operation;
 export declare type RequestLine = keyof Operations;
 export declare type NoParamsRequestLine = keyof OperationIndex.FilterOptionalParams<Operations>;
@@ -15,7 +16,7 @@ export declare type Config = Omit<FetchTransportOptions, 'baseUrl' | 'headers'> 
     readonly storeHash: string;
     readonly accessToken: string;
 };
-export declare class Client {
+export declare class Client<CustomEndpoints extends string = never> {
     constructor(config: Config);
     constructor(transport: Transport);
     private readonly transport;
@@ -24,19 +25,19 @@ export declare class Client {
     send(requestLine: string, params?: Parameters): Promise<Response>;
     get<Path extends NoParamsRequestPath<'GET'>>(path: Path): Promise<ResponseData<`GET ${Path}`, {}> | null>;
     get<Path extends RequestPath<'GET'>, Params extends Operation.MinimalInput<Operations[`GET ${Path}`]>>(path: Path, params: Const<Params & Operation.MinimalInput<Operations[`GET ${Path}`]>>): Promise<ResponseData<`GET ${Path}`, Params> | null>;
-    get<T = unknown>(path: string, params?: Parameters): Promise<T>;
+    get<T = unknown>(path: RemoveStart<'GET ', UntypedEndpoints | CustomEndpoints>, params?: Parameters): Promise<T>;
     list<Path extends NoParamsListablePath>(path: Path): AsyncIterable<ListItemType<Path, {}>>;
     list<Path extends ListablePath, Params extends Operation.MinimalInput<Operations[`GET ${Path}`]>>(path: Path, params: Const<Params & Operation.MinimalInput<Operations[`GET ${Path}`]>>): AsyncIterable<ListItemType<Path, Params>>;
-    list<T = unknown>(path: string, params?: Parameters): AsyncIterable<T>;
+    list<T = unknown>(path: RemoveStart<'GET ', UntypedEndpoints | CustomEndpoints>, params?: Parameters): AsyncIterable<T>;
     post<Path extends NoParamsRequestPath<'POST'>>(path: Path): Promise<ResponseData<`POST ${Path}`, {}>>;
     post<Path extends RequestPath<'POST'>, Params extends Operation.MinimalInput<Operations[`POST ${Path}`]>>(path: Path, params: Const<Params & Operation.MinimalInput<Operations[`POST ${Path}`]>>): Promise<ResponseData<`POST ${Path}`, Params>>;
-    post<T = unknown>(path: string, params?: Parameters): Promise<T>;
+    post<T = unknown>(path: RemoveStart<'POST ', UntypedEndpoints | CustomEndpoints>, params?: Parameters): Promise<T>;
     put<Path extends NoParamsRequestPath<'PUT'>>(path: Path): Promise<ResponseData<`PUT ${Path}`, {}>>;
     put<Path extends RequestPath<'PUT'>, Params extends Operation.MinimalInput<Operations[`PUT ${Path}`]>>(path: Path, params: Const<Params & Operation.MinimalInput<Operations[`PUT ${Path}`]>>): Promise<ResponseData<`PUT ${Path}`, Params>>;
-    put<T = unknown>(path: string, params?: Parameters): Promise<T>;
+    put<T = unknown>(path: RemoveStart<'PUT ', UntypedEndpoints | CustomEndpoints>, params?: Parameters): Promise<T>;
     delete<Path extends NoParamsRequestPath<'DELETE'>>(path: Path): Promise<ResponseData<`DELETE ${Path}`, {}> | null>;
     delete<Path extends RequestPath<'DELETE'>, Params extends Operation.MinimalInput<Operations[`DELETE ${Path}`]>>(path: Path, params: Const<Params & Operation.MinimalInput<Operations[`DELETE ${Path}`]>>): Promise<ResponseData<`DELETE ${Path}`, Params> | null>;
-    delete<T = unknown>(path: string, params?: Parameters): Promise<T>;
+    delete<T = unknown>(path: RemoveStart<'DELETE ', UntypedEndpoints | CustomEndpoints>, params?: Parameters): Promise<T>;
     private checkResponseStatus;
 }
 declare type ListItemType<Path extends string, Params = unknown> = ResponseData<`GET ${Path}` & RequestLine, Params> extends ReadonlyArray<infer T> ? T : never;
@@ -52,4 +53,10 @@ declare type ListablePath_<Ops extends OperationIndex> = {
 declare type ResolveResponse<ReqLine extends RequestLine, Params = unknown> = unknown extends Params ? Operations[ReqLine]['response'] : Params extends Parameters ? InferResponse<ReqLine, Params> : never;
 declare type RequestPath<Method extends RequestMethod> = RequestLine & `${Method} ${any}` extends `${Method} ${infer Path}` ? Path : never;
 declare type NoParamsRequestPath<Method extends RequestMethod> = NoParamsRequestLine & `${Method} ${any}` extends `${Method} ${infer Path}` ? Path : never;
+/**
+ * A list of known BigCommerce endpoints which are not part of the Open API specs
+ */
+declare type UntypedEndpoints = PromoEndpoints | PromoCodeEndpoints;
+declare type PromoEndpoints = 'GET /promotions' | 'GET /promotions/{id}' | 'POST /promotions' | 'PUT /promotions/{id}' | 'DELETE /promotions' | 'DELETE /promotions/{id}';
+declare type PromoCodeEndpoints = 'GET /promotions/{promotion_id}/codes' | 'POST /promotions/{promotion_id}/codes' | 'DELETE /promotions/{promotion_id}/codes' | 'DELETE /promotions/{promotion_id}/codes/{code_id}';
 export {};
