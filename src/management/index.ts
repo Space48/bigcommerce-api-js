@@ -33,12 +33,6 @@ export class Client<CustomEndpoints extends string = never> {
   readonly v3 = new V3.Client<ExtractSubpaths<'/v3', CustomEndpoints>>(this.config);
 }
 
-export namespace Client {
-  export type AdditonalPaths = {
-    V2?: AdditonalPaths
-  }
-}
-
 type ExtractSubpaths<Path extends string, AllCustomEndpoints extends string>
   = AllCustomEndpoints extends `${infer Method} ${Path}${infer Subpath}`
     ? `${Method} ${Subpath}`
