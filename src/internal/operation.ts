@@ -153,6 +153,10 @@ export function fetchTransport(options: FetchTransportOptions): Transport {
       ("Content-Type" in params.header) ? params?.header["Content-Type"].toLowerCase().includes("multipart/form-data") : false : false;
     const body = params?.body && (isformDataContent ? params.body : JSON.stringify(params.body));
 
+    if (isformDataContent) {
+      staticHeaders.Accept = "*/*";
+    }
+
     const fetchFn = () => fetch(
       `${baseUrl}${path}${queryString}`,
       {
