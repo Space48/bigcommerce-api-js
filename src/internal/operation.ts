@@ -25,7 +25,7 @@ export type Response = {
 };
 
 export namespace Response {
-  export type Success<T extends Response | Operation> = 
+  export type Success<T extends Response | Operation> =
     T extends { status: 200 | 201 | 204 } ? T
     : T extends Operation ? Success<T['response']>
     : never;
@@ -42,11 +42,11 @@ export namespace Operation {
   type InputParameters<OpParams extends Operation['parameters']> =
     MakeEmptyObjectOptional<{
       [K in keyof OpParams]:
-        K extends 'query' ? Partial<OpParams[K]>
-        : K extends 'header' ? Omit<OpParams[K], 'Accept' | 'Content-Type'>
-        : OpParams[K]
+      K extends 'query' ? Partial<OpParams[K]>
+      : K extends 'header' ? Omit<OpParams[K], 'Accept' | 'Content-Type'>
+      : OpParams[K]
     }>
-  ;
+    ;
 }
 
 export type OperationIndex = Record<string, Operation>;
@@ -60,8 +60,8 @@ export namespace OperationIndex {
 type MakeEmptyObjectOptional<T> = 1 extends 0 ? never : ({
   readonly [K in keyof T as {} extends T[K] ? K : never]?: T[K]
 } & {
-  readonly [K in keyof T as {} extends T[K] ? never : K]: T[K]
-});
+    readonly [K in keyof T as {} extends T[K] ? never : K]: T[K]
+  });
 
 export function resolvePath(parameterizedPath: string, pathParams: Record<string, any>): string {
   return parameterizedPath
@@ -130,13 +130,13 @@ export function fetchTransport(options: FetchTransportOptions): Transport {
 
   const shouldRetry =
     retry === false ? () => false
-    : retry === true || retry?.shouldRetry === undefined ? defaultRetryConfig.shouldRetry!
-    : retry.shouldRetry;
-  
+      : retry === true || retry?.shouldRetry === undefined ? defaultRetryConfig.shouldRetry!
+        : retry.shouldRetry;
+
   const backoffTime =
     retry === false ? () => { throw new Error() }
-    : retry === true || retry?.backoffTime === undefined ? defaultRetryConfig.backoffTime!
-    : retry.backoffTime;
+      : retry === true || retry?.backoffTime === undefined ? defaultRetryConfig.backoffTime!
+        : retry.backoffTime;
 
   const staticHeaders = {
     "Accept-Encoding": "gzip",
@@ -147,16 +147,18 @@ export function fetchTransport(options: FetchTransportOptions): Transport {
   return async (requestLine, params) => {
     const [method, paramaterizedPath] = requestLine.split(" ", 2);
     const path = resolvePath(paramaterizedPath, params?.path ?? {});
-    const queryParams = stringify(params?.query ?? {}, { arrayFormat: "comma" } );
+    const queryParams = stringify(params?.query ?? {}, { arrayFormat: "comma" });
     const queryString = queryParams.length ? `?${queryParams}` : "";
-    const body = params?.body && JSON.stringify(params.body);
-    
+    const isformDataContent = params?.header ? ("content-type" in params.header) ? params?.header["content-type"].toLowerCase().includes("multipart/form-data") :
+      ("Content-Type" in params.header) ? params?.header["Content-Type"].toLowerCase().includes("multipart/form-data") : false : false;
+    const body = params?.body && (isformDataContent ? params.body : JSON.stringify(params.body));
+
     const fetchFn = () => fetch(
       `${baseUrl}${path}${queryString}`,
       {
         method,
         headers: {
-          'Content-Type': params?.body ? 'application/json' : undefined,
+          'Content-Type': params?.body ? isformDataContent ? 'multipart/form-data' : 'application/json' : undefined,
           ...staticHeaders,
           ...params?.header,
         },
@@ -166,7 +168,7 @@ export function fetchTransport(options: FetchTransportOptions): Transport {
     );
 
     let response: FetchResponse;
-    for (let attemptNum = 1;; attemptNum++) {
+    for (let attemptNum = 1; ; attemptNum++) {
       response = await fetchFn();
       if (!response.ok && shouldRetry(attemptNum, response, requestLine)) {
         await new Promise<void>(
