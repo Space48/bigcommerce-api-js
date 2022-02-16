@@ -87,7 +87,7 @@ export class Client<CustomEndpoints extends string = never> {
 
   async *list<T>(path: string, params?: Parameters): AsyncIterable<T> {
     const MAX_PAGES = Number.MAX_SAFE_INTEGER;
-    for (let page = 0; page < MAX_PAGES; page++) {
+    for (let page = 1; page < MAX_PAGES; page++) {
       const res = await this.send(`GET ${path}`, { ...params, query: { ...params?.query, page }});
       this.checkResponseStatus(`GET ${path}`, res);
       const items = res.body.data as T[] | null | undefined;
