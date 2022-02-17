@@ -14,7 +14,7 @@
     "prepare": "npm run clean && npm run build -- --build tsconfig.publish.json"
   },
   "engines": {
-    "node": ">= 10"
+    "node": ">=14"
   },
   "repository": {
     "type": "git",
