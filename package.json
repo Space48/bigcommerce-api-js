@@ -35,6 +35,6 @@
     "@types/node-fetch": "^2.5.12",
     "form-data": "^4.0.0",
     "node-fetch": "^2.6.1",
-    "query-string": "^7.0.0"
+    "query-string": "^7.1.1"
   }
 }
