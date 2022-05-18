@@ -822,7 +822,7 @@ export interface components {
             readonly city?: string;
             readonly state?: string;
             /** The billing address must include the zip code. The zip code must be two or more characters. */
-            readonly zip: number;
+            readonly zip: string;
             readonly country?: string;
             readonly country_iso2?: string;
             readonly phone?: number;
