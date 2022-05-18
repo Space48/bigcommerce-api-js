@@ -825,7 +825,7 @@ export interface components {
             readonly zip: string;
             readonly country?: string;
             readonly country_iso2?: string;
-            readonly phone?: number;
+            readonly phone?: string;
             readonly email?: string;
         };
         /** Shipping Address properties common to all requests and responses. */
