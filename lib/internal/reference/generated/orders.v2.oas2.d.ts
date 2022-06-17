@@ -748,13 +748,9 @@ export interface components {
             /** If the order was placed through eBay, the eBay order number will be included. Otherwise, the value will be `0`. */
             readonly ebay_order_id?: string;
             /** ID of the order in another system. For example, the Amazon Order ID if this is an Amazon order.This field can be updated in a /POST, but using a /PUT to update the order will return a 400 error. The field 'external_id' cannot be written to. Please remove it from your request before trying again. It can not be overwritten once set. */
-            readonly external_id?: {
-                readonly [key: string]: any;
-            };
+            readonly external_id?: string;
             /** For orders submitted or modified via the API, using a PUT or POST operation, you can optionally pass in a value identifying the system used to generate the order. For example: `POS`. Otherwise, the value will be null. */
-            readonly external_source?: {
-                readonly [key: string]: any;
-            };
+            readonly external_source?: string;
             /** The full name of the country where the customer made the purchase, based on the IP. */
             readonly geoip_country?: string;
             /** The country where the customer made the purchase, in ISO2 format, based on the IP. */
@@ -776,9 +772,7 @@ export interface components {
             /** The payment method for this order. Can be one of the following: `Manual`, `Credit Card`, `cash`, `Test Payment Gateway`, etc. */
             readonly payment_method?: "Credit Card" | "Cash" | "Test Payment Gateway" | "Manual";
             /** The external Transaction ID/Payment ID within this order's payment provider (if a payment provider was used). */
-            readonly payment_provider_id?: {
-                readonly [key: string]: any;
-            };
+            readonly payment_provider_id?: string|number;
             /** The amount refunded from this transaction. (Float, Float-As-String, Integer) */
             readonly refunded_amount?: string;
             /** The value of shipping cost, excluding tax. (Float, Float-As-String, Integer) */
