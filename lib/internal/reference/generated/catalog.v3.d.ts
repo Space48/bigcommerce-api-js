@@ -2461,7 +2461,7 @@ export interface definitions {
         /** Legacy template setting which controls if the option set shows up to the side of or below the product image and description. */
         readonly option_set_display?: string;
     } & {
-        readonly variants?: definitions["productVariant_Full"];
+        readonly variants?: definitions["productVariant_Full"][];
     };
     /** Common ProductImage properties. */
     readonly productImage_Full: definitions["productImage_Base"] & {
