@@ -41,4 +41,4 @@ declare type NoParamsRequestPath<Method extends RequestMethod> = NoParamsRequest
  * A list of known BigCommerce endpoints which are not part of the Open API specs
  */
 declare type UntypedEndpoints = never;
-export { };
+export {};
