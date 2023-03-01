@@ -2,14 +2,14 @@ import type { V2 as reference } from "../../internal/reference";
 import type { NarrowResponse } from "./response-narrowing";
 import { Operation, OperationIndex, Parameters, Request, RequestMethod, Response, Transport, FetchTransportOptions } from "../../internal/operation";
 import { Const, RemoveStart } from "../../internal/type-utils";
-export declare type Operations = reference.Operation;
-export declare type RequestLine = keyof Operations;
-export declare type NoParamsRequestLine = keyof OperationIndex.FilterOptionalParams<Operations>;
-export declare type InferResponse<ReqLine extends RequestLine, Params extends Parameters> = NarrowResponse<Operations, Request<ReqLine, Params>, Operations[ReqLine]['response']>;
-export declare type ResponseData<ReqLine extends RequestLine, Params extends Parameters> = Response.Success<ResolveResponse<ReqLine, Params>> extends {
+export type Operations = reference.Operation;
+export type RequestLine = keyof Operations;
+export type NoParamsRequestLine = keyof OperationIndex.FilterOptionalParams<Operations>;
+export type InferResponse<ReqLine extends RequestLine, Params extends Parameters> = NarrowResponse<Operations, Request<ReqLine, Params>, Operations[ReqLine]['response']>;
+export type ResponseData<ReqLine extends RequestLine, Params = unknown> = Response.Success<ResolveResponse<ReqLine, Params>> extends {
     readonly body: infer Data;
 } ? Data : never;
-export declare type Config = Omit<FetchTransportOptions, 'baseUrl' | 'headers'> & {
+export type Config = Omit<FetchTransportOptions, 'baseUrl' | 'headers'> & {
     readonly storeHash: string;
     readonly accessToken: string;
 };
@@ -34,11 +34,11 @@ export declare class Client<CustomEndpoints extends string = never> {
     put<T = unknown>(path: RemoveStart<'PUT ', UntypedEndpoints | CustomEndpoints>, params?: Parameters): Promise<T>;
     private checkResponseStatus;
 }
-declare type ResolveResponse<ReqLine extends RequestLine, Params = unknown> = unknown extends Params ? Operations[ReqLine]['response'] : Params extends Parameters ? InferResponse<ReqLine, Params> : never;
-declare type RequestPath<Method extends RequestMethod> = RequestLine & `${Method} ${any}` extends `${Method} ${infer Path}` ? Path : never;
-declare type NoParamsRequestPath<Method extends RequestMethod> = NoParamsRequestLine & `${Method} ${any}` extends `${Method} ${infer Path}` ? Path : never;
+type ResolveResponse<ReqLine extends RequestLine, Params = unknown> = unknown extends Params ? Operations[ReqLine]['response'] : Params extends Parameters ? InferResponse<ReqLine, Params> : never;
+type RequestPath<Method extends RequestMethod> = RequestLine & `${Method} ${any}` extends `${Method} ${infer Path}` ? Path : never;
+type NoParamsRequestPath<Method extends RequestMethod> = NoParamsRequestLine & `${Method} ${any}` extends `${Method} ${infer Path}` ? Path : never;
 /**
  * A list of known BigCommerce endpoints which are not part of the Open API specs
  */
-declare type UntypedEndpoints = never;
+type UntypedEndpoints = never;
 export {};
