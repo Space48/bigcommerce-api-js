@@ -5,8 +5,8 @@ import { Const, RemoveStart } from "../../internal/type-utils";
 export declare type Operations = reference.Operation;
 export declare type RequestLine = keyof Operations;
 export declare type NoParamsRequestLine = keyof OperationIndex.FilterOptionalParams<Operations>;
-export declare type InferResponse<ReqLine extends RequestLine, Params> = NarrowResponse<Operations, Request<ReqLine, Params>, Operations[ReqLine]['response']>;
-export declare type ResponseData<ReqLine extends RequestLine, Params = unknown> = Response.Success<ResolveResponse<ReqLine, Params>> extends {
+export declare type InferResponse<ReqLine extends RequestLine, Params extends Parameters> = NarrowResponse<Operations, Request<ReqLine, Params>, Operations[ReqLine]['response']>;
+export declare type ResponseData<ReqLine extends RequestLine, Params extends Parameters> = Response.Success<ResolveResponse<ReqLine, Params>> extends {
     readonly body: infer Data;
 } ? Data : never;
 export declare type Config = Omit<FetchTransportOptions, 'baseUrl' | 'headers'> & {
