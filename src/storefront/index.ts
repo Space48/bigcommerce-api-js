@@ -9,7 +9,7 @@ export type RequestLine = keyof Operations;
 
 export type NoParamsRequestLine = keyof OperationIndex.FilterOptionalParams<Operations>;
 
-export type InferResponse<ReqLine extends RequestLine, Params> =
+export type InferResponse<ReqLine extends RequestLine, Params extends Parameters> =
   NarrowResponse<
     Operations,
     Request<ReqLine, Params>,
@@ -29,7 +29,8 @@ export interface Client {
     params: Const<Params & Operation.MinimalInput<Operations[ReqLine]>>
   ): Promise<InferResponse<ReqLine, Params>>
 
-  delete<Path extends NoParamsRequestPath<'DELETE'>>(requestLine: Path): Promise<ResponseData<`DELETE ${Path}`, {}> | null>
+  //Todo investigate and resolve issue no paramter request paths
+  //delete<Path extends NoParamsRequestPath<'DELETE'>>(requestLine: Path): Promise<ResponseData<`DELETE ${Path}`, {}> | null>
 
   delete<Path extends RequestPath<'DELETE'>, Params extends Operation.MinimalInput<Operations[`DELETE ${Path}`]>> (
     path: Path,
@@ -50,7 +51,8 @@ export interface Client {
     params: Const<Params & Operation.MinimalInput<Operations[`POST ${Path}`]>>
   ): Promise<ResponseData<`POST ${Path}`, Params>>
 
-  put<Path extends NoParamsRequestPath<'PUT'>>(requestLine: Path): Promise<ResponseData<`PUT ${Path}`, {}>>
+  //Todo investigate and resolve issue no paramter request paths
+  //put<Path extends NoParamsRequestPath<'PUT'>>(requestLine: Path): Promise<ResponseData<`PUT ${Path}`, {}>>
 
   put<Path extends RequestPath<'PUT'>, Params extends Operation.MinimalInput<Operations[`PUT ${Path}`]>> (
     path: Path,
