@@ -19,8 +19,8 @@ export type InferResponse<ReqLine extends RequestLine, Params extends Parameters
 
 export type ResponseData<ReqLine extends RequestLine, Params = unknown> =
   Response.Success<ResolveResponse<ReqLine, Params>> extends { readonly body: { readonly data?: infer Data } }
-  ? Data
-  : never;
+    ? Data
+    : never;
 
 export type Config = Omit<FetchTransportOptions, 'baseUrl' | 'headers'> & {
   readonly storeHash: string
@@ -78,7 +78,7 @@ export class Client<CustomEndpoints extends string = never> {
 
   list<Path extends NoParamsListablePath>(path: Path): AsyncIterable<ListItemType<Path, {}>>
 
-  list<Path extends ListablePath, Params extends Operation.MinimalInput<Operations[`GET ${Path}`]>>(
+  list<Path extends ListablePath, Params extends Operation.MinimalInput<Operations[`GET ${Path}`]>> (
     path: Path,
     params: Const<Params & Operation.MinimalInput<Operations[`GET ${Path}`]>>
   ): AsyncIterable<ListItemType<Path, Params>>
@@ -88,7 +88,7 @@ export class Client<CustomEndpoints extends string = never> {
   async *list<T>(path: string, params?: Parameters): AsyncIterable<T> {
     const MAX_PAGES = Number.MAX_SAFE_INTEGER;
     for (let page = 1; page < MAX_PAGES; page++) {
-      const res = await this.send(`GET ${path}`, { ...params, query: { ...params?.query, page } });
+      const res = await this.send(`GET ${path}`, { ...params, query: { ...params?.query, page }});
       this.checkResponseStatus(`GET ${path}`, res);
       const items = res.body.data as T[] | null | undefined;
       if (!items?.length) {
@@ -155,8 +155,8 @@ export class Client<CustomEndpoints extends string = never> {
 
 type ListItemType<Path extends string, Params = unknown> =
   ResponseData<`GET ${Path}` & RequestLine, Params> extends ReadonlyArray<infer T>
-  ? T
-  : never;
+    ? T
+    : never;
 
 type ListablePath = ListablePath_<Operations>;
 
@@ -164,18 +164,18 @@ type NoParamsListablePath = ListablePath & NoParamsRequestPath<'GET'>;
 
 type ListablePath_<Ops extends OperationIndex> = {
   [ReqLine in keyof Ops]:
-  Response.Success<Ops[ReqLine]['response']> extends { body: { data?: ReadonlyArray<any> } }
-  ? ReqLine extends `GET ${infer Path}`
-  ? Path
-  : never
-  : never
+    Response.Success<Ops[ReqLine]['response']> extends { body: { data?: ReadonlyArray<any> } }
+      ? ReqLine extends `GET ${infer Path}`
+        ? Path
+        : never
+      : never
 }[keyof Ops];
 
 type ResolveResponse<ReqLine extends RequestLine, Params = unknown> =
   unknown extends Params
-  ? Operations[ReqLine]['response']
+    ? Operations[ReqLine]['response']
   : Params extends Parameters
-  ? InferResponse<ReqLine, Params>
+    ? InferResponse<ReqLine, Params>
   : never;
 
 type RequestPath<Method extends RequestMethod> =
@@ -190,7 +190,7 @@ type NoParamsRequestPath<Method extends RequestMethod> =
 type UntypedEndpoints =
   | PromoEndpoints
   | PromoCodeEndpoints
-  ;
+;
 
 type PromoEndpoints =
   | 'GET /promotions'
@@ -199,11 +199,11 @@ type PromoEndpoints =
   | 'PUT /promotions/{id}'
   | 'DELETE /promotions'
   | 'DELETE /promotions/{id}'
-  ;
+;
 
 type PromoCodeEndpoints =
   | 'GET /promotions/{promotion_id}/codes'
   | 'POST /promotions/{promotion_id}/codes'
   | 'DELETE /promotions/{promotion_id}/codes'
   | 'DELETE /promotions/{promotion_id}/codes/{code_id}'
-  ;
+;
