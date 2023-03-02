@@ -10,7 +10,7 @@ export type RequestLine = keyof Operations;
 
 export type NoParamsRequestLine = keyof OperationIndex.FilterOptionalParams<Operations>;
 
-export type InferResponse<ReqLine extends RequestLine, Params> =
+export type InferResponse<ReqLine extends RequestLine, Params extends Parameters> =
   NarrowResponse<
     Operations,
     Request<ReqLine, Params>,
@@ -31,7 +31,7 @@ export class Client<CustomEndpoints extends string = never> {
   constructor(config: Config)
 
   constructor(transport: Transport)
-  
+
   constructor(configOrTransport: Config | Transport) {
     this.transport =
       typeof configOrTransport === 'function'
@@ -192,7 +192,7 @@ type UntypedEndpoints =
   | PromoCodeEndpoints
 ;
 
-type PromoEndpoints = 
+type PromoEndpoints =
   | 'GET /promotions'
   | 'GET /promotions/{id}'
   | 'POST /promotions'
@@ -201,7 +201,7 @@ type PromoEndpoints =
   | 'DELETE /promotions/{id}'
 ;
 
-type PromoCodeEndpoints = 
+type PromoCodeEndpoints =
   | 'GET /promotions/{promotion_id}/codes'
   | 'POST /promotions/{promotion_id}/codes'
   | 'DELETE /promotions/{promotion_id}/codes'
