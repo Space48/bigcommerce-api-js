@@ -6,7 +6,7 @@ import { RemoveStart } from "../../internal/type-utils";
 export declare type Operations = reference.Operation;
 export declare type RequestLine = keyof Operations;
 export declare type NoParamsRequestLine = keyof OperationIndex.FilterOptionalParams<Operations>;
-export declare type InferResponse<ReqLine extends RequestLine, Params> = NarrowResponse<Operations, Request<ReqLine, Params>, Operations[ReqLine]['response']>;
+export declare type InferResponse<ReqLine extends RequestLine, Params extends Parameters> = NarrowResponse<Operations, Request<ReqLine, Params>, Operations[ReqLine]['response']>;
 export declare type ResponseData<ReqLine extends RequestLine, Params = unknown> = Response.Success<ResolveResponse<ReqLine, Params>> extends {
     readonly body: {
         readonly data?: infer Data;
@@ -15,6 +15,7 @@ export declare type ResponseData<ReqLine extends RequestLine, Params = unknown> 
 export declare type Config = Omit<FetchTransportOptions, 'baseUrl' | 'headers'> & {
     readonly storeHash: string;
     readonly accessToken: string;
+    readonly customHeaders?: Record<string, string>;
 };
 export declare class Client<CustomEndpoints extends string = never> {
     constructor(config: Config);
