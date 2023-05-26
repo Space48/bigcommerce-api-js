@@ -16,7 +16,7 @@ export type InferResponse<ReqLine extends RequestLine, Params extends Parameters
     Operations[ReqLine]['response']
   >;
 
-export type ResponseData<ReqLine extends RequestLine, Params = unknown> =
+export type ResponseData<ReqLine extends RequestLine, Params extends Parameters> =
   Response.Success<ResolveResponse<ReqLine, Params>> extends { readonly body: infer Data }
     ? Data
     : never;
