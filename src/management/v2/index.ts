@@ -23,7 +23,8 @@ export type ResponseData<ReqLine extends RequestLine, Params extends Parameters>
 
 export type Config = Omit<FetchTransportOptions, 'baseUrl' | 'headers'> & {
   readonly storeHash: string
-  readonly accessToken: string
+  readonly accessToken: string,
+  readonly customHeaders?: Record<string, string>
 };
 
 export class Client<CustomEndpoints extends string = never> {

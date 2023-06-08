@@ -8,7 +8,8 @@ export * as V3 from "./v3";
 export type Config = {
   readonly storeHash: string;
   readonly accessToken: string;
-  readonly agent?: Agent
+  readonly agent?: Agent,
+  readonly customHeaders?: Record<string, string>
 };
 
 /**
