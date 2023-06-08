@@ -8,6 +8,7 @@ export declare type Config = {
     readonly storeHash: string;
     readonly accessToken: string;
     readonly agent?: Agent;
+    readonly customHeaders?: Record<string, string>;
 };
 /**
  * If you need to use a path which is not part if the spec, you can pass it

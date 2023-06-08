@@ -1,6 +1,6 @@
 {
   "name": "@space48/bigcommerce-api",
-  "version": "0.3.2",
+  "version": "0.3.3-alpha3",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

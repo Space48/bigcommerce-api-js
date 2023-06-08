@@ -25,6 +25,7 @@ export type ResponseData<ReqLine extends RequestLine, Params = unknown> =
 export type Config = Omit<FetchTransportOptions, 'baseUrl' | 'headers'> & {
   readonly storeHash: string
   readonly accessToken: string
+  readonly customHeaders?: Record<string, string>
 };
 
 export class Client<CustomEndpoints extends string = never> {
@@ -37,7 +38,7 @@ export class Client<CustomEndpoints extends string = never> {
       typeof configOrTransport === 'function'
         ? configOrTransport
         : fetchTransport({
-          headers: { "X-Auth-Token": configOrTransport.accessToken },
+          headers: { "X-Auth-Token": configOrTransport.accessToken, ...(configOrTransport.customHeaders || {}) },
           baseUrl: `https://api.bigcommerce.com/stores/${configOrTransport.storeHash}/v3`,
           agent: configOrTransport.agent,
         });

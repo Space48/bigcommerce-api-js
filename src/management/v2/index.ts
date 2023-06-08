@@ -16,14 +16,15 @@ export type InferResponse<ReqLine extends RequestLine, Params extends Parameters
     Operations[ReqLine]['response']
   >;
 
-export type ResponseData<ReqLine extends RequestLine, Params = unknown> =
+export type ResponseData<ReqLine extends RequestLine, Params extends Parameters> =
   Response.Success<ResolveResponse<ReqLine, Params>> extends { readonly body: infer Data }
     ? Data
     : never;
 
 export type Config = Omit<FetchTransportOptions, 'baseUrl' | 'headers'> & {
   readonly storeHash: string
-  readonly accessToken: string
+  readonly accessToken: string,
+  readonly customHeaders?: Record<string, string>
 };
 
 export class Client<CustomEndpoints extends string = never> {
@@ -38,7 +39,7 @@ export class Client<CustomEndpoints extends string = never> {
         : fetchTransport({
           agent: configOrTransport.agent,
           baseUrl: `https://api.bigcommerce.com/stores/${configOrTransport.storeHash}/v2`,
-          headers: { "X-Auth-Token": configOrTransport.accessToken },
+          headers: { "X-Auth-Token": configOrTransport.accessToken, ...(configOrTransport.customHeaders || {}) },
         });
   }
 

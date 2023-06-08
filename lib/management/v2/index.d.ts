@@ -12,6 +12,7 @@ export declare type ResponseData<ReqLine extends RequestLine, Params extends Par
 export declare type Config = Omit<FetchTransportOptions, 'baseUrl' | 'headers'> & {
     readonly storeHash: string;
     readonly accessToken: string;
+    readonly customHeaders?: Record<string, string>;
 };
 export declare class Client<CustomEndpoints extends string = never> {
     constructor(config: Config);
