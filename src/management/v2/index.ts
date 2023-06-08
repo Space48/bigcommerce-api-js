@@ -39,7 +39,7 @@ export class Client<CustomEndpoints extends string = never> {
         : fetchTransport({
           agent: configOrTransport.agent,
           baseUrl: `https://api.bigcommerce.com/stores/${configOrTransport.storeHash}/v2`,
-          headers: { "X-Auth-Token": configOrTransport.accessToken },
+          headers: { "X-Auth-Token": configOrTransport.accessToken, ...(configOrTransport.customHeaders || {}) },
         });
   }
 
