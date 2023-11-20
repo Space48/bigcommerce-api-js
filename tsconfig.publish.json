@@ -9,7 +9,7 @@
     "typeRoots": [
       "node_modules/@types"
     ],
-    "lib": ["ES2018"],
+    "lib": ["ES2018","DOM"],
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "declaration": true,
